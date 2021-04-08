@@ -22,5 +22,11 @@
     "**/tsconfig.spec.json": true,
     "**/.editorconfig": true,
     "**/.browserslistrc": true
+  },
+
+  "workbench.tree.indent": 24,
+  "workbench.tree.renderIndentGuides": "always",
+  "workbench.colorCustomizations": {
+    "tree.indentGuidesStroke": "#008070"
   }
 }
