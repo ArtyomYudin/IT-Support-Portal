@@ -13,5 +13,14 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "files.eol": "\n"
+
+  "files.eol": "\n",
+
+  "files.exclude": {
+    "**/node_modules/": true,
+    "**/tsconfig.app.json": true,
+    "**/tsconfig.spec.json": true,
+    "**/.editorconfig": true,
+    "**/.browserslistrc": true
+  }
 }
