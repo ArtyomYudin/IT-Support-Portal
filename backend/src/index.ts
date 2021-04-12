@@ -1,5 +1,7 @@
-import http2 from 'http2';
+import { initHTTPSServer } from './modules/https-server';
 
-http2.createServer().listen(() => {
-  console.log('bla bla');
-});
+(async () => {
+  const httpServer = await initHTTPSServer();
+
+  console.log(httpServer.address());
+})();

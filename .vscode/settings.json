@@ -24,7 +24,7 @@
     "**/.browserslistrc": true
   },
 
-  "workbench.tree.indent": 24,
+  "workbench.tree.indent": 32,
   "workbench.tree.renderIndentGuides": "always",
   "workbench.colorCustomizations": {
     "tree.indentGuidesStroke": "#008070"
