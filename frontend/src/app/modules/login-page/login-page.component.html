@@ -1,1 +1,25 @@
-<p>login-page works!</p>
+<div class="login-wrapper">
+    <form [formGroup]="loginForm" class="login" (ngSubmit)="(null)" autocomplete="off">
+        <section class="title">
+            <h3 class="welcome">Добро пожаловать в</h3>
+            Информационную систему отдела ИТО
+            <h5 class="hint">Используйте свои учетные данные для входа в систему</h5>
+        </section>
+        <div class="login-group">
+            <!--<clr-select-container>
+                <select clrSelect name="type" class="clr-select">
+                    <option value="local">Пользователь</option>
+                    <option value="admin">Администратор</option>
+                </select>
+            </clr-select-container>-->
+            <clr-input-container>
+                <input type="text" formControlName="email" clrInput placeholder="Адрес эл. почты" required />
+            </clr-input-container>
+            <clr-password-container>
+                <input type="password" formControlName="password" clrPassword placeholder="Пароль" required />
+            </clr-password-container>
+            <!--<div *ngIf="error" class="error active">Не правильные учетные данные</div>-->
+            <button type="submit" class="btn btn-primary">Войти</button>
+        </div>
+    </form>
+</div>

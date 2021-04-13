@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import util from 'util';
 
-const hostname = '172.21.220.13';
+const hostname = '127.0.0.1';
 const port = 4443;
 
 const headers = {
