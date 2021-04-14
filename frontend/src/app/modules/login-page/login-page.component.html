@@ -1,5 +1,5 @@
 <div class="login-wrapper">
-    <form [formGroup]="loginForm" class="login" (ngSubmit)="(null)" autocomplete="off">
+    <form [formGroup]="loginForm" class="login" (ngSubmit)="onSubmit()" autocomplete="off">
         <section class="title">
             <h3 class="welcome">Добро пожаловать в</h3>
             Информационную систему отдела ИТО
@@ -18,8 +18,8 @@
             <clr-password-container>
                 <input type="password" formControlName="password" clrPassword placeholder="Пароль" required />
             </clr-password-container>
-            <!--<div *ngIf="error" class="error active">Не правильные учетные данные</div>-->
-            <button type="submit" class="btn btn-primary">Войти</button>
+            <div *ngIf="error" class="error active">Не правильные учетные данные</div>
+            <button type="submit" class="btn btn-primary" [clrLoading]="loading">Войти</button>
         </div>
     </form>
 </div>
