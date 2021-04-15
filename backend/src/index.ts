@@ -3,7 +3,7 @@ import { websocketServer } from './modules/wss-server';
 
 (async () => {
   const httpServer = await initHTTPSServer();
-  const wss = websocketServer(httpServer);
+  //const wss = websocketServer(httpServer);
 
   console.log(httpServer.address());
 })();
