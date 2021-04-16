@@ -37,5 +37,6 @@
     //"fullTemplateTypeCheck": false,
     "preserveWhitespaces": true
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp"],
+  "files": ["./node_modules/@types/node/index.d.ts"]
 }
