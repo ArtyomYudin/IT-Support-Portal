@@ -2,10 +2,11 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import { constants } from 'crypto';
+import { config } from 'dotenv';
 import { checkUserCredentials } from '../services/ldap-auth';
 
-const hostname = '127.0.0.1';
-const port = 3443;
+config();
+
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers':
@@ -31,11 +32,13 @@ export function initHTTPSServer(): https.Server {
 
   const server = https
     .createServer(options, (req, res) => {
-      res.statusCode = 204;
-      Object.entries(headers).forEach(([key, value]) => {
-        res.setHeader(key, value);
-      });
-      res.end();
+      if (req.method === 'OPTIONS') {
+        res.statusCode = 204;
+        Object.entries(headers).forEach(([key, value]) => {
+          res.setHeader(key, value);
+        });
+        res.end();
+      }
 
       let body: any = [];
 
@@ -54,8 +57,8 @@ export function initHTTPSServer(): https.Server {
         }
       });
     })
-    .listen(port, hostname, () => {
-      console.log(`Server is listening on port ${port}`);
+    .listen(parseInt(process.env.HTTPS_PORT!, 10), process.env.HTTPS_HOSTNAME!, () => {
+      console.log(`Server is listening on port ${process.env.HTTPS_PORT}`);
     })
     .on('error', onError);
   return server;

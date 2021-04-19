@@ -37,6 +37,7 @@ export class AuthenticationService {
           localStorage.setItem('IT-Support-Portal', JSON.stringify(authUser));
           this.currentUserSubject$.next(authUser);
         }
+        // console.log(authUser);
         return authUser;
       }),
       catchError(err => {
@@ -48,12 +49,12 @@ export class AuthenticationService {
 
   public logout(): void {
     // remove user from local storage to log user out
-    localStorage.removeItem('ngMonitoring');
+    localStorage.removeItem('IT-Support-Portal');
     this.currentUserSubject$.next(null);
   }
 
   public isAuthenticated(): boolean {
-    if (localStorage.getItem('ngMonitoring')) {
+    if (localStorage.getItem('IT-Support-Portal')) {
       //  const token = JSON.parse(localStorage.getItem('ngMonitoring')).token;
       // console.log(this.jwtHelper);
       return !this.jwtHelper.isTokenExpired();

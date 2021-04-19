@@ -1,22 +1,64 @@
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import * as ldap from 'ldapjs';
+import { ServerResponse } from 'http';
+import { config } from 'dotenv';
+config();
 
-export function checkUserCredentials(reqBody: string, res: any): any {
-  const postReq = {
-    email: JSON.parse(reqBody).email,
-    password: JSON.parse(reqBody).password,
-  };
-
+export function checkUserCredentials(reqBody: string, res: ServerResponse): any {
   const ldapClient = ldap.createClient({
     url: 'ldap://172.20.19.18:389',
   });
 
-  ldapClient.bind('cn=root', 'secret', err => {
-    ldapClient.unbind();
-    console.log('binding failed', err);
-  });
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+    // 'Access-Control-Max-Age': 2592000, // 30 days
+  };
 
-  return null;
+  const { email, password } = JSON.parse(reqBody);
+  if (!reqBody || !email || !password) {
+    res.statusCode = 400;
+    res.statusMessage = JSON.stringify({ Error: true, Message: 'Bad Request: empty data' });
+    Object.entries(headers).forEach(([key, value]) => {
+      res.setHeader(key, value);
+    });
+    res.end();
+  }
+  ldapClient.bind(email, password, (err: any) => {
+    if (err) {
+      ldapClient.unbind();
+      res.statusCode = 400;
+      res.statusMessage = JSON.stringify({ Error: true, Message: 'wrong email/password combination' });
+      Object.entries(headers).forEach(([key, value]) => {
+        res.setHeader(key, value);
+      });
+      res.end();
+    } else {
+      // Sign JWT and send it to Client
+      // const token = jwt.sign({ uid: user.get('_id') }, JWT_KEY, { expiresIn: '5m' });
+      //return res.status(200).json({ data: { token } });
+      console.log(email);
+      const userToken = jwt.sign({ email }, process.env.JWT_SECRET!, {
+        expiresIn: '1h',
+        subject: 'IT-Support-Portal',
+      });
+      res.statusCode = 200;
+      Object.entries(headers).forEach(([key, value]) => {
+        res.setHeader(key, value);
+      });
+      res.end(
+        JSON.stringify({
+          //   id: userId,
+          //   email: rows[0].email,
+          //   firstName: rows[0].first_name,
+          //   lastName: rows[0].last_name,
+          //   accessRole: rows[0].access_role,
+          token: userToken,
+        }),
+      );
+      console.log('binding success');
+    }
+  });
 }
 
 /*
