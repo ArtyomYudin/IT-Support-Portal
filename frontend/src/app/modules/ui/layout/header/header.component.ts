@@ -1,6 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject, interval } from 'rxjs';
+
+import { AuthenticationService } from '../../../../services/auth.service';
+import { AuthUser } from '../../../../models/auth-user.model';
 
 @Component({
   selector: 'fe-header',
@@ -8,16 +12,40 @@ import { Subject, interval } from 'rxjs';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  public currentUser: AuthUser;
+
   public clock = interval(1000).pipe(map(() => new Date()));
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
-  constructor() {}
+  constructor(private router: Router, private authenticationService: AuthenticationService) {
+    this.authenticationService.currentUser$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(x => {
+      this.currentUser = x;
+    });
+    // this.sessionCheckService.isActivateStatus
+    //     .pipe(takeUntil(this.ngUnsubscribe))
+    //     .subscribe(
+    //       isExpired => {
+    //         console.log('Resived !')
+    //         isExpired ? null : this.onLogout()
+    //       });}
+  }
 
   ngOnInit(): void {}
 
   public ngOnDestroy(): void {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.complete();
+  }
+
+  public onLogout(): void {
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  public isAdmin(): boolean {
+    // console.log(JSON.parse(this.currentUser.accessRole));
+    return JSON.parse(this.currentUser.accessRole).admin === 1;
+    // return true;
   }
 }

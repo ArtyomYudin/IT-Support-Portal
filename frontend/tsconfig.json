@@ -19,13 +19,7 @@
     "module": "es2020",
     "lib": ["es2018", "dom"],
     "paths": {
-      "core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata"],
-      "@app/*": ["src/app/*"],
-      "@assets/*": ["src/assets/*"],
-      "@models/*": ["src/app/models/*"],
-      "@modules/*": ["src/app/modules/*"],
-      "@pipe/*": ["src/app/pipe/*"],
-      "@services/*": ["src/app/services/*"]
+      "core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata"]
     }
   },
   "angularCompilerOptions": {

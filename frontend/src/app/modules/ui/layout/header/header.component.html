@@ -1,0 +1,52 @@
+<clr-header class="header header-6" *ngIf="currentUser">
+    <div class="branding">
+        <a class="nav-link">
+            <cds-icon shape="dashboard"></cds-icon>
+            <span class="title">Портал отдела ИТО</span>
+        </a>
+    </div>
+
+    <div class="header-actions">
+        <div class="settings" style="align-items: center">
+            <!--<clr-icon shape="calendar"></clr-icon>-->
+            <span class="title">&nbsp;&nbsp;{{ clock | async | date: 'dd MMMM, HH:mm' }} </span>
+        </div>
+        <clr-dropdown>
+            <button class="nav-text" clrDropdownTrigger *ngIf="currentUser">
+                {{ currentUser.firstName }} {{ currentUser.lastName }}
+                <clr-icon shape="caret down"></clr-icon>
+            </button>
+
+            <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                <!--<button (click)="aboutPage.open()" clrDropdownItem>О программе</button>-->
+                <a class="nav-link" [routerLink]="['/', 'skud']" clrDropdownItem>Настройки</a>
+                <button (click)="onLogout()" clrDropdownItem>Выход</button>
+            </clr-dropdown-menu>
+        </clr-dropdown>
+    </div>
+</clr-header>
+
+<nav class="subnav" [clr-nav-level]="1" *ngIf="currentUser">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'skud']">Заявки на приобретение</a>
+            <!-- <a class="nav-link active" href="#"></a> -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'monitoring']" *ngIf="isAdmin()">Мониторинг оборудования</a>
+            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'vpn']" *ngIf="isAdmin()">Статистика VPN</a>
+            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'dhcp']" *ngIf="isAdmin()">Статистика DHCP</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'config']" *ngIf="isAdmin()">Настройки системы</a>
+        </li>
+    </ul>
+</nav>
+
+<!--<app-about #aboutPage></app-about>-->

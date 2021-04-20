@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
-import { AuthenticationService } from '@services/auth.service';
+import { AuthenticationService } from '../../services/auth.service';
 
 @Component({
   selector: 'fe-login-page',

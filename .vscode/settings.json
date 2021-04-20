@@ -2,6 +2,8 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
 
+  "js/ts.implicitProjectConfig.experimentalDecorators": true,
+
   // "eslint.validate": [ "javascript", "typescript", "html"],
   "eslint.validate": ["javascript", "typescript"],
   "eslint.workingDirectories": ["./backend", "./frontend"],

@@ -1,13 +1,13 @@
 export class AuthUser {
-  public id!: number | null;
+  public id: number;
 
-  public email!: string | null;
+  public email: string;
 
-  public firstName!: string | null;
+  public firstName: string;
 
-  public lastName!: string | null;
+  public lastName: string;
 
-  public accessRole!: string | null;
+  public accessRole: string;
 
-  public token?: string | null;
+  public token?: string;
 }

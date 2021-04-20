@@ -6,7 +6,7 @@ import { ClarityModule } from '@clr/angular';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { LoginPageComponent } from '@modules/login-page/login-page.component';
+import { LoginPageComponent } from './login-page.component';
 
 const routing = RouterModule.forChild([{ path: '', component: LoginPageComponent }]);
 

@@ -2,11 +2,12 @@ import jwt from 'jsonwebtoken';
 import * as ldap from 'ldapjs';
 import { ServerResponse } from 'http';
 import { config } from 'dotenv';
+
 config();
 
 export function checkUserCredentials(reqBody: string, res: ServerResponse): any {
   const ldapClient = ldap.createClient({
-    url: 'ldap://172.20.19.18:389',
+    url: process.env.LDAP_URL!,
   });
 
   const headers = {
@@ -36,7 +37,7 @@ export function checkUserCredentials(reqBody: string, res: ServerResponse): any 
     } else {
       // Sign JWT and send it to Client
       // const token = jwt.sign({ uid: user.get('_id') }, JWT_KEY, { expiresIn: '5m' });
-      //return res.status(200).json({ data: { token } });
+      // return res.status(200).json({ data: { token } });
       console.log(email);
       const userToken = jwt.sign({ email }, process.env.JWT_SECRET!, {
         expiresIn: '1h',

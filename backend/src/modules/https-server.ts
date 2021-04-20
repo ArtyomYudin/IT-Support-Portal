@@ -43,13 +43,13 @@ export function initHTTPSServer(): https.Server {
       let body: any = [];
 
       req.on('error', err => {
-        // logger.error(err);
+        console.log('REQ error:', err);
       });
       req.on('data', chunk => body.push(chunk));
       req.on('end', () => {
         body = Buffer.concat(body).toString();
         res.on('error', err => {
-          // logger.error(err);
+          console.log('RES error:', err);
         });
         if (req.url === '/api/auth' && req.method === 'POST') {
           console.log('Resive post', body);
@@ -57,7 +57,7 @@ export function initHTTPSServer(): https.Server {
         }
       });
     })
-    .listen(parseInt(process.env.HTTPS_PORT!, 10), process.env.HTTPS_HOSTNAME!, () => {
+    .listen(parseInt(process.env.HTTPS_PORT!, 10), process.env.HTTPS_HOST!, () => {
       console.log(`Server is listening on port ${process.env.HTTPS_PORT}`);
     })
     .on('error', onError);

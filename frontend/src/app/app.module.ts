@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
-import { AppRoutingModule } from '@app/app-routing.module';
-import { AppComponent } from '@app/app.component';
-
-import { UiModule } from '@modules/ui/ui.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { UiModule } from './modules/ui/ui.module';
 
 export function jwtTokenGetter(): string {
   return localStorage.getItem('IT-Support-Portal') ? JSON.parse(localStorage.getItem('IT-Support-Portal')).token : null;
@@ -14,6 +14,7 @@ export function jwtTokenGetter(): string {
   //  return JSON.parse(localStorage.getItem('ngMonitoring')).token;
   // }
 }
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -33,5 +34,6 @@ export function jwtTokenGetter(): string {
   ],
   providers: [],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

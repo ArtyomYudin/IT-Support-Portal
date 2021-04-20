@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { ClarityModule } from '@clr/angular';
+import { ClarityIcons, dashboardIcon } from '@cds/core/icon';
+import '@cds/core/icon/register.js';
 
-import { LayoutComponent } from '@modules/ui/layout/layout.component';
-import { HeaderComponent } from '@modules/ui/layout/header/header.component';
-import { MainComponent } from '@modules/ui/layout/main/main.component';
+import { MainComponent } from './layout/main/main.component';
+import { LayoutComponent } from './layout/layout.component';
+import { HeaderComponent } from './layout/header/header.component';
 
+ClarityIcons.addIcons(dashboardIcon);
 @NgModule({
   declarations: [LayoutComponent, HeaderComponent, MainComponent],
   imports: [CommonModule, RouterModule, ClarityModule],
