@@ -57,7 +57,7 @@ export function initHTTPSServer(): https.Server {
         }
       });
     })
-    .listen(parseInt(process.env.HTTPS_PORT!, 10), process.env.HTTPS_HOST!, () => {
+    .listen(parseInt(process.env.HTTPS_PORT as string, 10), process.env.HTTPS_HOST as string, () => {
       console.log(`Server is listening on port ${process.env.HTTPS_PORT}`);
     })
     .on('error', onError);

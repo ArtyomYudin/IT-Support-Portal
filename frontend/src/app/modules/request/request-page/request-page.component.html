@@ -1,1 +1,34 @@
-<p>request-page works!</p>
+<clr-modal [(clrModalOpen)]="requestPageOpen">
+    <h3 class="modal-title">Заявка на приобретение ОС, ТМЦ</h3>
+    <div class="modal-body">
+        <cds-form-group layout="vertical">
+            <cds-input layout="vertical">
+                <label>label</label>
+                <input placeholder="name" />
+                <cds-control-message>message text</cds-control-message>
+            </cds-input>
+
+            <cds-input layout="vertical">
+                <label>disabled</label>
+                <input placeholder="name" disabled />
+                <cds-control-message>disabled message</cds-control-message>
+            </cds-input>
+
+            <cds-input layout="vertical">
+                <label>error</label>
+                <input placeholder="name" />
+                <cds-control-message status="error">error message</cds-control-message>
+            </cds-input>
+
+            <cds-input layout="vertical">
+                <label>success</label>
+                <input placeholder="name" />
+                <cds-control-message status="success">success message</cds-control-message>
+            </cds-input>
+        </cds-form-group>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="requestPageOpen = false">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="requestPageOpen = false">Ok</button>
+    </div>
+</clr-modal>

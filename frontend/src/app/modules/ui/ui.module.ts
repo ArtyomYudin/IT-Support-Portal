@@ -9,11 +9,12 @@ import '@cds/core/icon/register.js';
 import { MainComponent } from './layout/main/main.component';
 import { LayoutComponent } from './layout/layout.component';
 import { HeaderComponent } from './layout/header/header.component';
+import { GlobalPipeModule } from '../../pipes/globalpipe.module';
 
 ClarityIcons.addIcons(dashboardIcon);
 @NgModule({
   declarations: [LayoutComponent, HeaderComponent, MainComponent],
-  imports: [CommonModule, RouterModule, ClarityModule],
+  imports: [CommonModule, RouterModule, ClarityModule, GlobalPipeModule],
   exports: [LayoutComponent],
 })
 export class UiModule {}

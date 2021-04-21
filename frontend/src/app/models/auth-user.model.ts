@@ -3,11 +3,11 @@ export class AuthUser {
 
   public email: string;
 
-  public firstName: string;
+  public userDisplayName: string;
 
-  public lastName: string;
+  public userPhoto?: string;
 
-  public accessRole: string;
+  public accessRole?: string;
 
-  public token?: string;
+  public token: string;
 }
