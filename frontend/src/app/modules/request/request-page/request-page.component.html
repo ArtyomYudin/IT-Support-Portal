@@ -1,34 +1,72 @@
-<clr-modal [(clrModalOpen)]="requestPageOpen">
+<clr-modal [(clrModalOpen)]="requestPageOpen" [clrModalSize]="'lg'">
     <h3 class="modal-title">Заявка на приобретение ОС, ТМЦ</h3>
     <div class="modal-body">
-        <cds-form-group layout="vertical">
-            <cds-input layout="vertical">
-                <label>label</label>
-                <input placeholder="name" />
-                <cds-control-message>message text</cds-control-message>
-            </cds-input>
+        <form [formGroup]="requestForm" clrForm [clrLayout]="'vertical'">
+            <clr-input-container>
+                <label>Инициатор приобретения (Подразделение):</label>
+                <input type="text" formControlName="purchaseInitiator" clrInput required />
+            </clr-input-container>
+            <clr-textarea-container>
+                <label>Объект приобретения (наименование, количество):</label>
+                <textarea formControlName="purchaseTarget" clrTextarea required></textarea>
+            </clr-textarea-container>
+            <clr-input-container>
+                <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
+                <input type="text" formControlName="responsiblePerson" clrInput required />
+            </clr-input-container>
+            <clr-checkbox-container [clrInline]="'horizontal'">
+                <label>Статья расходов:</label>
+                <clr-checkbox-wrapper>
+                    <input type="checkbox" clrCheckbox name="options" value="option1" />
+                    <label>ОХР, для нужд предприятия</label>
+                </clr-checkbox-wrapper>
+                <clr-checkbox-wrapper>
+                    <input type="checkbox" clrCheckbox name="options" value="option2" />
+                    <label>ОХР, для нужд подразделения</label>
+                </clr-checkbox-wrapper>
+                <clr-checkbox-wrapper>
+                    <input type="checkbox" clrCheckbox name="options" value="option2" />
+                    <label>для реализации проекта (указать проект)</label>
+                </clr-checkbox-wrapper>
+            </clr-checkbox-container>
+            <clr-textarea-container>
+                <label>Обоснование необходимости::</label>
+                <textarea clrTextarea required></textarea>
+            </clr-textarea-container>
+            <clr-input-container>
+                <label>Подразделение предприятия, ответственное за приобретение:</label>
+                <input type="text" clrInput required />
+            </clr-input-container>
+            <clr-input-container>
+                <label>Подготовлено (сотрудник подразделения-инициатора):</label>
+                <input type="text" clrInput [disabled]="true" />
+            </clr-input-container>
 
-            <cds-input layout="vertical">
-                <label>disabled</label>
-                <input placeholder="name" disabled />
-                <cds-control-message>disabled message</cds-control-message>
+            <style>
+                cds-input#cds-input-with-label label::before {
+                    --color: #acbac3;
+                }
+            </style>
+            <cds-input layout="horizontal" id="cds-input-with-label">
+                <label class="cds-custom-label">Руководитель подразделения-инициатора</label>
+                <input />
             </cds-input>
-
-            <cds-input layout="vertical">
-                <label>error</label>
-                <input placeholder="name" />
-                <cds-control-message status="error">error message</cds-control-message>
+            <cds-input layout="horizontal">
+                <label class="cds-custom-label">Руководитель подразделения, ответственного за приобретение</label>
+                <input />
             </cds-input>
-
-            <cds-input layout="vertical">
-                <label>success</label>
-                <input placeholder="name" />
-                <cds-control-message status="success">success message</cds-control-message>
+            <cds-input layout="horizontal">
+                <label class="cds-custom-label">Заместитель Генерального директора по направлению</label>
+                <input style="width: 120%" />
             </cds-input>
-        </cds-form-group>
+            <cds-input layout="horizontal">
+                <label>Начальник финансово-экономического отдела</label>
+                <input />
+            </cds-input>
+        </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="requestPageOpen = false">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="requestPageOpen = false">Ok</button>
+        <button type="button" class="btn btn-outline" (click)="requestPageOpen = false">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="requestPageOpen = false">Сохранить</button>
     </div>
 </clr-modal>

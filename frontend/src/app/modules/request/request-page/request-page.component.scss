@@ -1,0 +1,23 @@
+.clr-form-control {
+  align-items: unset;
+  margin-top: 1rem;
+}
+
+.clr-input,
+.clr-textarea {
+  width: 100%;
+}
+
+::ng-deep .modal-header--accessible {
+  padding: 0;
+}
+
+/*
+::slotted([slot='label']) {
+  color: #acbac3 !important;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 0.9rem;
+  font-family: Metropolis, 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+*/

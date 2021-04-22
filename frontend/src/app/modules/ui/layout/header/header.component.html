@@ -15,6 +15,7 @@
             <button class="nav-text" clrDropdownTrigger *ngIf="currentUser">
                 <img class="personPhoto" [src]="currentUser.userPhoto | thumbnailPhoto" />
                 {{ currentUser.userDisplayName }}
+                <cds-icon shape="caret" direction="down"></cds-icon>
             </button>
 
             <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
