@@ -1,7 +1,9 @@
+<!--
 <clr-modal [(clrModalOpen)]="requestPageOpen" [clrModalSize]="'lg'">
     <h3 class="modal-title">Заявка на приобретение ОС, ТМЦ</h3>
     <div class="modal-body">
-        <form [formGroup]="requestForm" clrForm [clrLayout]="'vertical'">
+
+        <form [formGroup]="requestForm" clrForm [clrLayout]="'vertical'" autocomplete="off">
             <clr-input-container>
                 <label>Инициатор приобретения (Подразделение):</label>
                 <input type="text" formControlName="purchaseInitiator" clrInput required />
@@ -39,15 +41,10 @@
             </clr-input-container>
             <clr-input-container>
                 <label>Подготовлено (сотрудник подразделения-инициатора):</label>
-                <input type="text" clrInput [disabled]="true" />
+                <input type="text" clrInput  />
             </clr-input-container>
 
-            <style>
-                cds-input#cds-input-with-label label::before {
-                    --color: #acbac3;
-                }
-            </style>
-            <cds-input layout="horizontal" id="cds-input-with-label">
+            <cds-input layout="horizontal">
                 <label class="cds-custom-label">Руководитель подразделения-инициатора</label>
                 <input />
             </cds-input>
@@ -64,9 +61,101 @@
                 <input />
             </cds-input>
         </form>
-    </div>
+
+
     <div class="modal-footer">
         <button type="button" class="btn btn-outline" (click)="requestPageOpen = false">Отмена</button>
         <button type="button" class="btn btn-primary" (click)="requestPageOpen = false">Сохранить</button>
     </div>
 </clr-modal>
+-->
+
+<clr-wizard #requestWizard (clrWizardOnFinish)="onSubmit()" (clrWizardOnCancel)="onCancel()">
+    <clr-wizard-title>Заявка на приобретение ОС, ТМЦ</clr-wizard-title>
+    <clr-wizard-button [type]="'cancel'">Отмена</clr-wizard-button>
+    <clr-wizard-button [type]="'previous'">Назад</clr-wizard-button>
+    <clr-wizard-button [type]="'next'">Далее</clr-wizard-button>
+    <clr-wizard-button [type]="'finish'">Сохранить</clr-wizard-button>
+
+    <!-- additional clr-wizard-button components as needed -->
+    <clr-wizard-page #page [clrWizardPageNextDisabled]="!requestInfo.valid">
+        <ng-template clrPageTitle>Описание</ng-template>
+        <ng-template clrPageNavTitle>Описание</ng-template>
+        <form [formGroup]="requestInfo" clrForm [clrLayout]="'vertical'" autocomplete="off">
+            <clr-input-container>
+                <label>Инициатор приобретения (Подразделение):</label>
+                <input type="text" formControlName="purchaseInitiator" clrInput required />
+            </clr-input-container>
+            <clr-textarea-container>
+                <label>Объект приобретения (наименование, количество):</label>
+                <textarea formControlName="purchaseTarget" clrTextarea required rows="4"></textarea>
+            </clr-textarea-container>
+            <clr-input-container>
+                <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
+                <input type="text" formControlName="responsiblePerson" clrInput required />
+            </clr-input-container>
+            <clr-checkbox-container [clrInline]="'horizontal'">
+                <label>Статья расходов:</label>
+                <clr-checkbox-wrapper>
+                    <input type="checkbox" clrCheckbox name="options" value="option1" />
+                    <label>ОХР, для нужд предприятия</label>
+                </clr-checkbox-wrapper>
+                <clr-checkbox-wrapper>
+                    <input type="checkbox" clrCheckbox name="options" value="option2" />
+                    <label>ОХР, для нужд подразделения</label>
+                </clr-checkbox-wrapper>
+                <clr-checkbox-wrapper>
+                    <input type="checkbox" clrCheckbox name="options" value="option2" />
+                    <label>для реализации проекта (указать проект)</label>
+                </clr-checkbox-wrapper>
+            </clr-checkbox-container>
+            <clr-input-container class="ttt">
+                <input type="text" clrInput required />
+            </clr-input-container>
+            <clr-textarea-container>
+                <label>Обоснование необходимости::</label>
+                <textarea clrTextarea required rows="4"></textarea>
+            </clr-textarea-container>
+            <clr-input-container>
+                <label>Подразделение предприятия, ответственное за приобретение:</label>
+                <input type="text" clrInput required />
+            </clr-input-container>
+        </form>
+    </clr-wizard-page>
+
+    <clr-wizard-page #second>
+        <ng-template clrPageTitle>Сотрудник подразделения-инициатора</ng-template>
+        <ng-template clrPageNavTitle>Составитель заявки</ng-template>
+        <form [formGroup]="requestCreater" clrForm [clrLayout]="'vertical'" autocomplete="off">
+            <clr-input-container>
+                <label>Должность:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-input-container>
+                <label>ФИО:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+        </form>
+    </clr-wizard-page>
+    <clr-wizard-page #second>
+        <ng-template clrPageTitle>Согласующие лица</ng-template>
+        <form [formGroup]="requestApprovers" clrForm [clrLayout]="'vertical'" autocomplete="off">
+            <clr-input-container>
+                <label>Руководитель подразделения-инициатора:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-input-container>
+                <label>Руководитель подразделения ответственного за приобретение:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-input-container>
+                <label>Заместитель Генерального директора по направлению:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-input-container>
+                <label>Начальник финансово-экономического отдела:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+        </form>
+    </clr-wizard-page>
+</clr-wizard>

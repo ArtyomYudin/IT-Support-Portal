@@ -8,9 +8,9 @@
   width: 100%;
 }
 
-::ng-deep .modal-header--accessible {
-  padding: 0;
-}
+//::ng-deep .modal-header--accessible {
+//  padding: 0;
+//}
 
 /*
 ::slotted([slot='label']) {
@@ -21,3 +21,13 @@
   font-family: Metropolis, 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
 }
 */
+
+/*
+::ng-deep .clr-wizard.wizard-xl .modal-dialog {
+  height: 75vh;
+}
+*/
+.ttt {
+  align-items: unset;
+  margin-top: 0rem;
+}
