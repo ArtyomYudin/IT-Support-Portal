@@ -22,12 +22,13 @@
 }
 */
 
-/*
-::ng-deep .clr-wizard.wizard-xl .modal-dialog {
-  height: 75vh;
+@media (max-height: 900px) {
+  ::ng-deep .clr-wizard.wizard-xl .modal-dialog {
+    height: 87vh;
+  }
 }
-*/
-.ttt {
+
+.expenseItemDescription {
   align-items: unset;
   margin-top: 0rem;
 }

@@ -14,11 +14,48 @@ export class RequestPageComponent implements OnInit {
 
   public requestInfo!: FormGroup;
 
-  public requestCreater!: FormGroup;
+  public requestAuthor!: FormGroup;
 
   public requestApprovers!: FormGroup;
 
+  public expenseItemDescriptionStatus: boolean;
+
+  public expenseItemDescriptionHelper: string;
+
   private ngUnsubscribe$: Subject<any> = new Subject();
+
+  private expenseItemProperties(expenseItem: string, expenseItemValue: boolean): void {
+    switch (expenseItem) {
+      case 'company': {
+        break;
+      }
+      case 'department': {
+        this.expenseItemDescriptionStatus = expenseItemValue;
+        this.expenseItemDescriptionHelper = 'Укажите наименование подразделения.';
+        break;
+      }
+      case 'project': {
+        this.expenseItemDescriptionStatus = expenseItemValue;
+        this.expenseItemDescriptionHelper = 'Укажите наименование проекта.';
+        /*
+        if (expenseItemValue) {
+          this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
+          this.requestInfo.controls.expenseItemCompany.disable();
+          this.requestInfo.controls.expenseItemDepartment.disable();
+        } else {
+          this.requestInfo.controls.expenseItemDescription.clearValidators();
+          this.requestInfo.controls.expenseItemCompany.enable();
+          this.requestInfo.controls.expenseItemDepartment.enable();
+        }
+        this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
+        */
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
 
   @ViewChild('requestWizard') wizard: ClrWizard;
 
@@ -29,12 +66,34 @@ export class RequestPageComponent implements OnInit {
       purchaseInitiator: ['', Validators.required],
       purchaseTarget: ['', Validators.required],
       responsiblePerson: ['', Validators.required],
+      expenseItemCompany: [''],
+      expenseItemDepartment: [''],
+      expenseItemProject: [''],
+      expenseItemDescription: [''],
+      purchaseReason: ['', Validators.required],
+      purchaseDepartment: ['', Validators.required],
     });
 
-    this.requestInfo
-      .get('purchaseInitiator')
-      .valueChanges.pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(value => console.log('Success!', value));
+    this.requestAuthor = this.formBuilder.group({
+      requestAuthorName: ['', Validators.required],
+      requestAuthorPosition: ['', Validators.required],
+    });
+    this.requestApprovers = this.formBuilder.group({
+      headOfInitDepartment: ['', Validators.required],
+      headOfPurchaseDepartment: ['', Validators.required],
+      deputyDirector: [''],
+      headOfFinDepartment: ['', Validators.required],
+    });
+
+    this.requestInfo.controls.expenseItemCompany.valueChanges
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe(value => this.expenseItemProperties('company', value));
+    this.requestInfo.controls.expenseItemDepartment.valueChanges
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe(value => this.expenseItemProperties('department', value));
+    this.requestInfo.controls.expenseItemProject.valueChanges
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe(value => this.expenseItemProperties('project', value));
   }
 
   public ngOnDestroy(): void {
@@ -55,10 +114,9 @@ export class RequestPageComponent implements OnInit {
   public onCancel(): void {
     this.requestInfo.reset();
     this.wizard.reset();
-    console.log('Cancel!');
   }
 
   public onSubmit(): void {
-    console.log('Success!');
+    this.wizard.reset();
   }
 }

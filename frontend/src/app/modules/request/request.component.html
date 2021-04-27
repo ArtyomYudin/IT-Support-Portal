@@ -5,14 +5,10 @@
     </clr-tab>
     <clr-tab>
         <button clrTabLink>Распоряжения на оплату</button>
-        <clr-tab-content>Распоряжения на оплату</clr-tab-content>
+        <clr-tab-content *clrIfActive>Распоряжения на оплату</clr-tab-content>
     </clr-tab>
     <clr-tab>
         <button clrTabLink>Закупки</button>
-        <clr-tab-content *clrIfActive="false">Закупки</clr-tab-content>
+        <clr-tab-content *clrIfActive>Закупки</clr-tab-content>
     </clr-tab>
 </clr-tabs>
-
-<button (click)="requestPage.open()">О программе</button>
-
-<fe-request-page #requestPage></fe-request-page>
