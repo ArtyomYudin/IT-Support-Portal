@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { Subject } from 'rxjs/internal/Subject';
@@ -9,7 +9,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './request-page.component.html',
   styleUrls: ['./request-page.component.scss'],
 })
-export class RequestPageComponent implements OnInit {
+export class RequestPageComponent implements OnInit, OnDestroy {
   // public requestPageOpen: boolean;
 
   public requestInfo!: FormGroup;
@@ -24,20 +24,39 @@ export class RequestPageComponent implements OnInit {
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
-  private expenseItemProperties(expenseItem: string, expenseItemValue: boolean): void {
+  private expenseItemProperties(expenseItem: string, expenseItemValue: any): void {
     switch (expenseItem) {
       case 'company': {
+        console.log(expenseItemValue.target.checked);
+        if (expenseItemValue) {
+          this.requestInfo.controls.expenseItemDepartment.disable();
+          this.requestInfo.controls.expenseItemProject.disable();
+        } else {
+          this.requestInfo.controls.expenseItemDepartment.enable();
+          this.requestInfo.controls.expenseItemProject.enable();
+        }
         break;
       }
       case 'department': {
+        console.log('DEP!');
         this.expenseItemDescriptionStatus = expenseItemValue;
         this.expenseItemDescriptionHelper = 'Укажите наименование подразделения.';
+        if (expenseItemValue) {
+          this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
+          this.requestInfo.controls.expenseItemCompany.disable();
+          this.requestInfo.controls.expenseItemProject.disable();
+        } else {
+          this.requestInfo.controls.expenseItemDescription.clearValidators();
+          this.requestInfo.controls.expenseItemCompany.enable();
+          this.requestInfo.controls.expenseItemProject.enable();
+        }
+        this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
         break;
       }
       case 'project': {
         this.expenseItemDescriptionStatus = expenseItemValue;
         this.expenseItemDescriptionHelper = 'Укажите наименование проекта.';
-        /*
+
         if (expenseItemValue) {
           this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
           this.requestInfo.controls.expenseItemCompany.disable();
@@ -48,9 +67,9 @@ export class RequestPageComponent implements OnInit {
           this.requestInfo.controls.expenseItemDepartment.enable();
         }
         this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
-        */
         break;
       }
+
       default: {
         break;
       }
@@ -85,15 +104,17 @@ export class RequestPageComponent implements OnInit {
       headOfFinDepartment: ['', Validators.required],
     });
 
-    this.requestInfo.controls.expenseItemCompany.valueChanges
+    /*
+    this.requestInfo.controls.expenseItemCompany.statusChanges
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe(value => this.expenseItemProperties('company', value));
-    this.requestInfo.controls.expenseItemDepartment.valueChanges
+    this.requestInfo.controls.expenseItemDepartment.value
       .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(value => this.expenseItemProperties('department', value));
-    this.requestInfo.controls.expenseItemProject.valueChanges
+      .subscribe((value: boolean) => this.expenseItemProperties('department', value));
+    this.requestInfo.controls.expenseItemProject.value
       .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(value => this.expenseItemProperties('project', value));
+      .subscribe((value: boolean) => this.expenseItemProperties('project', value));
+*/
   }
 
   public ngOnDestroy(): void {
@@ -118,5 +139,57 @@ export class RequestPageComponent implements OnInit {
 
   public onSubmit(): void {
     this.wizard.reset();
+  }
+
+  public onCheckboxChange(event: any, expenseItem: string): void {
+    console.log(event.target.checked);
+    switch (expenseItem) {
+      case 'company': {
+        if (event.target.checked) {
+          this.requestInfo.controls.expenseItemDepartment.disable();
+          this.requestInfo.controls.expenseItemProject.disable();
+        } else {
+          this.requestInfo.controls.expenseItemDepartment.enable();
+          this.requestInfo.controls.expenseItemProject.enable();
+        }
+        break;
+      }
+      case 'department': {
+        console.log('DEP!');
+        this.expenseItemDescriptionStatus = event.target.checked;
+        this.expenseItemDescriptionHelper = 'Укажите наименование подразделения.';
+        if (event.target.checked) {
+          this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
+          this.requestInfo.controls.expenseItemCompany.disable();
+          this.requestInfo.controls.expenseItemProject.disable();
+        } else {
+          this.requestInfo.controls.expenseItemDescription.clearValidators();
+          this.requestInfo.controls.expenseItemCompany.enable();
+          this.requestInfo.controls.expenseItemProject.enable();
+        }
+        this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
+        break;
+      }
+      case 'project': {
+        this.expenseItemDescriptionStatus = event.target.checked;
+        this.expenseItemDescriptionHelper = 'Укажите наименование проекта.';
+
+        if (event.target.checked) {
+          this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
+          this.requestInfo.controls.expenseItemCompany.disable();
+          this.requestInfo.controls.expenseItemDepartment.disable();
+        } else {
+          this.requestInfo.controls.expenseItemDescription.clearValidators();
+          this.requestInfo.controls.expenseItemCompany.enable();
+          this.requestInfo.controls.expenseItemDepartment.enable();
+        }
+        this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
+        break;
+      }
+
+      default: {
+        break;
+      }
+    }
   }
 }

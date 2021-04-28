@@ -94,22 +94,37 @@
                 <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
                 <input type="text" formControlName="responsiblePerson" clrInput />
             </clr-input-container>
-            <clr-checkbox-container [clrInline]="'horizontal'">
-                <label>Статья расходов:</label>
+            <label class="clr-form-control clr-control-label">Статья расходов:</label>
+            <div class="clr-control-container clr-control-inline">
                 <clr-checkbox-wrapper>
-                    <input type="checkbox" formControlName="expenseItemCompany" clrCheckbox />
+                    <input
+                        type="checkbox"
+                        formControlName="expenseItemCompany"
+                        clrCheckbox
+                        (change)="onCheckboxChange($event, 'company')"
+                    />
                     <label>ОХР, для нужд предприятия</label>
                 </clr-checkbox-wrapper>
                 <clr-checkbox-wrapper>
-                    <input type="checkbox" formControlName="expenseItemDepartment" clrCheckbox />
+                    <input
+                        type="checkbox"
+                        formControlName="expenseItemDepartment"
+                        clrCheckbox
+                        (change)="onCheckboxChange($event, 'department')"
+                    />
                     <label>ОХР, для нужд подразделения</label>
                 </clr-checkbox-wrapper>
                 <clr-checkbox-wrapper>
-                    <input type="checkbox" formControlName="expenseItemProject" clrCheckbox />
+                    <input
+                        type="checkbox"
+                        formControlName="expenseItemProject"
+                        clrCheckbox
+                        (change)="onCheckboxChange($event, 'project')"
+                    />
                     <label>для реализации проекта</label>
                 </clr-checkbox-wrapper>
-            </clr-checkbox-container>
-            <clr-input-container class="expenseItemDescription" *ngIf="this.expenseItemDescriptionStatus">
+            </div>
+            <clr-input-container class="expense-item-description" *ngIf="this.expenseItemDescriptionStatus">
                 <input type="text" formControlName="expenseItemDescription" clrInput />
                 <clr-control-helper>{{ this.expenseItemDescriptionHelper }}</clr-control-helper>
             </clr-input-container>

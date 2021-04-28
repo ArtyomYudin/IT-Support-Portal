@@ -22,13 +22,25 @@
 }
 */
 
-@media (max-height: 900px) {
+@media (max-height: 1028px) {
+  ::ng-deep .clr-wizard.wizard-xl .modal-dialog {
+    height: 85vh;
+  }
+}
+
+@media (max-height: 907px) {
   ::ng-deep .clr-wizard.wizard-xl .modal-dialog {
     height: 87vh;
   }
 }
 
-.expenseItemDescription {
+.expense-item-description {
   align-items: unset;
   margin-top: 0rem;
+}
+
+.expense-item-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
