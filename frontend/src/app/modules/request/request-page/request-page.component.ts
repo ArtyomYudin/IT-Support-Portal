@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { Subject } from 'rxjs/internal/Subject';
@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
   selector: 'fe-request-page',
   templateUrl: './request-page.component.html',
   styleUrls: ['./request-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestPageComponent implements OnInit, OnDestroy {
   // public requestPageOpen: boolean;

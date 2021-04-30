@@ -1,9 +1,10 @@
+import { Server } from 'node:https';
 import WebSocket from 'ws';
 
-export function websocketServer(httpsServer: any): WebSocket.Server {
+export function websocketServer(httpsServer: Server): WebSocket.Server {
   const wss = new WebSocket.Server({
     server: httpsServer,
-    //port: 3030,
+    // port: 3030,
     perMessageDeflate: {
       zlibDeflateOptions: {
         // See zlib defaults.
