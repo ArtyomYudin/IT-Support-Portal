@@ -55,9 +55,9 @@ export class AuthenticationService {
 
   public isAuthenticated(): boolean {
     if (localStorage.getItem('IT-Support-Portal')) {
-      //  const token = JSON.parse(localStorage.getItem('ngMonitoring')).token;
+      const { token } = JSON.parse(localStorage.getItem('IT-Support-Portal'));
       // console.log(this.jwtHelper);
-      return !this.jwtHelper.isTokenExpired();
+      return !this.jwtHelper.isTokenExpired(token);
     }
     return false;
   }

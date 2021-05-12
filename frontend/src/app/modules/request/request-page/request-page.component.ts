@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { Subject } from 'rxjs/internal/Subject';
-import { takeUntil } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { WebsocketService } from '../../../services/websocket.service';
 
 @Component({
   selector: 'fe-request-page',
   templateUrl: './request-page.component.html',
   styleUrls: ['./request-page.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestPageComponent implements OnInit, OnDestroy {
   // public requestPageOpen: boolean;
@@ -79,7 +80,7 @@ export class RequestPageComponent implements OnInit, OnDestroy {
 
   @ViewChild('requestWizard') wizard: ClrWizard;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private jwtHelper: JwtHelperService) {}
 
   ngOnInit(): void {
     this.requestInfo = this.formBuilder.group({
@@ -104,18 +105,6 @@ export class RequestPageComponent implements OnInit, OnDestroy {
       deputyDirector: [''],
       headOfFinDepartment: ['', Validators.required],
     });
-
-    /*
-    this.requestInfo.controls.expenseItemCompany.statusChanges
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(value => this.expenseItemProperties('company', value));
-    this.requestInfo.controls.expenseItemDepartment.value
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe((value: boolean) => this.expenseItemProperties('department', value));
-    this.requestInfo.controls.expenseItemProject.value
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe((value: boolean) => this.expenseItemProperties('project', value));
-*/
   }
 
   public ngOnDestroy(): void {
@@ -129,7 +118,8 @@ export class RequestPageComponent implements OnInit, OnDestroy {
   }
 
   public open(): void {
-    // this.requestPageOpen = true;
+    const { token } = JSON.parse(localStorage.getItem('IT-Support-Portal'));
+    this.wsService.send('requestInit', this.jwtHelper.decodeToken(token).email);
     this.wizard.open();
   }
 

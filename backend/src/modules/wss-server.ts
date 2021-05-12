@@ -1,4 +1,4 @@
-import { Server } from 'node:https';
+import { Server } from 'https';
 import WebSocket from 'ws';
 
 export function websocketServer(httpsServer: Server): WebSocket.Server {

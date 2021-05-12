@@ -52,7 +52,7 @@ export function initHTTPSServer(): https.Server {
           console.log('RES error:', err);
         });
         if (req.url === '/api/auth' && req.method === 'POST') {
-          console.log('Resive post', body);
+          // console.log('Resive post', body);
           checkUserCredentials(body, res);
         }
       });
