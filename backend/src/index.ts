@@ -19,10 +19,8 @@ import { wsParseMessage } from './modules/wss-api';
     });
 
     ws.on('message', msg => {
-      wsParseMessage(msg);
+      wsParseMessage(dbPool, ws, msg);
     });
   });
-
-  const db = dbPool;
   console.log(httpServer.address());
 })();

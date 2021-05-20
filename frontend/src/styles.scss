@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 //@import '~@clr/ui/clr-ui-dark.min.css';
 // @import '~@cds/core/styles/theme.dark.min.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 body {
   background-color: #1b2a32;
@@ -31,4 +32,10 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.cdk-overlay-container,
+.cdk-global-overlay-wrapper,
+.cdk-overlay-connected-position-bounding-box {
+  z-index: 9000;
 }

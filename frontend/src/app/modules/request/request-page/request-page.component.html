@@ -92,7 +92,12 @@
             </clr-textarea-container>
             <clr-input-container>
                 <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
-                <input type="text" formControlName="responsiblePerson" clrInput />
+                <input type="text" formControlName="responsiblePerson" clrInput [matAutocomplete]="auto" />
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-autocomplete>
             </clr-input-container>
             <label class="clr-form-control clr-control-label">Статья расходов:</label>
             <div class="clr-control-container clr-control-inline">

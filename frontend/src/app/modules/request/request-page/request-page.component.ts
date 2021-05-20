@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
-import { Subject } from 'rxjs/internal/Subject';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Observable } from 'rxjs/internal/Observable';
+import { filter, map, startWith } from 'rxjs/operators';
 import { WebsocketService } from '../../../services/websocket.service';
+import { Event } from '../../../services/websocket.service.event';
 
 @Component({
   selector: 'fe-request-page',
@@ -11,7 +13,7 @@ import { WebsocketService } from '../../../services/websocket.service';
   styleUrls: ['./request-page.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RequestPageComponent implements OnInit, OnDestroy {
+export class RequestPageComponent implements OnInit {
   // public requestPageOpen: boolean;
 
   public requestInfo!: FormGroup;
@@ -24,7 +26,11 @@ export class RequestPageComponent implements OnInit, OnDestroy {
 
   public expenseItemDescriptionHelper: string;
 
-  private ngUnsubscribe$: Subject<any> = new Subject();
+  public options: string[] = ['One', 'Two', 'Three', 'test', 'test2', 'test3'];
+
+  public filteredOptions: Observable<string[]>;
+
+  public allEmployee$: Observable<any[]>;
 
   private expenseItemProperties(expenseItem: string, expenseItemValue: any): void {
     switch (expenseItem) {
@@ -83,6 +89,8 @@ export class RequestPageComponent implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private jwtHelper: JwtHelperService) {}
 
   ngOnInit(): void {
+    this.allEmployee$ = this.wsService.on<any>(Event.EV_ALL_EMPLOYEE);
+
     this.requestInfo = this.formBuilder.group({
       purchaseInitiator: ['', Validators.required],
       purchaseTarget: ['', Validators.required],
@@ -105,11 +113,12 @@ export class RequestPageComponent implements OnInit, OnDestroy {
       deputyDirector: [''],
       headOfFinDepartment: ['', Validators.required],
     });
-  }
 
-  public ngOnDestroy(): void {
-    this.ngUnsubscribe$.next(null);
-    this.ngUnsubscribe$.complete();
+    this.filteredOptions = this.requestInfo.controls.responsiblePerson.valueChanges.pipe(
+      startWith(''),
+      // map(value => (value.length >= 3 ? this.filter(value) : [])),
+      map(value => this.filter(value)),
+    );
   }
 
   // convenience getter for easy access to form fields
@@ -182,5 +191,13 @@ export class RequestPageComponent implements OnInit, OnDestroy {
         break;
       }
     }
+  }
+
+  private filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    // console.log(this.allEmployee$.pipe(map(options => options.filter(option => option.toLowerCase().indexOf(filterValue) === 0))));
+    // console.log(this.allEmployee$);
+    // this.options = this.allEmployee$
+    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
 }

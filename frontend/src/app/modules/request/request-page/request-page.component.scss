@@ -44,3 +44,23 @@
   flex-wrap: wrap;
   align-content: flex-start;
 }
+
+::ng-deep .mat-autocomplete-panel {
+  background-color: #22343c;
+}
+
+::ng-deep .mat-option {
+  font-family: 'Metropolis', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+  color: #adbbc4;
+  height: 32px !important;
+}
+
+::ng-deep .mat-option.mat-active {
+  color: #fcfcfc;
+}
+
+::ng-deep .cdk-overlay-pane {
+  /* Do you changes here */
+  min-width: 250px;
+}
