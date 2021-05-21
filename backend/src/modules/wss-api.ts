@@ -2,16 +2,17 @@ import { Pool } from 'mariadb';
 import * as dbSelect from '../db/db_select';
 
 export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
-  function getAllEmployee(): void {
+  function getFilteredEmployee(value: string): void {
     dbPool
       .getConnection()
       .then(conn => {
-        conn.query(dbSelect.getAllEmployee).then(rows => {
-          // console.log(rows[0].name);
+        conn.query(dbSelect.getFilteredEmployee(value)).then(rows => {
+          console.log(value);
+          console.log(rows);
           ws.send(
             JSON.stringify({
-              event: 'event_all_employee',
-              data: rows[0].name,
+              event: 'event_filtered_employee',
+              data: rows,
             }),
           );
         });
@@ -24,9 +25,9 @@ export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
 
   const parseMsg = JSON.parse(msg);
   switch (parseMsg.event) {
-    case 'requestInit':
+    case 'getFilteredRespPerson':
       // console.log(`Connection test ${parseMsg.data}`);
-      getAllEmployee();
+      getFilteredEmployee(parseMsg.data);
       break;
 
     default:

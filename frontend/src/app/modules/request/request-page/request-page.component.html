@@ -94,10 +94,14 @@
                 <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
                 <input type="text" formControlName="responsiblePerson" clrInput [matAutocomplete]="auto" />
                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                        {{ option }}
-                    </mat-option>
+                    <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                    <ng-container *ngIf="!isLoading">
+                        <mat-option *ngFor="let respPerson of filteredRespPerson" [value]="respPerson">
+                            {{ respPerson }}
+                        </mat-option>
+                    </ng-container>
                 </mat-autocomplete>
+                {{ filteredRespPerson }}
             </clr-input-container>
             <label class="clr-form-control clr-control-label">Статья расходов:</label>
             <div class="clr-control-container clr-control-inline">

@@ -2,5 +2,5 @@ export enum Event {
   CONNECT = 'connect',
   DISCONNECT = 'disconnect',
 
-  EV_ALL_EMPLOYEE = 'event_all_employee',
+  EV_FILTERED_EMPLOYEE = 'event_filtered_employee',
 }
