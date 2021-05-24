@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/internal/Observable';
-import { debounceTime, distinctUntilChanged, filter, finalize, map, share, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 import { WebsocketService } from '../../../services/websocket.service';
 import { Event } from '../../../services/websocket.service.event';
@@ -14,7 +14,7 @@ import { Event } from '../../../services/websocket.service.event';
   styleUrls: ['./request-page.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RequestPageComponent implements OnInit {
+export class RequestPageComponent implements OnInit, OnDestroy {
   // public requestPageOpen: boolean;
 
   public requestInfo!: FormGroup;
@@ -27,17 +27,11 @@ export class RequestPageComponent implements OnInit {
 
   public expenseItemDescriptionHelper: string;
 
-  public options: string[] = ['One', 'Two', 'Three', 'test', 'test2', 'test3'];
-
-  public filteredOptions: Observable<string[]>;
-
   public allEmployee$: Observable<any[]>;
 
-  public filteredRespPerson: any[];
+  public filteredRespPerson: any[] = [];
 
   public isLoading = false;
-
-  public errorMsg: string;
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
@@ -98,8 +92,6 @@ export class RequestPageComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private jwtHelper: JwtHelperService) {}
 
   ngOnInit(): void {
-    this.allEmployee$ = this.wsService.on<any>(Event.EV_FILTERED_EMPLOYEE);
-
     this.requestInfo = this.formBuilder.group({
       purchaseInitiator: ['', Validators.required],
       purchaseTarget: ['', Validators.required],
@@ -123,55 +115,36 @@ export class RequestPageComponent implements OnInit {
       headOfFinDepartment: ['', Validators.required],
     });
 
-    // this.filteredOptions = this.requestInfo.controls.responsiblePerson.valueChanges.pipe(
-    //  startWith(''),
-    //  // map(value => (value.length >= 3 ? this.filter(value) : [])),
-    //  map(value => this.filter(value)),
-    // );
+    // this.allEmployee$ = this.wsService.on<any>(Event.EV_FILTERED_EMPLOYEE);
 
     this.requestInfo.controls.responsiblePerson.valueChanges
       .pipe(
+        distinctUntilChanged(),
         debounceTime(500),
         tap(() => {
-          this.errorMsg = '';
           this.filteredRespPerson = [];
-          this.isLoading = true;
+          // this.isLoading = true;
         }),
-        switchMap(async value =>
-          value.length >= 3
-            ? {
-                // console.log(value);
-                this: this.wsService.send('getFilteredRespPerson', value),
-                return: this.wsService.on<any>(Event.EV_FILTERED_EMPLOYEE).pipe(
-                  share(),
-                  distinctUntilChanged(),
-                  takeUntil(this.ngUnsubscribe$),
-                  finalize(() => {
-                    console.log('null null');
-                    this.isLoading = false;
-                  }),
-                ),
-              }
-            : [],
-        ),
+        filter(value => value.length >= 3),
+        switchMap(value => {
+          this.wsService.send('getFilteredRespPerson', value);
+          return this.wsService.on<any>(Event.EV_FILTERED_EMPLOYEE);
+        }),
+        takeUntil(this.ngUnsubscribe$),
       )
       .subscribe(data => {
-        if (data === undefined) {
-          // this.errorMsg = data.Error;
+        // console.log(data.length);
+        if (data.length === 0) {
           this.filteredRespPerson = [];
-          this.isLoading = false;
-          console.log('null null');
+          // this.isLoading = true;
         } else {
-          this.errorMsg = '';
-          // this.filteredRespPerson = data[];
-          this.isLoading = false;
+          this.filteredRespPerson = data;
+          // this.isLoading = false;
         }
-
-        console.log(data);
       });
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
   }
@@ -249,13 +222,9 @@ export class RequestPageComponent implements OnInit {
     }
   }
 
-  /*
-  private filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    // console.log(this.allEmployee$.pipe(map(options => options.filter(option => option.toLowerCase().indexOf(filterValue) === 0))));
-    // console.log(this.allEmployee$);
-    // this.options = this.allEmployee$
-    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+  public displayFn(respPerson: any) {
+    if (respPerson) {
+      return respPerson.name;
+    }
   }
-  */
 }

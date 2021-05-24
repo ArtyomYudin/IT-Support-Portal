@@ -93,15 +93,14 @@
             <clr-input-container>
                 <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
                 <input type="text" formControlName="responsiblePerson" clrInput [matAutocomplete]="auto" />
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
                     <ng-container *ngIf="!isLoading">
                         <mat-option *ngFor="let respPerson of filteredRespPerson" [value]="respPerson">
-                            {{ respPerson }}
+                            {{ respPerson.name }}
                         </mat-option>
                     </ng-container>
                 </mat-autocomplete>
-                {{ filteredRespPerson }}
             </clr-input-container>
             <label class="clr-form-control clr-control-label">Статья расходов:</label>
             <div class="clr-control-container clr-control-inline">
@@ -110,7 +109,7 @@
                         type="checkbox"
                         formControlName="expenseItemCompany"
                         clrCheckbox
-                        (change)="onCheckboxChange($event, 'company')"
+                        (change)="onCheckboxChange($event.target, 'company')"
                     />
                     <label>ОХР, для нужд предприятия</label>
                 </clr-checkbox-wrapper>

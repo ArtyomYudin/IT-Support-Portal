@@ -3,16 +3,19 @@ import * as dbSelect from '../db/db_select';
 
 export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
   function getFilteredEmployee(value: string): void {
+    const filteredEmployeeArray: any[] = [];
     dbPool
       .getConnection()
       .then(conn => {
         conn.query(dbSelect.getFilteredEmployee(value)).then(rows => {
-          console.log(value);
-          console.log(rows);
+          rows.forEach((row: any, i: number) => {
+            filteredEmployeeArray[i] = { id: row.id, name: row.name };
+          });
+          console.log(filteredEmployeeArray);
           ws.send(
             JSON.stringify({
               event: 'event_filtered_employee',
-              data: rows,
+              data: filteredEmployeeArray,
             }),
           );
         });
