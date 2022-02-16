@@ -19,7 +19,14 @@
     "module": "es2020",
     "lib": ["es2018", "dom"],
     "paths": {
-      "core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata"]
+      //"core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata"],
+      "@app/*": ["src/app/*"],
+      "@core/*": ["src/app/core/*"],
+      "@assets/*": ["src/app/assets/*"],
+      "@model/*": ["src/app/shared/models/*"],
+      "@feature/*": ["src/app/features/*"],
+      "@pipe/*": ["src/app/shared/pipes/*"],
+      "@service/*": ["src/app/shared/services/*"]
     }
   },
   "angularCompilerOptions": {
@@ -32,5 +39,6 @@
     "preserveWhitespaces": true
   },
   "exclude": ["node_modules", "tmp"],
-  "files": ["./node_modules/@types/node/index.d.ts"]
+  "files": ["./node_modules/@types/node/index.d.ts"],
+  "include": ["src/**/.d.ts", "src/**/*.ts"]
 }

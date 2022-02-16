@@ -14,3 +14,21 @@
   text-align: center;
   background-color: white;
 }
+
+.dropdown-toggle,
+.dropdown-item:focus {
+  outline: none;
+  // box-shadow: none;
+}
+
+.dropdown .dropdown-toggle cds-icon {
+  height: 18px;
+  width: 18px;
+  position: unset;
+}
+
+.nav .nav-link.active,
+.nav .nav-link:hover {
+  box-shadow: none;
+  color: #4aaed9;
+}
