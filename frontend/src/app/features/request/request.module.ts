@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
-import { CdsModule } from '@cds/angular';
+// import { CdsModule } from '@cds/angular';
 // import { loadCoreIconSet } from '@cds/core/icon/collections/core';
 // import { loadEssentialIconSet } from '@cds/core/icon/collections/essential';
 import { RouterModule } from '@angular/router';
@@ -18,6 +18,6 @@ import { RequestListComponent } from './request-list/request-list.component';
 const routing = RouterModule.forChild([{ path: '', component: RequestComponent }]);
 @NgModule({
   declarations: [RequestPageComponent, RequestComponent, RequestListComponent],
-  imports: [CommonModule, ClarityModule, CdsModule, ReactiveFormsModule, MatAutocompleteModule, routing],
+  imports: [CommonModule, ClarityModule, ReactiveFormsModule, MatAutocompleteModule, routing],
 })
 export class RequestModule {}

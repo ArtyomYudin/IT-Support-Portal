@@ -6,9 +6,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { UiModule } from './modules/ui/ui.module';
+import { AppRoutingModule } from '@core/app-routing.module';
+import { UiModule } from '@core/ui/ui.module';
+import { AppComponent } from '@app/app.component';
 
 registerLocaleData(localeRu, 'ru');
 

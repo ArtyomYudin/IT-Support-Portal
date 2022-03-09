@@ -1,15 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject, interval } from 'rxjs';
 
-import { AuthenticationService } from '../../../../services/auth.service';
-import { AuthUser } from '../../../../models/auth-user.model';
+import { AuthenticationService } from '@service/auth.service';
+import { AuthUser } from '@model/auth-user.model';
 
 @Component({
   selector: 'fe-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   public currentUser: AuthUser;

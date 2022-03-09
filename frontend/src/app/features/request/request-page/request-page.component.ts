@@ -1,18 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/internal/Observable';
 import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
-import { WebsocketService } from '../../../services/websocket.service';
-import { Event } from '../../../services/websocket.service.event';
+import { WebsocketService } from '@service/websocket.service';
+import { Event } from '@service/websocket.service.event';
 
 @Component({
   selector: 'fe-request-page',
   templateUrl: './request-page.component.html',
   styleUrls: ['./request-page.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestPageComponent implements OnInit, OnDestroy {
   // public requestPageOpen: boolean;

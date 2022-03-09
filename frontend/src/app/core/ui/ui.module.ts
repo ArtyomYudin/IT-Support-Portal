@@ -8,10 +8,10 @@ import { ClarityModule } from '@clr/angular';
 // import { ClarityIcons, dashboardIcon } from '@cds/core/icon';
 // import '@cds/core/icon/register.js';
 
-import { MainComponent } from './layout/main/main.component';
-import { LayoutComponent } from './layout/layout.component';
-import { HeaderComponent } from './layout/header/header.component';
-import { GlobalPipeModule } from '../../pipes/globalpipe.module';
+import { MainComponent } from '@core/ui/layout/main/main.component';
+import { LayoutComponent } from '@core/ui/layout/layout.component';
+import { HeaderComponent } from '@core/ui/layout/header/header.component';
+import { GlobalPipeModule } from '@pipe/globalpipe.module';
 
 // loadCoreIconSet();
 // loadTechnologyIconSet();
