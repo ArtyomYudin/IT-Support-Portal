@@ -11,34 +11,6 @@
   },
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
-    "@angular/animations": "~12.1.1",
-    "@angular/common": "~12.1.1",
-    "@angular/compiler": "~12.1.1",
-    "@angular/core": "~12.1.1",
-    "@angular/forms": "~12.1.1",
-    "@angular/material": "~12.1.1",
-    "@angular/platform-browser": "~12.1.1",
-    "@angular/platform-browser-dynamic": "~12.1.1",
-    "@angular/router": "~12.1.1",
-    "@auth0/angular-jwt": "^5.0.2",
-    "@cds/angular": "^5.2.1",
-    "@cds/core": "^5.4.1",
-    "@clr/angular": "^5.4.1",
-    "@clr/icons": "^5.4.1",
-    "@clr/ui": "^5.4.1",
-    "@webcomponents/webcomponentsjs": "^2.5.0",
-    "rxjs": "^7.0.1",
-    "tslib": "^2.0.0",
-    "zone.js": "~0.11.3"
-  },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "^12.1.1",
-    "@angular/cli": "~12.1.1",
-    "@angular/compiler-cli": "~12.1.1",
-    "ts-node": "^9.1.1",
-    "typescript": "~4.2.4"
-=======
     "@angular/animations": "~13.2.2",
     "@angular/common": "~13.2.2",
     "@angular/compiler": "~13.2.2",
@@ -64,7 +36,6 @@
     "@angular/compiler-cli": "~13.2.2",
     "ts-node": "^10.5.0",
     "typescript": "~4.5.5"
->>>>>>> e8263b5d835ab448351d96452df7b88c5bcec7b2
   },
   "browser": {
     "crypto": false,
