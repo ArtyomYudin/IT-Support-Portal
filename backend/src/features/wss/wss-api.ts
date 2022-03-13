@@ -1,5 +1,5 @@
 import { Pool } from 'mariadb';
-import * as dbSelect from '../db/db_select';
+import * as dbSelect from '../../shared/db/db_select';
 
 export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
   function getFilteredEmployee(value: string): void {

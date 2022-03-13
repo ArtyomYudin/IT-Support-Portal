@@ -12,6 +12,7 @@ const routes: Routes = [
     data: { key: 'cached_request' },
   },
   { path: 'login', loadChildren: () => import('../features/login-page/login-page.module').then(m => m.LoginPageModule) },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

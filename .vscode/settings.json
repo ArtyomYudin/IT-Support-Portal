@@ -41,11 +41,11 @@
       "previewLimit": 50,
       "server": "ripley.vi.ci",
       "port": 3306,
-      "askForPassword": true,
       "driver": "MariaDB",
       "name": "Ripley MariaDB",
       "database": "itsupport",
-      "username": "itsupport"
+      "username": "itsupport",
+      "password": "i8bKPpxHLEWz"
     }
   ]
 }

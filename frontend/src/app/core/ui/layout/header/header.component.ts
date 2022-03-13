@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject, interval } from 'rxjs';
@@ -10,7 +10,6 @@ import { AuthUser } from '@model/auth-user.model';
   selector: 'fe-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   public currentUser: AuthUser;
@@ -46,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public isAdmin(): boolean {
     // console.log(JSON.parse(this.currentUser.accessRole));
-    return JSON.parse(this.currentUser.accessRole).admin === 1;
-    // return true;
+    // return JSON.parse(this.currentUser.accessRole).admin === 1;
+    return true;
   }
 }
