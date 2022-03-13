@@ -2,7 +2,7 @@
 
 # compiled output
 frontend/dist
-backend/lib
+backend/dist
 /tmp
 /out-tsc
 # Only exists if Bazel was run
@@ -52,3 +52,5 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+/backend/bot_storage
