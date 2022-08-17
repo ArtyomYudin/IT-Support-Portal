@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { constants } from 'crypto';
 import { config } from 'dotenv';
-import { checkUserCredentials } from '../services/ldap-auth';
+import { checkUserCredentials } from './ldap-auth';
 
 config();
 

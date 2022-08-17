@@ -30,9 +30,31 @@
 <nav class="subnav" [clr-nav-level]="1" *ngIf="currentUser">
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'request']">Приобретение ОС, ТМЦ</a>
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'skud']">Статистика СКУД</a>
             <!-- <a class="nav-link active" href="#"></a> -->
         </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'monitoring']" *ngIf="isAdmin()">Мониторинг оборудования</a>
+            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'vpn']" *ngIf="isAdmin()">Статистика VPN</a>
+            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'dhcp']" *ngIf="isAdmin()">Статистика DHCP</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'avaya']" *ngIf="isAdmin()">Статистика Avaya</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'config']" *ngIf="isAdmin()">Настройки системы</a>
+        </li>
+        <!--
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'request']">Приобретение ОС, ТМЦ</a>
+        </li>
+        -->
     </ul>
 </nav>
 
