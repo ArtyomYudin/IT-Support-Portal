@@ -23,6 +23,7 @@
     "@auth0/angular-jwt": "^5.0.2",
     "@cds/core": "^5.6.4",
     "@clr/angular": "^13.0.2",
+    "@clr/icons": "^13.0.2",
     "@clr/ui": "^13.0.2",
     "@lit/reactive-element": "^1.2.1",
     "@webcomponents/webcomponentsjs": "^2.6.0",
