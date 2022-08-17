@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/internal/Observable';
@@ -17,11 +17,11 @@ import { Event } from '@service/websocket.service.event';
 export class RequestPageComponent implements OnInit, OnDestroy {
   // public requestPageOpen: boolean;
 
-  public requestInfo!: FormGroup;
+  public requestInfo!: UntypedFormGroup;
 
-  public requestAuthor!: FormGroup;
+  public requestAuthor!: UntypedFormGroup;
 
-  public requestApprovers!: FormGroup;
+  public requestApprovers!: UntypedFormGroup;
 
   public expenseItemDescriptionStatus: boolean;
 
@@ -89,7 +89,7 @@ export class RequestPageComponent implements OnInit, OnDestroy {
 
   @ViewChild('requestWizard') wizard: ClrWizard;
 
-  constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private jwtHelper: JwtHelperService) {}
+  constructor(private formBuilder: UntypedFormBuilder, private wsService: WebsocketService, private jwtHelper: JwtHelperService) {}
 
   ngOnInit(): void {
     this.requestInfo = this.formBuilder.group({
