@@ -52,11 +52,8 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": ["src/app/assets/favicon.ico", "src/app/assets"],
-            "styles": ["node_modules/@clr/ui/clr-ui-dark.min.css", "src/app/styles/styles.scss"],
-            "scripts": [
-              "node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
-              "node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"
-            ]
+            "styles": ["node_modules/@clr/icons/clr-icons.min.css", "node_modules/@clr/ui/clr-ui.min.css", "src/app/styles/styles.scss"],
+            "scripts": ["node_modules/@clr/icons/clr-icons.min.js"]
           },
           "configurations": {
             "production": {
@@ -114,6 +111,5 @@
         }
       }
     }
-  },
-  "defaultProject": "it-support-portal-frontend"
+  }
 }

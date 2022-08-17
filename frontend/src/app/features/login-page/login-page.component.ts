@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
@@ -19,14 +19,14 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   public error = '';
 
-  public loginForm!: FormGroup;
+  public loginForm!: UntypedFormGroup;
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   private returnUrl!: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
