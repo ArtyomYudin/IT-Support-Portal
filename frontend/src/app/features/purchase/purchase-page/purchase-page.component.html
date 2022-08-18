@@ -1,75 +1,3 @@
-<!--
-<clr-modal [(clrModalOpen)]="requestPageOpen" [clrModalSize]="'lg'">
-    <h3 class="modal-title">Заявка на приобретение ОС, ТМЦ</h3>
-    <div class="modal-body">
-
-        <form [formGroup]="requestForm" clrForm [clrLayout]="'vertical'" autocomplete="off">
-            <clr-input-container>
-                <label>Инициатор приобретения (Подразделение):</label>
-                <input type="text" formControlName="purchaseInitiator" clrInput />
-            </clr-input-container>
-            <clr-textarea-container>
-                <label>Объект приобретения (наименование, количество):</label>
-                <textarea formControlName="purchaseTarget" clrTextarea></textarea>
-            </clr-textarea-container>
-            <clr-input-container>
-                <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
-                <input type="text" formControlName="responsiblePerson" clrInput />
-            </clr-input-container>
-            <clr-checkbox-container [clrInline]="'horizontal'">
-                <label>Статья расходов:</label>
-                <clr-checkbox-wrapper>
-                    <input type="checkbox" clrCheckbox name="options" value="option1" />
-                    <label>ОХР, для нужд предприятия</label>
-                </clr-checkbox-wrapper>
-                <clr-checkbox-wrapper>
-                    <input type="checkbox" clrCheckbox name="options" value="option2" />
-                    <label>ОХР, для нужд подразделения</label>
-                </clr-checkbox-wrapper>
-                <clr-checkbox-wrapper>
-                    <input type="checkbox" clrCheckbox name="options" value="option2" />
-                    <label>для реализации проекта (указать проект)</label>
-                </clr-checkbox-wrapper>
-            </clr-checkbox-container>
-            <clr-textarea-container>
-                <label>Обоснование необходимости::</label>
-                <textarea clrTextarea></textarea>
-            </clr-textarea-container>
-            <clr-input-container>
-                <label>Подразделение предприятия, ответственное за приобретение:</label>
-                <input type="text" clrInput />
-            </clr-input-container>
-            <clr-input-container>
-                <label>Подготовлено (сотрудник подразделения-инициатора):</label>
-                <input type="text" clrInput  />
-            </clr-input-container>
-
-            <cds-input layout="horizontal">
-                <label class="cds-custom-label">Руководитель подразделения-инициатора</label>
-                <input />
-            </cds-input>
-            <cds-input layout="horizontal">
-                <label class="cds-custom-label">Руководитель подразделения, ответственного за приобретение</label>
-                <input />
-            </cds-input>
-            <cds-input layout="horizontal">
-                <label class="cds-custom-label">Заместитель Генерального директора по направлению</label>
-                <input style="width: 120%" />
-            </cds-input>
-            <cds-input layout="horizontal">
-                <label>Начальник финансово-экономического отдела</label>
-                <input />
-            </cds-input>
-        </form>
-
-
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="requestPageOpen = false">Отмена</button>
-        <button type="button" class="btn btn-primary" (click)="requestPageOpen = false">Сохранить</button>
-    </div>
-</clr-modal>
--->
-
 <clr-wizard #requestWizard (clrWizardOnFinish)="onSubmit()" (clrWizardOnCancel)="onCancel()">
     <clr-wizard-title>Заявка на приобретение ОС, ТМЦ</clr-wizard-title>
     <clr-wizard-button [type]="'cancel'">Отмена</clr-wizard-button>
@@ -78,13 +6,13 @@
     <clr-wizard-button [type]="'finish'">Сохранить</clr-wizard-button>
 
     <!-- additional clr-wizard-button components as needed -->
-    <clr-wizard-page #requestPage [clrWizardPageNextDisabled]="!requestInfo.valid">
+    <clr-wizard-page #purchaseRequestPage [clrWizardPageNextDisabled]="!requestInfo.valid">
         <ng-template clrPageTitle>Описание</ng-template>
         <ng-template clrPageNavTitle>Описание</ng-template>
         <form [formGroup]="requestInfo" clrForm [clrLayout]="'vertical'" autocomplete="off">
             <clr-input-container>
                 <label>Инициатор приобретения (Подразделение):</label>
-                <input type="text" formControlName="purchaseInitiator" clrInput />
+                <input type="text" formControlName="purchaseInitiator" [value]="this.eventEmployeeByEmail$.unitName | async" clrInput />
             </clr-input-container>
             <clr-textarea-container>
                 <label>Объект приобретения (наименование, количество):</label>
@@ -109,7 +37,7 @@
                         type="checkbox"
                         formControlName="expenseItemCompany"
                         clrCheckbox
-                        (change)="onCheckboxChange($event.target, 'company')"
+                        (change)="onCheckboxChange($event, 'company')"
                     />
                     <label>ОХР, для нужд предприятия</label>
                 </clr-checkbox-wrapper>

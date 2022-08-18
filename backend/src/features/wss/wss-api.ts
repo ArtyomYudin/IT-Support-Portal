@@ -15,7 +15,31 @@ export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
           ws.send(
             JSON.stringify({
               event: 'event_filtered_employee',
-              data: filteredEmployeeArray,
+              data: filteredEmployeeArray || null,
+            }),
+          );
+        });
+        conn.release(); // release to pool
+      })
+      .catch(err => {
+        console.log(`not connected due to error: ${err}`);
+      });
+  }
+
+  function getEmployeeByEmail(value: string): void {
+    let employeeByEmail: any = {};
+    dbPool
+      .getConnection()
+      .then(conn => {
+        conn.query(dbSelect.getEmployeeByEmail(value)).then(rows => {
+          rows.forEach((row: any) => {
+            employeeByEmail = row;
+          });
+          console.log(employeeByEmail);
+          ws.send(
+            JSON.stringify({
+              event: 'event_employee_by_email',
+              data: employeeByEmail || null,
             }),
           );
         });
@@ -32,7 +56,10 @@ export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
       // console.log(`Connection test ${parseMsg.data}`);
       getFilteredEmployee(parseMsg.data);
       break;
-
+    case 'purchaseRequestInit':
+      getEmployeeByEmail(parseMsg.data);
+      console.log(parseMsg.data);
+      break;
     default:
       break;
   }

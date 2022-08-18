@@ -1,4 +1,4 @@
-.header .branding cds-icon {
+.header .branding clr-icon {
   height: 24px;
   width: 24px;
   margin-right: 0.5rem;
@@ -13,6 +13,7 @@
   border-radius: 50%;
   text-align: center;
   background-color: white;
+  margin-right: 0.2rem;
 }
 
 .dropdown-toggle,
@@ -21,7 +22,7 @@
   // box-shadow: none;
 }
 
-.dropdown .dropdown-toggle cds-icon {
+.dropdown .dropdown-toggle clr-icon {
   height: 18px;
   width: 18px;
   position: unset;
@@ -30,5 +31,6 @@
 .nav .nav-link.active,
 .nav .nav-link:hover {
   box-shadow: none;
-  color: #4aaed9;
+  //color: #4aaed9;
+  color: #0072a3;
 }

@@ -2,7 +2,7 @@ import { initHTTPSServer } from '../features/https-server';
 import { dbPool } from '../shared/db/db_pool';
 import { websocketServer } from '../features/wss/wss-server';
 import { wsParseMessage } from '../features/wss/wss-api';
-import { monitoringBot } from '../features/jabber-bot';
+// import { monitoringBot } from '../features/jabber-bot';
 
 (async () => {
   const httpServer = await initHTTPSServer();
@@ -24,8 +24,8 @@ import { monitoringBot } from '../features/jabber-bot';
     });
   });
   console.log(httpServer.address());
-  monitoringBot.say({
-    user: 'a.yudin@center-inform.ru',
-    text: 'hi!',
-  });
+  // monitoringBot.say({
+  //  user: 'a.yudin@center-inform.ru',
+  //  text: 'hi!',
+  // });
 })();

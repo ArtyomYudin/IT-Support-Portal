@@ -1,22 +1,20 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable } from 'rxjs/internal/Observable';
 import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
+import { Observable } from 'rxjs/internal/Observable';
+import { Employee } from '@model/employee.model';
 
 @Component({
-  selector: 'fe-request-page',
-  templateUrl: './request-page.component.html',
-  styleUrls: ['./request-page.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'fe-purchase-page',
+  templateUrl: './purchase-page.component.html',
+  styleUrls: ['./purchase-page.component.scss'],
 })
-export class RequestPageComponent implements OnInit, OnDestroy {
-  // public requestPageOpen: boolean;
-
+export class PurchasePageComponent implements OnInit, OnDestroy {
   public requestInfo!: UntypedFormGroup;
 
   public requestAuthor!: UntypedFormGroup;
@@ -27,13 +25,15 @@ export class RequestPageComponent implements OnInit, OnDestroy {
 
   public expenseItemDescriptionHelper: string;
 
-  public allEmployee$: Observable<any[]>;
-
   public filteredRespPerson: any[] = [];
 
   public isLoading = false;
 
+  public eventEmployeeByEmail$: any | Observable<Employee>;
+
   private ngUnsubscribe$: Subject<any> = new Subject();
+
+  currentUser: any;
 
   private expenseItemProperties(expenseItem: string, expenseItemValue: any): void {
     switch (expenseItem) {
@@ -92,6 +92,7 @@ export class RequestPageComponent implements OnInit, OnDestroy {
   constructor(private formBuilder: UntypedFormBuilder, private wsService: WebsocketService, private jwtHelper: JwtHelperService) {}
 
   ngOnInit(): void {
+    this.eventEmployeeByEmail$ = this.wsService.on<Employee>(Event.EV_EMPLOYEE_BY_EMAIL);
     this.requestInfo = this.formBuilder.group({
       purchaseInitiator: ['', Validators.required],
       purchaseTarget: ['', Validators.required],
@@ -115,8 +116,6 @@ export class RequestPageComponent implements OnInit, OnDestroy {
       headOfFinDepartment: ['', Validators.required],
     });
 
-    // this.allEmployee$ = this.wsService.on<any>(Event.EV_FILTERED_EMPLOYEE);
-
     this.requestInfo.controls.responsiblePerson.valueChanges
       .pipe(
         distinctUntilChanged(),
@@ -134,7 +133,7 @@ export class RequestPageComponent implements OnInit, OnDestroy {
       )
       .subscribe(data => {
         // console.log(data.length);
-        if (data.length === 0) {
+        if (!data) {
           this.filteredRespPerson = [];
           // this.isLoading = true;
         } else {
@@ -149,19 +148,23 @@ export class RequestPageComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
+  /*
   // convenience getter for easy access to form fields
   get f(): any {
     return this.requestInfo.controls;
   }
+ */
 
   public open(): void {
-    // const { token } = JSON.parse(localStorage.getItem('IT-Support-Portal'));
-    // this.wsService.send('requestInit', this.jwtHelper.decodeToken(token).email);
+    const { token } = JSON.parse(localStorage.getItem('IT-Support-Portal'));
+    this.wsService.send('purchaseRequestInit', this.jwtHelper.decodeToken(token).email);
     this.wizard.open();
   }
 
   public onCancel(): void {
-    this.requestInfo.reset();
+    this.requestInfo.reset(); // ошибка в логах при закрытии окна визарда !!!
+    this.requestAuthor.reset();
+    this.requestApprovers.reset();
     this.wizard.reset();
   }
 
@@ -222,9 +225,8 @@ export class RequestPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public displayFn(respPerson: any) {
-    if (respPerson) {
-      return respPerson.name;
-    }
+    return respPerson ? respPerson.name : null;
   }
 }

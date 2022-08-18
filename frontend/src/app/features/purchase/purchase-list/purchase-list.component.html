@@ -1,6 +1,6 @@
 <clr-datagrid class="datagrid-compact">
     <clr-dg-action-bar>
-        <button class="btn btn-outline btn-sm" (click)="requestPage.open()">
+        <button class="btn btn-outline btn-sm" (click)="purchasePage.open()">
             <!--<clr-icon shape="check" title="Check"></clr-icon>-->
             Создать заявку
         </button>
@@ -11,8 +11,8 @@
     <clr-dg-column>Инициатор Ф.И.О</clr-dg-column>
     <clr-dg-column>Подразделение</clr-dg-column>
     <clr-dg-column>Статус заявки</clr-dg-column>
-    <clr-dg-placeholder>We couldn't find any users!</clr-dg-placeholder>
+    <clr-dg-placeholder>Не создана ни одна заявка !</clr-dg-placeholder>
     <!-- ... -->
 </clr-datagrid>
 
-<fe-request-page #requestPage></fe-request-page>
+<fe-purchase-page #purchasePage></fe-purchase-page>

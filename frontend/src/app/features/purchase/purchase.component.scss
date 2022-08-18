@@ -1,0 +1,8 @@
+::ng-deep .tab-content {
+  width: 100%;
+}
+
+.tabs-vertical .nav-link:focus {
+  outline: none;
+  // box-shadow: none;
+}

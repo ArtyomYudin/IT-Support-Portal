@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { loadCoreIconSet, loadTechnologyIconSet } from '@cds/core/icon';
 
 @Component({
   selector: 'fe-root',
@@ -7,10 +6,7 @@ import { loadCoreIconSet, loadTechnologyIconSet } from '@cds/core/icon';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor() {
-    loadCoreIconSet();
-    loadTechnologyIconSet();
-  }
+  constructor() {}
 
   title = 'it-support-portal-frontend';
 }

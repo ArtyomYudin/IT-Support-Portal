@@ -4,12 +4,12 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@service/auth.guard.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/request', pathMatch: 'full' },
+  { path: '', redirectTo: '/purchase', pathMatch: 'full' },
   {
-    path: 'request',
-    loadChildren: () => import('../features/request/request.module').then(m => m.RequestModule),
+    path: 'purchase',
+    loadChildren: () => import('../features/purchase/purchase.module').then(m => m.PurchaseModule),
     canActivate: [AuthGuard],
-    data: { key: 'cached_request' },
+    data: { key: 'cached_purchase' },
   },
   { path: 'login', loadChildren: () => import('../features/login-page/login-page.module').then(m => m.LoginPageModule) },
   { path: '**', redirectTo: '' },
