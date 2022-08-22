@@ -2,10 +2,13 @@ import jwt from 'jsonwebtoken';
 import * as ldap from 'ldapjs';
 import { ServerResponse } from 'http';
 import { config } from 'dotenv';
+import { Pool } from 'mariadb';
+import * as dbSelect from '../shared/db/db_select';
 
 config();
 
-export function checkUserCredentials(reqBody: string, res: ServerResponse): any {
+export function checkUserCredentials(reqBody: string, res: ServerResponse, dbPool: Pool): any {
+  let employeeIdByEmail: any;
   const ldapClient = ldap.createClient({
     url: process.env.LDAP_URL as string,
   });
@@ -25,6 +28,21 @@ export function checkUserCredentials(reqBody: string, res: ServerResponse): any 
     });
     res.end();
   }
+
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getEmployeeByEmail(JSON.parse(reqBody).email)).then(rows => {
+        rows.forEach((row: any) => {
+          employeeIdByEmail = row.id;
+        });
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+
   ldapClient.bind(email, password, (err: any) => {
     if (err) {
       ldapClient.unbind();
@@ -51,6 +69,7 @@ export function checkUserCredentials(reqBody: string, res: ServerResponse): any 
           });
           res.end(
             JSON.stringify({
+              id: employeeIdByEmail,
               email,
               userDisplayName: entry.object.displayName,
               userPhoto: entry.raw.thumbnailPhoto ? entry.raw.thumbnailPhoto.toString('base64') : null,

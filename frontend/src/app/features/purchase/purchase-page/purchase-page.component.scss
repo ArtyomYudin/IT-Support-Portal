@@ -50,6 +50,28 @@
   background-color: #22343c;
 }
 */
+.clr-input,
+.clr-textarea {
+  font-family: 'Avenir Next';
+}
+
+.clr-textarea {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.clr-textarea:focus {
+  outline: none;
+}
+
+/*
+.clr-textarea:not([readonly]) {
+  background: linear-gradient(to bottom, transparent 95%, #0072a3 95%) no-repeat;
+  background-size: 0 100%;
+  transition: background-size 0.2s ease;
+}
+*/
 ::ng-deep .mat-option {
   font-family: 'Metropolis', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;

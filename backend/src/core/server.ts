@@ -5,7 +5,7 @@ import { wsParseMessage } from '../features/wss/wss-api';
 // import { monitoringBot } from '../features/jabber-bot';
 
 (async () => {
-  const httpServer = await initHTTPSServer();
+  const httpServer = await initHTTPSServer(dbPool);
   const wss = websocketServer(httpServer);
   const clients: any[] = [];
 

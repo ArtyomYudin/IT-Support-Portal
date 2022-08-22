@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS staff;
-CREATE TABLE IF NOT EXISTS staff (
+DROP TABLE IF EXISTS employee;
+CREATE TABLE IF NOT EXISTS employee (
   employee_id INT NOT NULL AUTO_INCREMENT,
   employee_name VARCHAR(100) NOT NULL,
   employee_email VARCHAR(40) NOT NULL,

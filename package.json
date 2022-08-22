@@ -13,8 +13,5 @@
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
     "skip-postinstall": "^1.0.0"
-  },
-  "dependencies": {
-    "@webcomponents/custom-elements": "^1.0.0"
   }
 }

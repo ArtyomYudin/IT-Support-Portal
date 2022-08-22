@@ -1,7 +1,19 @@
 import { Pool } from 'mariadb';
 import * as dbSelect from '../../shared/db/db_select';
+import * as dbInsert from '../../shared/db/db_insert';
 
 export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
+  function ConvertTo2Digits(newNum: number) {
+    return newNum.toString().padStart(2, '0');
+  }
+  function changeDateFormat(newDate: Date) {
+    return `${[newDate.getFullYear(), ConvertTo2Digits(newDate.getMonth() + 1), ConvertTo2Digits(newDate.getDate())].join('-')} ${[
+      ConvertTo2Digits(newDate.getHours()),
+      ConvertTo2Digits(newDate.getMinutes()),
+      ConvertTo2Digits(newDate.getSeconds()),
+    ].join(':')}`;
+  }
+
   function getFilteredEmployee(value: string): void {
     const filteredEmployeeArray: any[] = [];
     dbPool
@@ -50,6 +62,23 @@ export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
       });
   }
 
+  function savePurcheseRequestAsDraft(value: any): void {
+    dbPool
+      .getConnection()
+      .then(conn => {
+        try {
+          conn.query(dbInsert.insertPurchaseRequest(changeDateFormat(new Date()), value.purchaseInitiatorId));
+        } catch (error) {
+          console.log(error);
+        }
+
+        conn.release(); // release to pool
+      })
+      .catch(err => {
+        console.log(`not connected due to error: ${err}`);
+      });
+  }
+
   const parseMsg = JSON.parse(msg);
   switch (parseMsg.event) {
     case 'getFilteredRespPerson':
@@ -58,6 +87,10 @@ export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
       break;
     case 'purchaseRequestInit':
       getEmployeeByEmail(parseMsg.data);
+      console.log(parseMsg.data);
+      break;
+    case 'purchaseRequestAsDraft':
+      savePurcheseRequestAsDraft(parseMsg.data);
       console.log(parseMsg.data);
       break;
     default:

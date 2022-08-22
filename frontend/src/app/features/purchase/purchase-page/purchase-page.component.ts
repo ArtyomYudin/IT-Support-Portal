@@ -2,12 +2,14 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap, first } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
-import { Observable } from 'rxjs/internal/Observable';
+// import { Observable } from 'rxjs/internal/Observable';
+import { AuthenticationService } from '@service/auth.service';
 import { Employee } from '@model/employee.model';
+import { AuthUser } from '@model/auth-user.model';
 
 @Component({
   selector: 'fe-purchase-page',
@@ -15,6 +17,8 @@ import { Employee } from '@model/employee.model';
   styleUrls: ['./purchase-page.component.scss'],
 })
 export class PurchasePageComponent implements OnInit, OnDestroy {
+  public currentUser: AuthUser;
+
   public requestInfo!: UntypedFormGroup;
 
   public requestAuthor!: UntypedFormGroup;
@@ -27,13 +31,13 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
 
   public filteredRespPerson: any[] = [];
 
+  public purchaseRequestAllData: any;
+
   public isLoading = false;
 
-  public eventEmployeeByEmail$: any | Observable<Employee>;
+  public eventEmployeeByEmail$: Employee | any;
 
   private ngUnsubscribe$: Subject<any> = new Subject();
-
-  currentUser: any;
 
   private expenseItemProperties(expenseItem: string, expenseItemValue: any): void {
     switch (expenseItem) {
@@ -89,17 +93,25 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
 
   @ViewChild('requestWizard') wizard: ClrWizard;
 
-  constructor(private formBuilder: UntypedFormBuilder, private wsService: WebsocketService, private jwtHelper: JwtHelperService) {}
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private wsService: WebsocketService,
+    private jwtHelper: JwtHelperService,
+    private authenticationService: AuthenticationService,
+  ) {
+    this.authenticationService.currentUser$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(x => {
+      this.currentUser = x;
+    });
+  }
 
   ngOnInit(): void {
-    this.eventEmployeeByEmail$ = this.wsService.on<Employee>(Event.EV_EMPLOYEE_BY_EMAIL);
     this.requestInfo = this.formBuilder.group({
       purchaseInitiator: ['', Validators.required],
       purchaseTarget: ['', Validators.required],
       responsiblePerson: ['', Validators.required],
-      expenseItemCompany: [''],
-      expenseItemDepartment: [''],
-      expenseItemProject: [''],
+      expenseItemCompany: ['', Validators.required],
+      expenseItemDepartment: ['', Validators.required],
+      expenseItemProject: ['', Validators.required],
       expenseItemDescription: [''],
       purchaseReason: ['', Validators.required],
       purchaseDepartment: ['', Validators.required],
@@ -158,10 +170,20 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
   public open(): void {
     const { token } = JSON.parse(localStorage.getItem('IT-Support-Portal'));
     this.wsService.send('purchaseRequestInit', this.jwtHelper.decodeToken(token).email);
-    this.wizard.open();
+    this.wsService
+      .on<Employee>(Event.EV_EMPLOYEE_BY_EMAIL)
+      .pipe(first(), takeUntil(this.ngUnsubscribe$))
+      .subscribe(value => {
+        // this.purchaseInitiator = value;
+        this.requestInfo.controls.purchaseInitiator.setValue(value.unitName);
+        this.requestAuthor.controls.requestAuthorName.setValue(value.name);
+        this.requestAuthor.controls.requestAuthorPosition.setValue(value.positionName);
+        this.wizard.open();
+      });
   }
 
   public onCancel(): void {
+    this.saveAsDraft();
     this.requestInfo.reset(); // ошибка в логах при закрытии окна визарда !!!
     this.requestAuthor.reset();
     this.requestApprovers.reset();
@@ -228,5 +250,14 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line class-methods-use-this
   public displayFn(respPerson: any) {
     return respPerson ? respPerson.name : null;
+  }
+
+  public saveAsDraft(): void {
+    this.purchaseRequestAllData = {
+      purchaseInitiatorId: this.currentUser.id,
+      // requestAuthorName: this.requestAuthor.controls.requestAuthorName.value,
+      // requestAuthorPosition: this.requestAuthor.controls.requestAuthorPosition.value,
+    };
+    this.wsService.send('purchaseRequestAsDraft', this.purchaseRequestAllData);
   }
 }

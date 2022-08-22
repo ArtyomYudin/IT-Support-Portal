@@ -12,7 +12,7 @@
         <form [formGroup]="requestInfo" clrForm [clrLayout]="'vertical'" autocomplete="off">
             <clr-input-container>
                 <label>Инициатор приобретения (Подразделение):</label>
-                <input type="text" formControlName="purchaseInitiator" [value]="this.eventEmployeeByEmail$.unitName | async" clrInput />
+                <input type="text" formControlName="purchaseInitiator" clrInput />
             </clr-input-container>
             <clr-textarea-container>
                 <label>Объект приобретения (наименование, количество):</label>

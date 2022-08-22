@@ -28,6 +28,9 @@
   position: unset;
 }
 
+.nav .nav-link.active {
+  font-weight: 500;
+}
 .nav .nav-link.active,
 .nav .nav-link:hover {
   box-shadow: none;
@@ -38,6 +41,7 @@
 ::ng-deep .tabs-vertical .nav .nav-link.active {
   background-color: #fafafa;
   color: #0072a3;
+  font-weight: 500;
 }
 
 ::ng-deep .tabs-vertical .nav .nav-link:hover {
