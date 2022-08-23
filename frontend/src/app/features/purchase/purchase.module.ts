@@ -5,13 +5,13 @@ import { ClarityModule } from '@clr/angular';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { PurchasePageComponent } from './purchase-page/purchase-page.component';
+import { PurchaseRequestPageComponent } from './purchase-request-page/purchase-request-page.component';
 import { PurchaseComponent } from './purchase.component';
-import { PurchaseListComponent } from './purchase-list/purchase-list.component';
+import { PurchaseRequestListComponent } from './purchase-request-list/purchase-request-list.component';
 
 const routing = RouterModule.forChild([{ path: '', component: PurchaseComponent }]);
 @NgModule({
-  declarations: [PurchasePageComponent, PurchaseComponent, PurchaseListComponent],
+  declarations: [PurchaseRequestPageComponent, PurchaseComponent, PurchaseRequestListComponent],
   imports: [CommonModule, ClarityModule, ReactiveFormsModule, MatAutocompleteModule, routing],
 })
 export class PurchaseModule {}

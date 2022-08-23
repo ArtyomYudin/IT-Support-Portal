@@ -37,17 +37,3 @@
   //color: #4aaed9;
   color: #0072a3;
 }
-
-::ng-deep .tabs-vertical .nav .nav-link.active {
-  background-color: #fafafa;
-  color: #0072a3;
-  font-weight: 500;
-}
-
-::ng-deep .tabs-vertical .nav .nav-link:hover {
-  color: #0072a3;
-  //box-shadow: inset 0.15rem 0 #fafafa;
-}
-::ng-deep .tabs-vertical .nav .nav-link:not(.active):hover {
-  background-color: #fafafa;
-}

@@ -7,7 +7,7 @@ import * as dbSelect from '../shared/db/db_select';
 
 config();
 
-export function checkUserCredentials(reqBody: string, res: ServerResponse, dbPool: Pool): any {
+export async function checkUserCredentials(reqBody: string, res: ServerResponse, dbPool: Pool): Promise<any> {
   let employeeIdByEmail: any;
   const ldapClient = ldap.createClient({
     url: process.env.LDAP_URL as string,
@@ -29,7 +29,7 @@ export function checkUserCredentials(reqBody: string, res: ServerResponse, dbPoo
     res.end();
   }
 
-  dbPool
+  await dbPool
     .getConnection()
     .then(conn => {
       conn.query(dbSelect.getEmployeeByEmail(JSON.parse(reqBody).email)).then(rows => {

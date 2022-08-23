@@ -21,7 +21,7 @@ export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
       .then(conn => {
         conn.query(dbSelect.getFilteredEmployee(value)).then(rows => {
           rows.forEach((row: any, i: number) => {
-            filteredEmployeeArray[i] = { id: row.id, name: row.name };
+            filteredEmployeeArray[i] = { id: row.id, displayName: row.displayName };
           });
           console.log(filteredEmployeeArray);
           ws.send(
@@ -67,7 +67,15 @@ export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
       .getConnection()
       .then(conn => {
         try {
-          conn.query(dbInsert.insertPurchaseRequest(changeDateFormat(new Date()), value.purchaseInitiatorId));
+          conn.query(
+            dbInsert.insertPurchaseRequest(
+              changeDateFormat(new Date()),
+              value.purchaseTarget,
+              value.responsiblePersonId,
+              value.purchaseReason,
+              value.purchaseAuthorIdId,
+            ),
+          );
         } catch (error) {
           console.log(error);
         }

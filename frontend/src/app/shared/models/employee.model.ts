@@ -1,9 +1,9 @@
 export class Employee {
   public id: number;
 
-  public name: string;
+  public displayName: string;
 
-  public unitName: string;
+  public departmentName: string;
 
   public positionName: string;
 }

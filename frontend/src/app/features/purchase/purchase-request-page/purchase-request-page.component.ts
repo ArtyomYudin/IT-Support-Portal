@@ -1,33 +1,36 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap, first } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
-// import { Observable } from 'rxjs/internal/Observable';
 import { AuthenticationService } from '@service/auth.service';
 import { Employee } from '@model/employee.model';
 import { AuthUser } from '@model/auth-user.model';
 
 @Component({
-  selector: 'fe-purchase-page',
-  templateUrl: './purchase-page.component.html',
-  styleUrls: ['./purchase-page.component.scss'],
+  selector: 'fe-purchase-request-page',
+  templateUrl: './purchase-request-page.component.html',
+  styleUrls: ['./purchase-request-page.component.scss'],
 })
-export class PurchasePageComponent implements OnInit, OnDestroy {
+export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   public currentUser: AuthUser;
 
-  public requestInfo!: UntypedFormGroup;
+  public requestInfo: FormGroup;
 
-  public requestAuthor!: UntypedFormGroup;
+  public requestAuthor: FormGroup;
 
-  public requestApprovers!: UntypedFormGroup;
+  public requestApprovers: FormGroup;
 
-  public expenseItemDescriptionStatus: boolean;
+  public expenseDepartmentDescriptionStatus: boolean;
 
-  public expenseItemDescriptionHelper: string;
+  public expenseDepartmentDescriptionHelper: string;
+
+  public expenseProjectDescriptionStatus: boolean;
+
+  public expenseProjectDescriptionHelper: string;
 
   public filteredRespPerson: any[] = [];
 
@@ -39,62 +42,12 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
-  private expenseItemProperties(expenseItem: string, expenseItemValue: any): void {
-    switch (expenseItem) {
-      case 'company': {
-        console.log(expenseItemValue.target.checked);
-        if (expenseItemValue) {
-          this.requestInfo.controls.expenseItemDepartment.disable();
-          this.requestInfo.controls.expenseItemProject.disable();
-        } else {
-          this.requestInfo.controls.expenseItemDepartment.enable();
-          this.requestInfo.controls.expenseItemProject.enable();
-        }
-        break;
-      }
-      case 'department': {
-        console.log('DEP!');
-        this.expenseItemDescriptionStatus = expenseItemValue;
-        this.expenseItemDescriptionHelper = 'Укажите наименование подразделения.';
-        if (expenseItemValue) {
-          this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
-          this.requestInfo.controls.expenseItemCompany.disable();
-          this.requestInfo.controls.expenseItemProject.disable();
-        } else {
-          this.requestInfo.controls.expenseItemDescription.clearValidators();
-          this.requestInfo.controls.expenseItemCompany.enable();
-          this.requestInfo.controls.expenseItemProject.enable();
-        }
-        this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
-        break;
-      }
-      case 'project': {
-        this.expenseItemDescriptionStatus = expenseItemValue;
-        this.expenseItemDescriptionHelper = 'Укажите наименование проекта.';
+  private responsiblePerson: any;
 
-        if (expenseItemValue) {
-          this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
-          this.requestInfo.controls.expenseItemCompany.disable();
-          this.requestInfo.controls.expenseItemDepartment.disable();
-        } else {
-          this.requestInfo.controls.expenseItemDescription.clearValidators();
-          this.requestInfo.controls.expenseItemCompany.enable();
-          this.requestInfo.controls.expenseItemDepartment.enable();
-        }
-        this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
-        break;
-      }
-
-      default: {
-        break;
-      }
-    }
-  }
-
-  @ViewChild('requestWizard') wizard: ClrWizard;
+  @ViewChild('purchaseRequestWizard') wizard: ClrWizard;
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private wsService: WebsocketService,
     private jwtHelper: JwtHelperService,
     private authenticationService: AuthenticationService,
@@ -112,15 +65,19 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
       expenseItemCompany: ['', Validators.required],
       expenseItemDepartment: ['', Validators.required],
       expenseItemProject: ['', Validators.required],
-      expenseItemDescription: [''],
+      expenseDepartmentDescription: [''],
+      expenseProjectDescription: [''],
       purchaseReason: ['', Validators.required],
-      purchaseDepartment: ['', Validators.required],
+      purchaseITDepartment: ['', Validators.required],
+      purchaseLogisticDepartment: ['', Validators.required],
+      requestAuthor: ['', Validators.required],
     });
-
+    /*
     this.requestAuthor = this.formBuilder.group({
       requestAuthorName: ['', Validators.required],
       requestAuthorPosition: ['', Validators.required],
     });
+ */
     this.requestApprovers = this.formBuilder.group({
       headOfInitDepartment: ['', Validators.required],
       headOfPurchaseDepartment: ['', Validators.required],
@@ -174,18 +131,22 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
       .on<Employee>(Event.EV_EMPLOYEE_BY_EMAIL)
       .pipe(first(), takeUntil(this.ngUnsubscribe$))
       .subscribe(value => {
-        // this.purchaseInitiator = value;
-        this.requestInfo.controls.purchaseInitiator.setValue(value.unitName);
-        this.requestAuthor.controls.requestAuthorName.setValue(value.name);
-        this.requestAuthor.controls.requestAuthorPosition.setValue(value.positionName);
+        this.requestInfo.controls.purchaseInitiator.setValue(value.departmentName);
+        this.requestInfo.controls.purchaseInitiator.disable();
+        this.requestInfo.controls.requestAuthor.setValue(`${value.positionName}  ${value.displayName}`);
+        this.requestInfo.controls.requestAuthor.disable();
         this.wizard.open();
       });
   }
 
   public onCancel(): void {
     this.saveAsDraft();
-    this.requestInfo.reset(); // ошибка в логах при закрытии окна визарда !!!
-    this.requestAuthor.reset();
+
+    Object.keys(this.requestInfo.controls).forEach(key => {
+      this.requestInfo.get(key).setValue('');
+      this.requestInfo.get(key).setErrors(null);
+    });
+    // this.requestInfo.reset(); // ошибка в логах при закрытии окна визарда !!!
     this.requestApprovers.reset();
     this.wizard.reset();
   }
@@ -194,9 +155,10 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
     this.wizard.reset();
   }
 
-  // изменение видимости полей Статья расходов
+  /**
+   * изменение видимости полей  Checkbox-ов
+   */
   public onCheckboxChange(event: any, expenseItem: string): void {
-    // console.log(event.target.checked);
     switch (expenseItem) {
       case 'company': {
         if (event.target.checked) {
@@ -209,35 +171,55 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
         break;
       }
       case 'department': {
-        // console.log('DEP!');
-        this.expenseItemDescriptionStatus = event.target.checked;
-        this.expenseItemDescriptionHelper = 'Укажите наименование подразделения.';
+        this.expenseDepartmentDescriptionStatus = event.target.checked;
+        this.expenseDepartmentDescriptionHelper = 'Укажите наименование подразделения.';
         if (event.target.checked) {
-          this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
+          this.requestInfo.controls.expenseDepartmentDescription.setValidators(Validators.required);
           this.requestInfo.controls.expenseItemCompany.disable();
           this.requestInfo.controls.expenseItemProject.disable();
         } else {
-          this.requestInfo.controls.expenseItemDescription.clearValidators();
+          this.requestInfo.controls.expenseDepartmentDescription.clearValidators();
           this.requestInfo.controls.expenseItemCompany.enable();
           this.requestInfo.controls.expenseItemProject.enable();
         }
-        this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
+        this.requestInfo.controls.expenseDepartmentDescription.updateValueAndValidity();
         break;
       }
       case 'project': {
-        this.expenseItemDescriptionStatus = event.target.checked;
-        this.expenseItemDescriptionHelper = 'Укажите наименование проекта.';
+        this.expenseProjectDescriptionStatus = event.target.checked;
+        this.expenseProjectDescriptionHelper = 'Укажите наименование проекта.';
 
         if (event.target.checked) {
-          this.requestInfo.controls.expenseItemDescription.setValidators(Validators.required);
+          this.requestInfo.controls.expenseProjectDescription.setValidators(Validators.required);
           this.requestInfo.controls.expenseItemCompany.disable();
           this.requestInfo.controls.expenseItemDepartment.disable();
         } else {
-          this.requestInfo.controls.expenseItemDescription.clearValidators();
+          this.requestInfo.controls.expenseProjectDescription.clearValidators();
           this.requestInfo.controls.expenseItemCompany.enable();
           this.requestInfo.controls.expenseItemDepartment.enable();
         }
-        this.requestInfo.controls.expenseItemDescription.updateValueAndValidity();
+        this.requestInfo.controls.expenseProjectDescription.updateValueAndValidity();
+        break;
+      }
+      /**
+       * Слатает валидация purchaseLogisticDepartment и purchaseITDepartment
+       * дает возможность продолжить без выбора подразделения закупки !!!!
+       * Необходимо разобраться или переделать
+       */
+      case 'it': {
+        if (event.target.checked) {
+          this.requestInfo.controls.purchaseLogisticDepartment.disable();
+        } else {
+          this.requestInfo.controls.purchaseLogisticDepartment.enable();
+        }
+        break;
+      }
+      case 'logistic': {
+        if (event.target.checked) {
+          this.requestInfo.controls.purchaseITDepartment.disable();
+        } else {
+          this.requestInfo.controls.purchaseITDepartment.enable();
+        }
         break;
       }
 
@@ -249,12 +231,19 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
 
   // eslint-disable-next-line class-methods-use-this
   public displayFn(respPerson: any) {
-    return respPerson ? respPerson.name : null;
+    return respPerson || null;
+  }
+
+  public setResponsiblePerson(person: any): void {
+    this.responsiblePerson = person;
   }
 
   public saveAsDraft(): void {
     this.purchaseRequestAllData = {
-      purchaseInitiatorId: this.currentUser.id,
+      purchaseAuthorIdId: this.currentUser.id,
+      purchaseTarget: this.requestInfo.controls.purchaseTarget.value,
+      responsiblePersonId: this.responsiblePerson ? this.responsiblePerson.id : 0,
+      purchaseReason: this.requestInfo.controls.purchaseReason.value,
       // requestAuthorName: this.requestAuthor.controls.requestAuthorName.value,
       // requestAuthorPosition: this.requestAuthor.controls.requestAuthorPosition.value,
     };

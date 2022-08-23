@@ -11,6 +11,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { key: 'cached_purchase' },
   },
+  {
+    path: 'setting',
+    loadChildren: () => import('../features/setting/setting.module').then(m => m.SettingModule),
+    canActivate: [AuthGuard],
+    data: { key: 'cached_setting' },
+  },
   { path: 'login', loadChildren: () => import('../features/login-page/login-page.module').then(m => m.LoginPageModule) },
   { path: '**', redirectTo: '' },
 ];

@@ -42,3 +42,26 @@ body {
 .cdk-overlay-connected-position-bounding-box {
   z-index: 9000;
 }
+
+.tab-content {
+  width: 100%;
+}
+
+.tabs-vertical .nav .nav-link.active {
+  background-color: #fafafa;
+  color: #0072a3;
+  font-weight: 500;
+}
+
+.tabs-vertical .nav .nav-link:hover {
+  color: #0072a3;
+  //box-shadow: inset 0.15rem 0 #fafafa;
+}
+.tabs-vertical .nav .nav-link:not(.active):hover {
+  background-color: #fafafa;
+}
+
+.tabs-vertical .nav-link:focus {
+  outline: none;
+  // box-shadow: none;
+}

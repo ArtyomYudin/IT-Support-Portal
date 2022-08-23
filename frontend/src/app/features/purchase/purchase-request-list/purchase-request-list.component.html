@@ -1,0 +1,36 @@
+<clr-datagrid class="datagrid-compact">
+    <clr-dg-action-bar>
+        <button class="btn btn-primary btn-sm" (click)="purchaseRequestPage.open()">
+            <!--<clr-icon shape="check" title="Check"></clr-icon>-->
+            Создать заявку
+        </button>
+    </clr-dg-action-bar>
+
+    <clr-dg-column [style.width.px]="20">Дата заявки</clr-dg-column>
+    <clr-dg-column>Инициатор Ф.И.О</clr-dg-column>
+    <clr-dg-column>Подразделение</clr-dg-column>
+    <clr-dg-column>Ответственное лицо</clr-dg-column>
+    <clr-dg-column>Объект приобретения</clr-dg-column>
+    <clr-dg-column>Статус заявки</clr-dg-column>
+    <clr-dg-placeholder>Не создана ни одна заявка !</clr-dg-placeholder>
+    <!--
+    <clr-dg-row *clrDgItems="let cdr of cdrGridData$ | async" [clrDgItem]="cdr">
+        <clr-dg-cell>{{ cdr.callDateTime }}</clr-dg-cell>
+        <clr-dg-cell>{{ cdr.callDuration | avayaDurationConvert }}</clr-dg-cell>
+        <clr-dg-cell>{{ cdr.callingNumber }}</clr-dg-cell>
+        <clr-dg-cell>{{ cdr.callingName }}</clr-dg-cell>
+        <clr-dg-cell><cds-icon shape="arrow" direction="right"></cds-icon>{{ cdr.calledNumber }}</clr-dg-cell>
+        <clr-dg-cell>{{ cdr.calledName }}</clr-dg-cell>
+        <clr-dg-cell>{{ cdr.callCode | avayaCallCodeConvert: cdr.calledNumber:cdr.callingNumber }}</clr-dg-cell>
+    </clr-dg-row>
+
+    <clr-dg-footer>
+        <clr-dg-pagination #paginationUser [clrDgPageSize]="20">
+            <clr-dg-page-size [clrPageSizeOptions]="[20, 50, 100]">Вызовов на страницу</clr-dg-page-size>
+            {{ paginationUser.firstItem + 1 }} - {{ paginationUser.lastItem + 1 }} из {{ paginationUser.totalItems }} Вызовов
+        </clr-dg-pagination>
+    </clr-dg-footer>
+-->
+</clr-datagrid>
+
+<fe-purchase-request-page #purchaseRequestPage></fe-purchase-request-page>
