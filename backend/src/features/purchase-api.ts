@@ -1,4 +1,5 @@
 import { Pool } from 'mariadb';
+import { Server, WebSocket } from 'ws';
 import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
 
@@ -14,7 +15,31 @@ function changeDateFormat(newDate: Date) {
   ].join(':')}`;
 }
 
-function getFilteredEmployee(value: string): void {
+export function allPurchaseRequest(dbPool: Pool, ws: WebSocket): void {
+  const allPurchaseRequestArray: any[] = [];
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.purchaseRequestList).then(rows => {
+        rows.forEach((row: any, i: number) => {
+          allPurchaseRequestArray[i] = row;
+        });
+        // console.log(allPurchaseRequestArray);
+        ws.send(
+          JSON.stringify({
+            event: 'event_purchase_request_all',
+            data: allPurchaseRequestArray,
+          }),
+        );
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+
+export function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: string): void {
   const filteredEmployeeArray: any[] = [];
   dbPool
     .getConnection()
@@ -38,7 +63,7 @@ function getFilteredEmployee(value: string): void {
     });
 }
 
-function getEmployeeByEmail(value: string): void {
+export function getEmployeeByEmail(dbPool: Pool, ws: WebSocket, value: string): void {
   let employeeByEmail: any = {};
   dbPool
     .getConnection()
@@ -62,7 +87,7 @@ function getEmployeeByEmail(value: string): void {
     });
 }
 
-function savePurcheseRequestAsDraft(value: any): void {
+export function savePurcheseRequestAsDraft(dbPool: Pool, ws: WebSocket, value: any): void {
   dbPool
     .getConnection()
     .then(conn => {
@@ -87,8 +112,8 @@ function savePurcheseRequestAsDraft(value: any): void {
     });
 }
 
-function initApi(wss, clientId) {
-  // currentDayAvayaCDR(wss, clientId);
+export function init(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {
+  allPurchaseRequest(dbPool, ws);
 }
 
 // async function purchaseRequsetEvents(wss, clientId) {
@@ -97,5 +122,4 @@ function initApi(wss, clientId) {
 // }, 60000);
 // }
 
-exports.init = initApi;
 // exports.purchaseRequestEvents = purchaseRequestEvents;

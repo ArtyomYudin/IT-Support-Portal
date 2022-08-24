@@ -1,4 +1,4 @@
-<clr-wizard #purchaseRequestWizard (clrWizardOnFinish)="onSubmit()" (clrWizardOnCancel)="onCancel()">
+<clr-wizard #purchaseRequestWizard [clrWizardClosable]="false" (clrWizardOnFinish)="onSubmit()" (clrWizardOnCancel)="onCancel()">
     <clr-wizard-title>Заявка на приобретение ОС, ТМЦ</clr-wizard-title>
     <clr-wizard-button [type]="'cancel'">Отмена</clr-wizard-button>
     <clr-wizard-button [type]="'previous'">Назад</clr-wizard-button>
@@ -143,3 +143,14 @@
         </form>
     </clr-wizard-page>
 </clr-wizard>
+
+<clr-modal [(clrModalOpen)]="isConfirmModalVisible">
+    <h3 class="modal-title">Заполнение заявки было прервано.</h3>
+    <div class="modal-body">
+        <p>Сохранить заявку как черновик для последующего продолжения заполнения?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="saveAsDraft()">Да</button>
+        <button type="button" class="btn btn-primary" (click)="resetRequestPage()">Нет</button>
+    </div>
+</clr-modal>

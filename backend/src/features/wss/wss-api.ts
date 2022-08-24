@@ -1,8 +1,10 @@
 import { Pool } from 'mariadb';
-import * as dbSelect from '../../shared/db/db_select';
-import * as dbInsert from '../../shared/db/db_insert';
+import { WebSocket } from 'ws';
 
-export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
+import * as purchaseAPI from '../purchase-api';
+
+export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
+  /*
   function ConvertTo2Digits(newNum: number) {
     return newNum.toString().padStart(2, '0');
   }
@@ -86,20 +88,24 @@ export function wsParseMessage(dbPool: Pool, ws: import('ws'), msg: any): void {
         console.log(`not connected due to error: ${err}`);
       });
   }
-
+*/
   const parseMsg = JSON.parse(msg);
   switch (parseMsg.event) {
     case 'getFilteredRespPerson':
       // console.log(`Connection test ${parseMsg.data}`);
-      getFilteredEmployee(parseMsg.data);
+      purchaseAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
       break;
     case 'purchaseRequestInit':
-      getEmployeeByEmail(parseMsg.data);
+      purchaseAPI.getEmployeeByEmail(dbPool, ws, parseMsg.data);
       console.log(parseMsg.data);
       break;
     case 'purchaseRequestAsDraft':
-      savePurcheseRequestAsDraft(parseMsg.data);
+      purchaseAPI.savePurcheseRequestAsDraft(dbPool, ws, parseMsg.data);
       console.log(parseMsg.data);
+      break;
+
+    case 'getAllPurchaseRequest':
+      purchaseAPI.allPurchaseRequest(dbPool, ws);
       break;
     default:
       break;

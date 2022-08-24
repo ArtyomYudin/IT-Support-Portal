@@ -40,6 +40,8 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
 
   public eventEmployeeByEmail$: Employee | any;
 
+  public isConfirmModalVisible = false;
+
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   private responsiblePerson: any;
@@ -140,11 +142,18 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   }
 
   public onCancel(): void {
-    this.saveAsDraft();
+    this.isConfirmModalVisible = true;
+  }
 
+  public resetRequestPage(): void {
+    this.isConfirmModalVisible = false;
     Object.keys(this.requestInfo.controls).forEach(key => {
-      this.requestInfo.get(key).setValue('');
-      this.requestInfo.get(key).setErrors(null);
+      if (key === 'responsiblePerson') {
+        this.requestInfo.get(key).reset('');
+      } else this.requestInfo.get(key).reset();
+
+      // this.requestInfo.get(key).setErrors(null);
+      // this.requestInfo.get(key).updateValueAndValidity();
     });
     // this.requestInfo.reset(); // ошибка в логах при закрытии окна визарда !!!
     this.requestApprovers.reset();
@@ -152,7 +161,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit(): void {
-    this.wizard.reset();
+    this.resetRequestPage();
   }
 
   /**
@@ -239,6 +248,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   }
 
   public saveAsDraft(): void {
+    this.isConfirmModalVisible = false;
     this.purchaseRequestAllData = {
       purchaseAuthorIdId: this.currentUser.id,
       purchaseTarget: this.requestInfo.controls.purchaseTarget.value,
@@ -248,5 +258,6 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       // requestAuthorPosition: this.requestAuthor.controls.requestAuthorPosition.value,
     };
     this.wsService.send('purchaseRequestAsDraft', this.purchaseRequestAllData);
+    this.resetRequestPage();
   }
 }

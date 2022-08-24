@@ -21,12 +21,12 @@ export const getEmployeeByEmail = (email: string) => `
 export const purchaseRequestList = `
                             SELECT purchase_request.id AS id,
                                    purchase_request.date AS date,
-                                   employee_full_info.display_name AS author_display_name,
-                                   employee_full_info.department_name AS author_department_name,
-                                   employee.display_name AS responsible_displey_name,
-                                   purchase_request.target AS purchase_target,
-                                   purchase_request.status_id AS status_id
+                                   employee_full_info.display_name AS authorDisplayName,
+                                   employee_full_info.department_name AS authorDepartmentName,
+                                   employee.display_name AS responsibleDisplayName,
+                                   purchase_request.target AS purchaseTarget,
+                                   purchase_request.status_id AS statusId
                             FROM purchase_request
-                                   INNER JOIN employee_full_info on(purchase_request.author_id = employee_full_info.id)
-                                   INNER JOIN employee on(purchase_request.responsible_person_id = employee.id)
-                            ORDER by purchase_request.date`;
+                            LEFT OUTER JOIN employee_full_info on(purchase_request.author_id = employee_full_info.id)
+                            LEFT OUTER JOIN employee on(purchase_request.responsible_person_id = employee.id)
+                            ORDER by purchase_request.date desc`;
