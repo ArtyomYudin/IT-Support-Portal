@@ -52,7 +52,7 @@ export function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: string):
         ws.send(
           JSON.stringify({
             event: 'event_filtered_employee',
-            data: filteredEmployeeArray || null,
+            data: filteredEmployeeArray,
           }),
         );
       });
@@ -63,20 +63,66 @@ export function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: string):
     });
 }
 
-export function getEmployeeByEmail(dbPool: Pool, ws: WebSocket, value: string): void {
-  let employeeByEmail: any = {};
+export function getEmployeeByUPN(dbPool: Pool, ws: WebSocket, value: string): void {
+  let employeeByUPN: any = {};
   dbPool
     .getConnection()
     .then(conn => {
-      conn.query(dbSelect.getEmployeeByEmail(value)).then(rows => {
+      conn.query(dbSelect.getEmployeeByUPN(value)).then(rows => {
         rows.forEach((row: any) => {
-          employeeByEmail = row;
+          employeeByUPN = row;
         });
-        console.log(employeeByEmail);
+        console.log(employeeByUPN);
         ws.send(
           JSON.stringify({
-            event: 'event_employee_by_email',
-            data: employeeByEmail || null,
+            event: 'event_employee_by_upn',
+            data: employeeByUPN,
+          }),
+        );
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+
+export function getPurchaseRequestInitInfo(dbPool: Pool, ws: WebSocket, value: string): void {
+  let purchaseRequestInitByUPN: any = {};
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getPurchaseRequestInitInfoByUPN(value)).then(rows => {
+        rows.forEach((row: any) => {
+          purchaseRequestInitByUPN = row;
+        });
+        ws.send(
+          JSON.stringify({
+            event: 'event_purchase_request_init_info',
+            data: purchaseRequestInitByUPN,
+          }),
+        );
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+
+export function getPurchaseRequestApproversByUPN(dbPool: Pool, ws: WebSocket, value: string): void {
+  let purchaseRequestApproversByUPN: any = {};
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getPurchaseRequestApproversByUPN(value)).then(rows => {
+        rows.forEach((row: any) => {
+          purchaseRequestApproversByUPN = row;
+        });
+        ws.send(
+          JSON.stringify({
+            event: 'event_purchase_request_approvers_by_upn',
+            data: purchaseRequestApproversByUPN,
           }),
         );
       });
@@ -99,6 +145,7 @@ export function savePurcheseRequestAsDraft(dbPool: Pool, ws: WebSocket, value: a
             value.responsiblePersonId,
             value.purchaseReason,
             value.purchaseAuthorIdId,
+            value.purchaseRequestStatus,
           ),
         );
       } catch (error) {

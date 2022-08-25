@@ -32,7 +32,7 @@ export async function checkUserCredentials(reqBody: string, res: ServerResponse,
   await dbPool
     .getConnection()
     .then(conn => {
-      conn.query(dbSelect.getEmployeeByEmail(JSON.parse(reqBody).email)).then(rows => {
+      conn.query(dbSelect.getEmployeeByUPN(JSON.parse(reqBody).email)).then(rows => {
         rows.forEach((row: any) => {
           employeeIdByEmail = row.id;
         });

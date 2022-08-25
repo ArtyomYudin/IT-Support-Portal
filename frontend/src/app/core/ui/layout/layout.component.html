@@ -5,7 +5,14 @@
   -->
 
     <fe-header></fe-header>
-
+    <div class="content-area">
+        <clr-alert [clrAlertType]="'danger'" [clrAlertClosable]="false" *ngIf="!isConnected">
+            <clr-alert-item>
+                <span class="alert-text"> Отсутствует связь с сервером. </span>
+            </clr-alert-item>
+        </clr-alert>
+        <router-outlet></router-outlet>
+    </div>
     <fe-main>
         <!-- <ng-content></ng-content> -->
     </fe-main>

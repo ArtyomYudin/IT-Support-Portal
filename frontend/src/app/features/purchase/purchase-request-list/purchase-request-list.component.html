@@ -1,9 +1,14 @@
 <clr-datagrid [(clrDgSelected)]="selected">
     <clr-dg-action-bar>
         <div class="btn-group btn-link btn-sm">
-            <button class="btn" (click)="purchaseRequestPage.open()"><clr-icon shape="file"></clr-icon>Создать заявку</button>
-            <button class="btn" (click)="(null)" [disabled]="!(selected.length == 1)">
+            <button class="btn" (click)="purchaseRequestPage.onOpen()"><clr-icon shape="file"></clr-icon>Создать заявку</button>
+            <!--
+            <button class="btn" (click)="purchaseRequestPage.onOpen()" [disabled]="!(selected.length == 1 && selected[0].statusId == 1)">
                 <clr-icon shape="pencil"></clr-icon>Редактировать
+            </button>
+        -->
+            <button class="btn" (click)="(null)" [disabled]="!(selected.length == 1)">
+                <clr-icon shape="pencil"></clr-icon>Подписать заявку
             </button>
             <button class="btn" (click)="(null)" [disabled]="selected.length == 0"><clr-icon shape="trash"></clr-icon>Удалить</button>
         </div>
@@ -38,4 +43,11 @@
     </clr-dg-footer>
 </clr-datagrid>
 
+<!--
+    Selected users: <span *ngFor="let user of selected">{{ user.id }}</span>
+-->
+
+<!--
+    <fe-purchase-request-page [purchaseRequestDraftId]="selected" #purchaseRequestPage></fe-purchase-request-page>
+-->
 <fe-purchase-request-page #purchaseRequestPage></fe-purchase-request-page>

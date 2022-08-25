@@ -16,6 +16,8 @@ import { AuthUser } from '@model/auth-user.model';
   styleUrls: ['./purchase-request-page.component.scss'],
 })
 export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
+  // @Input() public purchaseRequestDraftId: any;
+
   public currentUser: AuthUser;
 
   public requestInfo: FormGroup;
@@ -38,7 +40,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
 
   public isLoading = false;
 
-  public eventEmployeeByEmail$: Employee | any;
+  // public eventEmployeeByUPN$: Employee | any;
 
   public isConfirmModalVisible = false;
 
@@ -126,11 +128,11 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   }
  */
 
-  public open(): void {
+  public onOpen(): void {
     const { token } = JSON.parse(localStorage.getItem('IT-Support-Portal'));
     this.wsService.send('purchaseRequestInit', this.jwtHelper.decodeToken(token).email);
     this.wsService
-      .on<Employee>(Event.EV_EMPLOYEE_BY_EMAIL)
+      .on<Employee>(Event.EV_PURCHASE_REQUEST_INIT_INFO)
       .pipe(first(), takeUntil(this.ngUnsubscribe$))
       .subscribe(value => {
         this.requestInfo.controls.purchaseInitiator.setValue(value.departmentName);
@@ -143,6 +145,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
 
   public onCancel(): void {
     this.isConfirmModalVisible = true;
+    this.savePurchaseRequest();
   }
 
   public resetRequestPage(): void {
@@ -161,6 +164,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit(): void {
+    this.savePurchaseRequest();
     this.resetRequestPage();
   }
 
@@ -247,13 +251,14 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
     this.responsiblePerson = person;
   }
 
-  public saveAsDraft(): void {
+  public savePurchaseRequest(): void {
     this.isConfirmModalVisible = false;
     this.purchaseRequestAllData = {
       purchaseAuthorIdId: this.currentUser.id,
       purchaseTarget: this.requestInfo.controls.purchaseTarget.value,
       responsiblePersonId: this.responsiblePerson ? this.responsiblePerson.id : 0,
       purchaseReason: this.requestInfo.controls.purchaseReason.value,
+      purchaseRequestStatus: 1,
       // requestAuthorName: this.requestAuthor.controls.requestAuthorName.value,
       // requestAuthorPosition: this.requestAuthor.controls.requestAuthorPosition.value,
     };

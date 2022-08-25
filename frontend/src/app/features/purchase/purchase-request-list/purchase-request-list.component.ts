@@ -16,6 +16,8 @@ export class PurchaseRequestListComponent implements OnInit, OnDestroy {
   // public loading = true;
   public selected: any = [];
 
+  // public purchaseRequestDraftId: any;
+
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   constructor(private wsService: WebsocketService) {

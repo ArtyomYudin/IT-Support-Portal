@@ -1,4 +1,11 @@
-export const insertPurchaseRequest = (prDate: string, prTarget: string, prRespPersonId: number, prReason: string, prAuthorId: number) => `
+export const insertPurchaseRequest = (
+  prDate: string,
+  prTarget: string,
+  prRespPersonId: number,
+  prReason: string,
+  prAuthorId: number,
+  prStatus: number,
+) => `
 INSERT INTO purchase_request (
         date,
         target,
@@ -12,4 +19,4 @@ INSERT INTO purchase_request (
         deputy_director_id,
         head_fin_dep_id,
         status_id)
-VALUES ('${prDate}','${prTarget}','${prRespPersonId}',null,'${prReason}',null,'${prAuthorId}',null,null,null,null,null)`;
+VALUES ('${prDate}','${prTarget}','${prRespPersonId}',null,'${prReason}',null,'${prAuthorId}',null,null,null,null,'${prStatus}')`;

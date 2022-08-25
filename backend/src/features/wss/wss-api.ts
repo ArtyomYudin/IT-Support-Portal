@@ -96,7 +96,7 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
       purchaseAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
       break;
     case 'purchaseRequestInit':
-      purchaseAPI.getEmployeeByEmail(dbPool, ws, parseMsg.data);
+      purchaseAPI.getPurchaseRequestInitInfo(dbPool, ws, parseMsg.data);
       console.log(parseMsg.data);
       break;
     case 'purchaseRequestAsDraft':
