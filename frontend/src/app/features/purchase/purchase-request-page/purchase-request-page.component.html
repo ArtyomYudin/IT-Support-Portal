@@ -10,6 +10,22 @@
         <ng-template clrPageTitle>Описание</ng-template>
         <ng-template clrPageNavTitle>Описание</ng-template>
         <form [formGroup]="requestInfo" clrForm [clrLayout]="'vertical'" autocomplete="off">
+            <!--
+            <div formArrayName="addresses">
+                <div *ngFor="let address of requestInfo.get('addresses').value; let i = index" class="panel panel-default">
+                    <div class="panel-heading">
+                        <input type="text" clrInput />
+                        <<button type="button" class="btn btn-outline" (click)="addAddress()">Да</button> <<button
+                            type="button"
+                            class="btn btn-outline"
+                            (click)="removeAddress(i)"
+                        >
+                            Not
+                        </button>
+                    </div>
+                </div>
+            </div>
+        -->
             <clr-input-container>
                 <label>Инициатор приобретения (Подразделение):</label>
                 <input type="text" formControlName="purchaseInitiator" clrInput />
@@ -85,7 +101,7 @@
             <label class="clr-form-control clr-control-label">Подразделение предприятия, ответственное за приобретение:</label>
             <div class="clr-control-container clr-control-inline">
                 <clr-checkbox-wrapper>
-                    <input type="checkbox" formControlName="purchaseITDepartment" clrCheckbox (change)="onCheckboxChange($event, 'it')" />
+                    <input type="checkbox" formControlName="purchaseITDepartment" clrCheckbox (change)="onCheckboxChange($event, 'ito')" />
                     <label>Отдел информационно-технического обеспечения </label>
                 </clr-checkbox-wrapper>
                 <clr-checkbox-wrapper>

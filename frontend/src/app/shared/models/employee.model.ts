@@ -6,4 +6,8 @@ export class Employee {
   public departmentName: string;
 
   public positionName: string;
+
+  public departmentManagerName?: string;
+
+  public directionManagerName?: string;
 }

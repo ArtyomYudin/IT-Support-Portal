@@ -100,7 +100,7 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
       console.log(parseMsg.data);
       break;
     case 'purchaseRequestAsDraft':
-      purchaseAPI.savePurcheseRequestAsDraft(dbPool, ws, parseMsg.data);
+      purchaseAPI.savePurcheseRequest(dbPool, ws, parseMsg.data);
       console.log(parseMsg.data);
       break;
 

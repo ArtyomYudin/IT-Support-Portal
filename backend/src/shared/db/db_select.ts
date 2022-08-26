@@ -18,6 +18,7 @@ export const getEmployeeByUPN = (email: string) => `
                                    order by employee.display_name desc
                             LIMIT 1`;
 
+/*                            
 export const getPurchaseRequestInitInfoByUPN = (email: string) => `
                             SELECT employee.id AS id,
                                    employee.display_name AS displayName,
@@ -28,6 +29,31 @@ export const getPurchaseRequestInitInfoByUPN = (email: string) => `
                                    INNER JOIN position on(employee.position_id = position.id)
                             WHERE employee.user_principal_name = '${email}'
                                    order by employee.display_name desc
+                            LIMIT 1`;
+*/
+export const getPurchaseRequestInitInfoByUPN = (email: string) => `
+                            SELECT 
+                                   employee_full_info.id as id,
+                                   employee_full_info.display_name as displayName,
+                                   employee_full_info.position_name as positionName,
+                                   employee_full_info.department_name as departmentName,
+                                   dep.id as departmentManagerId,
+                                   dep.display_name as departmentManagerName,
+                                   direction.id as directionManagerId,
+                                   direction.display_name as directionManagerName
+                            FROM employee_full_info
+                                   LEFT JOIN (
+                                          select id,
+                                          display_name
+                                   FROM employee
+                                   ) direction on direction.id = employee_full_info.direction_manager_id
+                                   LEFT JOIN (
+                                          select id,
+                                          display_name
+                                   FROM employee
+                                   ) dep on dep.id = employee_full_info.department_manager_id
+                            WHERE employee_full_info.user_principal_name = '${email}'
+                                   order by employee_full_info.display_name desc
                             LIMIT 1`;
 
 export const getPurchaseRequestApproversByUPN = (email: string) => `

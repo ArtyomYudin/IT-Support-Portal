@@ -133,7 +133,7 @@ export function getPurchaseRequestApproversByUPN(dbPool: Pool, ws: WebSocket, va
     });
 }
 
-export function savePurcheseRequestAsDraft(dbPool: Pool, ws: WebSocket, value: any): void {
+export function savePurcheseRequest(dbPool: Pool, ws: WebSocket, value: any): void {
   dbPool
     .getConnection()
     .then(conn => {
@@ -143,6 +143,7 @@ export function savePurcheseRequestAsDraft(dbPool: Pool, ws: WebSocket, value: a
             changeDateFormat(new Date()),
             value.purchaseTarget,
             value.responsiblePersonId,
+            value.expenseItem,
             value.purchaseReason,
             value.purchaseAuthorIdId,
             value.purchaseRequestStatus,

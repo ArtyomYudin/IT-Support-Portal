@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { ClrWizard } from '@clr/angular';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap, first } from 'rxjs/operators';
@@ -75,6 +75,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       purchaseITDepartment: ['', Validators.required],
       purchaseLogisticDepartment: ['', Validators.required],
       requestAuthor: ['', Validators.required],
+      // addresses: this.formBuilder.array([this.initAddress()]),
     });
     /*
     this.requestAuthor = this.formBuilder.group({
@@ -116,6 +117,15 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  /*
+  initAddress() {
+    // initialize our address
+    return this.formBuilder.group({
+      street: ['', Validators.required],
+      postcode: [''],
+    });
+  }
+*/
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
@@ -128,6 +138,19 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   }
  */
 
+  /*
+  addAddress() {
+    // add address to the list
+    const control = <FormArray>this.requestInfo.controls.addresses;
+    control.push(this.initAddress());
+  }
+
+  removeAddress(i: number) {
+    const control = <FormArray>this.requestInfo.controls.addresses;
+    control.removeAt(i);
+  }
+  */
+
   public onOpen(): void {
     const { token } = JSON.parse(localStorage.getItem('IT-Support-Portal'));
     this.wsService.send('purchaseRequestInit', this.jwtHelper.decodeToken(token).email);
@@ -135,10 +158,14 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       .on<Employee>(Event.EV_PURCHASE_REQUEST_INIT_INFO)
       .pipe(first(), takeUntil(this.ngUnsubscribe$))
       .subscribe(value => {
+        // this.requestInfo.controls.purchaseTarget.setValue[]('sdsadasdas');
+
         this.requestInfo.controls.purchaseInitiator.setValue(value.departmentName);
         this.requestInfo.controls.purchaseInitiator.disable();
         this.requestInfo.controls.requestAuthor.setValue(`${value.positionName}  ${value.displayName}`);
         this.requestInfo.controls.requestAuthor.disable();
+        this.requestApprovers.controls.headOfInitDepartment.setValue(value.departmentManagerName);
+        this.requestApprovers.controls.deputyDirector.setValue(value.directionManagerName);
         this.wizard.open();
       });
   }
@@ -150,12 +177,13 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
 
   public resetRequestPage(): void {
     this.isConfirmModalVisible = false;
+
     Object.keys(this.requestInfo.controls).forEach(key => {
       if (key === 'responsiblePerson') {
         this.requestInfo.get(key).reset('');
       } else this.requestInfo.get(key).reset();
 
-      // this.requestInfo.get(key).setErrors(null);
+      this.requestInfo.get(key).enable();
       // this.requestInfo.get(key).updateValueAndValidity();
     });
     // this.requestInfo.reset(); // ошибка в логах при закрытии окна визарда !!!
@@ -194,6 +222,8 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
           this.requestInfo.controls.expenseDepartmentDescription.clearValidators();
           this.requestInfo.controls.expenseItemCompany.enable();
           this.requestInfo.controls.expenseItemProject.enable();
+          this.requestInfo.controls.expenseDepartmentDescription.reset();
+          this.requestInfo.controls.expenseItemDepartment.setValue(null);
         }
         this.requestInfo.controls.expenseDepartmentDescription.updateValueAndValidity();
         break;
@@ -210,21 +240,20 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
           this.requestInfo.controls.expenseProjectDescription.clearValidators();
           this.requestInfo.controls.expenseItemCompany.enable();
           this.requestInfo.controls.expenseItemDepartment.enable();
+          this.requestInfo.controls.expenseProjectDescription.reset();
+          this.requestInfo.controls.expenseItemProject.setValue(null);
         }
         this.requestInfo.controls.expenseProjectDescription.updateValueAndValidity();
         break;
       }
-      /**
-       * Слатает валидация purchaseLogisticDepartment и purchaseITDepartment
-       * дает возможность продолжить без выбора подразделения закупки !!!!
-       * Необходимо разобраться или переделать
-       */
-      case 'it': {
+
+      case 'ito': {
         if (event.target.checked) {
           this.requestInfo.controls.purchaseLogisticDepartment.disable();
         } else {
           this.requestInfo.controls.purchaseLogisticDepartment.enable();
         }
+        this.requestInfo.controls.purchaseLogisticDepartment.reset();
         break;
       }
       case 'logistic': {
@@ -233,6 +262,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
         } else {
           this.requestInfo.controls.purchaseITDepartment.enable();
         }
+        this.requestInfo.controls.purchaseITDepartment.reset();
         break;
       }
 
@@ -253,11 +283,19 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
 
   public savePurchaseRequest(): void {
     this.isConfirmModalVisible = false;
+    let expenseItem: any;
+    if (this.requestInfo.controls.expenseItemCompany.value) expenseItem = { expenseItem: 'company' };
+    else if (this.requestInfo.controls.expenseItemDepartment.value)
+      expenseItem = { expenseItem: 'department', expenseItemDescription: this.requestInfo.controls.expenseDepartmentDescription.value };
+    else expenseItem = { expenseItem: 'project', expenseItemDescription: this.requestInfo.controls.expenseProjectDescription.value };
+
     this.purchaseRequestAllData = {
       purchaseAuthorIdId: this.currentUser.id,
       purchaseTarget: this.requestInfo.controls.purchaseTarget.value,
       responsiblePersonId: this.responsiblePerson ? this.responsiblePerson.id : 0,
+      expenseItem,
       purchaseReason: this.requestInfo.controls.purchaseReason.value,
+      purchaseDepartment: this.requestInfo.controls.purchaseITDepartment.value ? 'ito' : 'logistic',
       purchaseRequestStatus: 1,
       // requestAuthorName: this.requestAuthor.controls.requestAuthorName.value,
       // requestAuthorPosition: this.requestAuthor.controls.requestAuthorPosition.value,
