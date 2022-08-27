@@ -2,10 +2,11 @@ import { initHTTPSServer } from '../features/https-server';
 import { dbPool } from '../shared/db/db_pool';
 import { websocketServer } from '../features/wss/wss-server';
 import { wsParseMessage } from '../features/wss/wss-api';
-import { monitoringBot } from '../features/jabber-bot';
+import * as purchaseAPI from '../features/purchase-api';
+// import { monitoringBot } from '../features/jabber-bot';
 
 (async () => {
-  const httpServer = await initHTTPSServer();
+  const httpServer = await initHTTPSServer(dbPool);
   const wss = websocketServer(httpServer);
   const clients: any[] = [];
 
@@ -14,6 +15,7 @@ import { monitoringBot } from '../features/jabber-bot';
     clients[id] = ws;
     console.log(`New connection ${id}`);
 
+    purchaseAPI.init(dbPool, wss, ws);
     ws.on('close', () => {
       console.log(`Connection closed ${id}`);
       delete clients[id];
@@ -24,8 +26,8 @@ import { monitoringBot } from '../features/jabber-bot';
     });
   });
   console.log(httpServer.address());
-  monitoringBot.say({
-    user: 'a.yudin@center-inform.ru',
-    text: 'hi!',
-  });
+  // monitoringBot.say({
+  //  user: 'a.yudin@center-inform.ru',
+  //  text: 'hi!',
+  // });
 })();

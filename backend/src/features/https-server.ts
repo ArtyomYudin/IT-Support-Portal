@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { constants } from 'crypto';
 import { config } from 'dotenv';
+import { Pool } from 'mariadb';
 import { checkUserCredentials } from './ldap-auth';
 
 config();
@@ -22,7 +23,7 @@ const options = {
   secureOptions: constants.SSL_OP_NO_SSLv3 || constants.SSL_OP_NO_SSLv2,
 };
 
-export function initHTTPSServer(): https.Server {
+export function initHTTPSServer(dbPool: Pool): https.Server {
   function onError(error: any) {
     if (error.syscall !== 'listen') {
       // throw error;
@@ -53,7 +54,7 @@ export function initHTTPSServer(): https.Server {
         });
         if (req.url === '/api/auth' && req.method === 'POST') {
           // console.log('Resive post', body);
-          checkUserCredentials(body, res);
+          checkUserCredentials(body, res, dbPool);
         }
       });
     })

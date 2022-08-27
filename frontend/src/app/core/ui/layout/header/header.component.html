@@ -1,7 +1,7 @@
 <clr-header class="header header-6" *ngIf="currentUser">
     <div class="branding">
         <a class="nav-link">
-            <cds-icon shape="dashboard"></cds-icon>
+            <clr-icon shape="dashboard"></clr-icon>
             <span class="title">Портал отдела ИТО</span>
         </a>
     </div>
@@ -15,12 +15,12 @@
             <button class="nav-text" clrDropdownTrigger *ngIf="currentUser">
                 <img class="personPhoto" [src]="currentUser.userPhoto | thumbnailPhoto" />
                 {{ currentUser.userDisplayName }}
-                <cds-icon shape="caret" direction="down"></cds-icon>
+                <clr-icon shape="angle" style="transform: rotate(180deg)"></clr-icon>
             </button>
 
             <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
                 <!--<button (click)="aboutPage.open()" clrDropdownItem>О программе</button>-->
-                <a class="nav-link" [routerLink]="['/', 'skud']" clrDropdownItem>Настройки</a>
+                <!--<a class="nav-link" [routerLink]="['/', 'skud']" clrDropdownItem>Настройки</a>-->
                 <button (click)="onLogout()" clrDropdownItem>Выход</button>
             </clr-dropdown-menu>
         </clr-dropdown>
@@ -34,10 +34,6 @@
             <!-- <a class="nav-link active" href="#"></a> -->
         </li>
         <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'monitoring']" *ngIf="isAdmin()">Мониторинг оборудования</a>
-            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
-        </li>
-        <li class="nav-item">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'vpn']" *ngIf="isAdmin()">Статистика VPN</a>
             <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
@@ -48,7 +44,19 @@
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'avaya']" *ngIf="isAdmin()">Статистика Avaya</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'config']" *ngIf="isAdmin()">Настройки системы</a>
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'monitoring']" *ngIf="isAdmin()">Мониторинг оборудования</a>
+            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'purchase']" *ngIf="isAdmin()">Закупки</a>
+            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'request']" *ngIf="isAdmin()">Обращения пользователей</a>
+            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'setting']" *ngIf="isAdmin()">Настройки системы</a>
         </li>
         <!--
         <li class="nav-item">
