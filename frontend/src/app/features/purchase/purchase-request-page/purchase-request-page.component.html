@@ -10,30 +10,37 @@
         <ng-template clrPageTitle>Описание</ng-template>
         <ng-template clrPageNavTitle>Описание</ng-template>
         <form [formGroup]="requestInfo" clrForm [clrLayout]="'vertical'" autocomplete="off">
-            <!--
-            <div formArrayName="addresses">
-                <div *ngFor="let address of requestInfo.get('addresses').value; let i = index" class="panel panel-default">
-                    <div class="panel-heading">
-                        <input type="text" clrInput />
-                        <<button type="button" class="btn btn-outline" (click)="addAddress()">Да</button> <<button
-                            type="button"
-                            class="btn btn-outline"
-                            (click)="removeAddress(i)"
-                        >
-                            Not
-                        </button>
-                    </div>
-                </div>
-            </div>
-        -->
             <clr-input-container>
                 <label>Инициатор приобретения (Подразделение):</label>
                 <input type="text" formControlName="purchaseInitiator" clrInput />
             </clr-input-container>
+            <!--
             <clr-textarea-container>
                 <label>Объект приобретения (наименование, количество):</label>
                 <textarea formControlName="purchaseTarget" clrTextarea rows="4"></textarea>
             </clr-textarea-container>
+        -->
+            <label class="purcase-targer-label">Объект приобретения (наименование, количество):</label>
+            <div formArrayName="purchaseTargets">
+                <div class="purchase-target-container" *ngFor="let purchaseTarget of purchaseTargets.controls; let i = index">
+                    <div [formGroupName]="i" class="purchase-target-wrapper">
+                        <div>{{ i + 1 }}.</div>
+                        <label class="purchase-target-input-label">
+                            <clr-input-container class="purchase-target-input-container">
+                                <input type="text" formControlName="target" class="purchase-target-input" clrInput />
+                            </clr-input-container>
+                            <div class="buttonnn btn-group btn-icon btn-link btn-sm">
+                                <button class="btn" (click)="addPurchaseTarget()">
+                                    <clr-icon shape="plus"></clr-icon>
+                                </button>
+                                <button *ngIf="purchaseTargets.value.length > 1" class="btn" (click)="removePurchaseTarget(i)">
+                                    <clr-icon shape="minus"></clr-icon>
+                                </button>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
             <clr-input-container>
                 <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
                 <input type="text" formControlName="responsiblePerson" clrInput [matAutocomplete]="auto" />

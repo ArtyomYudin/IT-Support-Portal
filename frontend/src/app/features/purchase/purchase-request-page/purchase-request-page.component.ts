@@ -64,7 +64,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.requestInfo = this.formBuilder.group({
       purchaseInitiator: ['', Validators.required],
-      purchaseTarget: ['', Validators.required],
+      // purchaseTarget: ['', Validators.required],
       responsiblePerson: ['', Validators.required],
       expenseItemCompany: ['', Validators.required],
       expenseItemDepartment: ['', Validators.required],
@@ -75,7 +75,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       purchaseITDepartment: ['', Validators.required],
       purchaseLogisticDepartment: ['', Validators.required],
       requestAuthor: ['', Validators.required],
-      // addresses: this.formBuilder.array([this.initAddress()]),
+      purchaseTargets: this.formBuilder.array([]),
     });
     /*
     this.requestAuthor = this.formBuilder.group({
@@ -117,15 +117,10 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  /*
-  initAddress() {
-    // initialize our address
-    return this.formBuilder.group({
-      street: ['', Validators.required],
-      postcode: [''],
-    });
+  get purchaseTargets() {
+    return this.requestInfo.controls.purchaseTargets as FormArray;
   }
-*/
+
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
@@ -138,20 +133,21 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   }
  */
 
-  /*
-  addAddress() {
+  addPurchaseTarget() {
     // add address to the list
-    const control = <FormArray>this.requestInfo.controls.addresses;
-    control.push(this.initAddress());
+    const purchaseTarget = this.formBuilder.group({
+      target: ['', Validators.required],
+    });
+
+    this.purchaseTargets.push(purchaseTarget);
   }
 
-  removeAddress(i: number) {
-    const control = <FormArray>this.requestInfo.controls.addresses;
-    control.removeAt(i);
+  removePurchaseTarget(i: number) {
+    this.purchaseTargets.removeAt(i);
   }
-  */
 
   public onOpen(): void {
+    this.addPurchaseTarget();
     const { token } = JSON.parse(localStorage.getItem('IT-Support-Portal'));
     this.wsService.send('purchaseRequestInit', this.jwtHelper.decodeToken(token).email);
     this.wsService
