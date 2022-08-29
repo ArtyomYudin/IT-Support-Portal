@@ -30,22 +30,6 @@
   "workbench.tree.renderIndentGuides": "always",
   "workbench.colorCustomizations": {
     "tree.indentGuidesStroke": "#008070"
-  },
+  }
   //"typescript.preferences.importModuleSpecifier": "non-relative",
-
-  "sqltools.connections": [
-    {
-      "mysqlOptions": {
-        "authProtocol": "default"
-      },
-      "previewLimit": 50,
-      "server": "ripley.vi.ci",
-      "port": 3306,
-      "driver": "MariaDB",
-      "name": "Ripley MariaDB",
-      "database": "itsupport",
-      "username": "itsupport",
-      "password": "i8bKPpxHLEWz"
-    }
-  ]
 }
