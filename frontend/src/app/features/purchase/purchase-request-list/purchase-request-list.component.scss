@@ -17,3 +17,7 @@ clr-icon {
 .btn-group .btn:focus {
   outline: none;
 }
+
+.limit-height clr-datagrid {
+  height: 480px;
+}

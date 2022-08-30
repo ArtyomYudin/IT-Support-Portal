@@ -24,7 +24,6 @@ export function allPurchaseRequest(dbPool: Pool, ws: WebSocket): void {
         rows.forEach((row: any, i: number) => {
           allPurchaseRequestArray[i] = row;
         });
-        // console.log(allPurchaseRequestArray);
         ws.send(
           JSON.stringify({
             event: 'event_purchase_request_all',
@@ -48,7 +47,6 @@ export function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: string):
         rows.forEach((row: any, i: number) => {
           filteredEmployeeArray[i] = { id: row.id, displayName: row.displayName };
         });
-        console.log(filteredEmployeeArray);
         ws.send(
           JSON.stringify({
             event: 'event_filtered_employee',
@@ -72,7 +70,6 @@ export function getEmployeeByUPN(dbPool: Pool, ws: WebSocket, value: string): vo
         rows.forEach((row: any) => {
           employeeByUPN = row;
         });
-        console.log(employeeByUPN);
         ws.send(
           JSON.stringify({
             event: 'event_employee_by_upn',
@@ -152,7 +149,7 @@ export function savePurcheseRequest(dbPool: Pool, ws: WebSocket, value: any): vo
       } catch (error) {
         console.log(error);
       }
-
+      console.log(value.purchaseTarget);
       conn.release(); // release to pool
     })
     .catch(err => {

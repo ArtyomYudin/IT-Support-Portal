@@ -9,7 +9,7 @@ export class PurchaseRequest {
 
   public responsibleDisplayName: string;
 
-  public purchaseTarget: string;
+  public purchaseTarget: { id: number; target: string };
 
   public statusId: number;
 }

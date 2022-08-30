@@ -23,17 +23,22 @@
             <label class="purcase-targer-label">Объект приобретения (наименование, количество):</label>
             <div formArrayName="purchaseTargets">
                 <div class="purchase-target-container" *ngFor="let purchaseTarget of purchaseTargets.controls; let i = index">
-                    <div [formGroupName]="i" class="purchase-target-wrapper">
-                        <div>{{ i + 1 }}.</div>
+                    <div [formGroupName]="i" class="purchase-target-wrapper form-row">
+                        <!-- <div>{{ i + 1 }}.</div> -->
                         <label class="purchase-target-input-label">
                             <clr-input-container class="purchase-target-input-container">
+                                <label class="purchase-target-input-number">{{ i + 1 }}.</label>
                                 <input type="text" formControlName="target" class="purchase-target-input" clrInput />
                             </clr-input-container>
-                            <div class="buttonnn btn-group btn-icon btn-link btn-sm">
-                                <button class="btn" (click)="addPurchaseTarget()">
+                            <div class="purchase-target-button-group btn-group btn-icon btn-link btn-sm">
+                                <button class="btn purchase-target-button" (click)="addPurchaseTarget()">
                                     <clr-icon shape="plus"></clr-icon>
                                 </button>
-                                <button *ngIf="purchaseTargets.value.length > 1" class="btn" (click)="removePurchaseTarget(i)">
+                                <button
+                                    *ngIf="purchaseTargets.value.length > 1"
+                                    class="btn purchase-target-button"
+                                    (click)="removePurchaseTarget(i)"
+                                >
                                     <clr-icon shape="minus"></clr-icon>
                                 </button>
                             </div>
@@ -97,7 +102,7 @@
             </clr-input-container>
             <clr-textarea-container>
                 <label>Обоснование необходимости::</label>
-                <textarea formControlName="purchaseReason" clrTextarea rows="4"></textarea>
+                <textarea formControlName="purchaseReason" clrTextarea rows="3" class="purchase-reason"></textarea>
             </clr-textarea-container>
             <!--
             <clr-input-container>

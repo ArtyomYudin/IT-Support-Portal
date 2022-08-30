@@ -108,7 +108,7 @@
 }
 
 .purchase-target-container .purchase-target-wrapper {
-  width: calc(100% - 75px);
+  width: calc(100% - 36px);
   //max-width: calc(45rem - 216px);
   //position: relative;
   flex: 0 0 auto;
@@ -117,12 +117,16 @@
   //max-height: 1.2rem;
 }
 
-.purchase-target-container .purchase-target-input-label .buttonnn {
+.purchase-target-container .purchase-target-input-label .purchase-target-button-group {
   position: absolute;
   right: 0rem;
-  top: 0rem;
+  top: 0.4rem;
   color: #0072a3;
   margin-right: 0rem;
+}
+.purchase-target-button {
+  padding: 0rem;
+  outline: none;
 }
 
 .purchase-target-container .purchase-target-input-label {
@@ -136,8 +140,20 @@
   width: 100%;
   //padding: 0 0 0 2rem;
   max-height: 1.2rem;
+  //display: flex;
 }
 
 .purchase-target-input-container {
   margin-top: 0rem;
+  margin-bottom: 0.3rem;
+  //display: flex;
+  flex-direction: row;
+}
+
+.purchase-target-input-number {
+  margin-top: auto;
+  font-weight: 300;
+}
+.purchase-reason {
+  padding: 0 0.4rem 0.4rem 0.4rem;
 }

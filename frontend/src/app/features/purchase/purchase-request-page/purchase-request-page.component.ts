@@ -106,7 +106,6 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
         takeUntil(this.ngUnsubscribe$),
       )
       .subscribe(data => {
-        // console.log(data.length);
         if (!data) {
           this.filteredRespPerson = [];
           // this.isLoading = true;
@@ -117,13 +116,13 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  get purchaseTargets() {
-    return this.requestInfo.controls.purchaseTargets as FormArray;
-  }
-
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
+  }
+
+  get purchaseTargets() {
+    return this.requestInfo.controls.purchaseTargets as FormArray;
   }
 
   /*
@@ -133,7 +132,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   }
  */
 
-  addPurchaseTarget() {
+  public addPurchaseTarget(): void {
     // add address to the list
     const purchaseTarget = this.formBuilder.group({
       target: ['', Validators.required],
@@ -142,7 +141,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
     this.purchaseTargets.push(purchaseTarget);
   }
 
-  removePurchaseTarget(i: number) {
+  public removePurchaseTarget(i: number): void {
     this.purchaseTargets.removeAt(i);
   }
 
@@ -183,6 +182,12 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       // this.requestInfo.get(key).updateValueAndValidity();
     });
     // this.requestInfo.reset(); // ошибка в логах при закрытии окна визарда !!!
+
+    while (this.purchaseTargets.length !== 0) {
+      this.purchaseTargets.removeAt(0);
+    }
+
+    this.requestInfo.controls.requestTargets = this.formBuilder.array([]);
     this.requestApprovers.reset();
     this.wizard.reset();
   }
@@ -285,9 +290,21 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       expenseItem = { expenseItem: 'department', expenseItemDescription: this.requestInfo.controls.expenseDepartmentDescription.value };
     else expenseItem = { expenseItem: 'project', expenseItemDescription: this.requestInfo.controls.expenseProjectDescription.value };
 
+    const purchaseTargetItemsArray: { id: number; item: string }[] = [];
+    // const purchaseTargetItems = { id: null as number, item: '' };
+    let i = 0;
+    this.purchaseTargets.value.forEach((itemValue: any) => {
+      const purchaseTargetItems = { id: null as number, item: '' };
+      purchaseTargetItems.id = i;
+      purchaseTargetItems.item = itemValue.target;
+      purchaseTargetItemsArray.push(purchaseTargetItems);
+      i += 1;
+      console.log(purchaseTargetItems);
+    });
+
     this.purchaseRequestAllData = {
       purchaseAuthorIdId: this.currentUser.id,
-      purchaseTarget: this.requestInfo.controls.purchaseTarget.value,
+      purchaseTarget: JSON.stringify(purchaseTargetItemsArray),
       responsiblePersonId: this.responsiblePerson ? this.responsiblePerson.id : 0,
       expenseItem,
       purchaseReason: this.requestInfo.controls.purchaseReason.value,

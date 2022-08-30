@@ -37,7 +37,6 @@ export class AuthenticationService {
           localStorage.setItem('IT-Support-Portal', JSON.stringify(authUser));
           this.currentUserSubject$.next(authUser);
         }
-        console.log(authUser);
         return authUser;
       }),
       catchError(err => {
