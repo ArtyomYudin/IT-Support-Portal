@@ -18,6 +18,18 @@ clr-icon {
   outline: none;
 }
 
+.card {
+  height: -webkit-fill-available;
+  max-height: 100%;
+}
 .limit-height clr-datagrid {
-  height: 480px;
+  height: calc(100vh - 144px);
+}
+.card {
+  margin-top: 0rem;
+  box-shadow: none;
+}
+
+.purchase-request-card {
+  margin-top: 1.5rem;
 }

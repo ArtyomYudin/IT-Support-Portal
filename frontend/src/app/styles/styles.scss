@@ -69,7 +69,17 @@ body {
   outline: none;
   // box-shadow: none;
 }
-.datagrid-table .datagrid-cell:focus {
+.datagrid-table .datagrid-cell:focus,
+.datagrid-table .datagrid-column:focus {
   outline: none;
   // box-shadow: none;
+}
+
+.datagrid-table input[type='checkbox']:focus + label::before,
+.clr-control-container input[type='checkbox']:focus + label::before {
+  outline: none;
+}
+
+.clr-radio-wrapper input[type='radio']:focus + label:before {
+  outline: none !important;
 }

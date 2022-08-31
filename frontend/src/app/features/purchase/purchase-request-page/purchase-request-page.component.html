@@ -31,15 +31,19 @@
                                 <input type="text" formControlName="target" class="purchase-target-input" clrInput />
                             </clr-input-container>
                             <div class="purchase-target-button-group btn-group btn-icon btn-link btn-sm">
-                                <button class="btn purchase-target-button" (click)="addPurchaseTarget()">
-                                    <clr-icon shape="plus"></clr-icon>
-                                </button>
                                 <button
                                     *ngIf="purchaseTargets.value.length > 1"
                                     class="btn purchase-target-button"
                                     (click)="removePurchaseTarget(i)"
                                 >
                                     <clr-icon shape="minus"></clr-icon>
+                                </button>
+                                <button
+                                    *ngIf="purchaseTargets.value.length == i + 1"
+                                    class="btn purchase-target-button"
+                                    (click)="addPurchaseTarget()"
+                                >
+                                    <clr-icon shape="plus"></clr-icon>
                                 </button>
                             </div>
                         </label>

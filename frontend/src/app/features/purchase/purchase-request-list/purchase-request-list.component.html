@@ -1,5 +1,5 @@
-<div class="limit-height">
-    <clr-datagrid [(clrDgSelected)]="selected" class="datagrid-compact">
+<div class="limit-height clr-row">
+    <clr-datagrid [(clrDgSelected)]="selected" class="datagrid-compact clr-col-8">
         <clr-dg-action-bar>
             <div class="btn-group btn-link btn-sm">
                 <button class="btn" (click)="purchaseRequestPage.onOpen()"><clr-icon shape="file"></clr-icon>Создать заявку</button>
@@ -15,10 +15,10 @@
             </div>
         </clr-dg-action-bar>
 
-        <clr-dg-column [style.width.px]="170">Дата заявки</clr-dg-column>
-        <clr-dg-column [style.width.px]="250">Инициатор Ф.И.О</clr-dg-column>
-        <clr-dg-column>Подразделение</clr-dg-column>
-        <clr-dg-column [style.width.px]="250">Ответственное лицо</clr-dg-column>
+        <clr-dg-column>Дата заявки</clr-dg-column>
+        <clr-dg-column>Инициатор Ф.И.О</clr-dg-column>
+        <clr-dg-column>Подразделение</clr-dg-column> -->
+        <clr-dg-column>Ответственное лицо</clr-dg-column>
         <clr-dg-column>Объект приобретения</clr-dg-column>
         <clr-dg-column>Статус заявки</clr-dg-column>
         <clr-dg-placeholder>Не создана ни одна заявка !</clr-dg-placeholder>
@@ -28,11 +28,11 @@
             [clrDgItem]="purchaseRequest"
             [(clrDgSelected)]="purchaseRequest.selected"
         >
-            <clr-dg-cell>{{ purchaseRequest.date | date: 'dd MMMM YYYY, HH:mm' }}</clr-dg-cell>
+            <clr-dg-cell>{{ purchaseRequest.date | date: 'dd MM YYYY, HH:mm' }}</clr-dg-cell>
             <clr-dg-cell>{{ purchaseRequest.authorDisplayName }}</clr-dg-cell>
             <clr-dg-cell>{{ purchaseRequest.authorDepartmentName }}</clr-dg-cell>
             <clr-dg-cell>{{ purchaseRequest.responsibleDisplayName }}</clr-dg-cell>
-            <clr-dg-cell>{{ purchaseRequest.purchaseTarget }}</clr-dg-cell>
+            <clr-dg-cell>{{ purchaseRequest.purchaseTarget | purchaseTarget }}</clr-dg-cell>
             <clr-dg-cell><clr-icon shape="pencil"></clr-icon>{{ purchaseRequest.statusId }}</clr-dg-cell>
         </clr-dg-row>
 
@@ -46,6 +46,14 @@
         </clr-dg-footer>
     -->
     </clr-datagrid>
+    <div class="clr-col purchase-request-card">
+        <div class="card">
+            <clr-input-container>
+                <label>Объект приобретения (наименование, количество):</label>
+                {{ selected.purchaseTarget }}
+            </clr-input-container>
+        </div>
+    </div>
 </div>
 <!--
     Selected users: <span *ngFor="let user of selected">{{ user.id }}</span>
@@ -54,4 +62,5 @@
 <!--
     <fe-purchase-request-page [purchaseRequestDraftId]="selected" #purchaseRequestPage></fe-purchase-request-page>
 -->
+
 <fe-purchase-request-page #purchaseRequestPage></fe-purchase-request-page>
