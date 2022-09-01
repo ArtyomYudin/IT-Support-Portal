@@ -7,8 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GlobalPipeModule } from '@pipe/globalpipe.module';
 import { PurchaseComponent } from './purchase.component';
-import { PurchaseRequestPageComponent } from './purchase-request-page/purchase-request-page.component';
-import { PurchaseRequestListComponent } from './purchase-request-list/purchase-request-list.component';
+import { PurchaseRequestPageComponent } from './request-page/request-page.component';
+import { PurchaseRequestListComponent } from './request-list/request-list.component';
 
 const routing = RouterModule.forChild([{ path: '', component: PurchaseComponent }]);
 @NgModule({

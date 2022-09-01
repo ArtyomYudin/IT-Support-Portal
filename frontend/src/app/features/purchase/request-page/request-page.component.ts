@@ -12,8 +12,8 @@ import { AuthUser } from '@model/auth-user.model';
 
 @Component({
   selector: 'fe-purchase-request-page',
-  templateUrl: './purchase-request-page.component.html',
-  styleUrls: ['./purchase-request-page.component.scss'],
+  templateUrl: './request-page.component.html',
+  styleUrls: ['./request-page.component.scss'],
 })
 export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
   // @Input() public purchaseRequestDraftId: any;

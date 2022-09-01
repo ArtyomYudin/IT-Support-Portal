@@ -1,0 +1,59 @@
+<clr-modal #userRequestModal [(clrModalOpen)]="basic" [clrModalClosable]="false" [clrModalSize]="'xl'">
+    <h3 class="modal-title">Новое обращение пользователея № 000001 от 01 сентября 2022г.</h3>
+    <div class="modal-body">
+        <form [formGroup]="requestInfo" clrForm [clrLayout]="'horizontal'" autocomplete="off">
+            <clr-input-container>
+                <label>Приоритет:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-date-container>
+                <label>Контрольный срок:</label>
+                <input type="date" clrDate />
+            </clr-date-container>
+
+            <clr-input-container>
+                <label>Инициатор обращения:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-input-container>
+                <label>Подразделение:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-input-container>
+                <label>Исполнитель:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-input-container>
+                <label>Услуга:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-input-container>
+                <label>Тема обращения:</label>
+                <input type="text" clrInput />
+            </clr-input-container>
+            <clr-textarea-container>
+                <label>Описание:</label>
+                <textarea clrTextarea rows="6" contenteditable="true"></textarea>
+            </clr-textarea-container>
+            <div contenteditable="true" formControlName="test">
+                This is the first line.<br />
+                See, how the text fits here, also if<br />there is a <strong>linebreak</strong> at the end? <br />It works nicely.
+                <br />
+                <br /><span style="color: lightgreen">Great</span>.
+            </div>
+            <label class="btn btn-link">
+                <input type="file" (change)="onChange($event)" placeholder="Upload file" class="button-input" accept="*" />
+                Attach Files
+            </label>
+            <!--
+            <clr-textarea-container>
+                <label>Объект приобретения (наименование, количество):</label>
+                <textarea formControlName="purchaseTarget" clrTextarea rows="4"></textarea>
+            </clr-textarea-container>
+        --></form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="onClose()">Отменя</button>
+        <button type="button" class="btn btn-primary" (click)="basic = false">Сохранить</button>
+    </div>
+</clr-modal>

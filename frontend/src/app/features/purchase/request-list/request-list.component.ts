@@ -7,8 +7,8 @@ import { PurchaseRequest } from '@model/purchase-request.model';
 
 @Component({
   selector: 'fe-purchase-request-list',
-  templateUrl: './purchase-request-list.component.html',
-  styleUrls: ['./purchase-request-list.component.scss'],
+  templateUrl: './request-list.component.html',
+  styleUrls: ['./request-list.component.scss'],
 })
 export class PurchaseRequestListComponent implements OnInit, OnDestroy {
   public purchaseRequestArray$: PurchaseRequest | any;
