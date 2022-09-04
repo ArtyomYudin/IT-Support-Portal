@@ -48,11 +48,17 @@
     </clr-datagrid>
     <div class="clr-col purchase-request-card">
         <div class="card">
+            <!--
+            Selected users: <textarea *ngFor="let user of selected">{{ user.purchaseReason }}</textarea>
             <clr-input-container>
                 <label>Объект приобретения (наименование, количество):</label>
-                {{ selected.purchaseTarget }}
+                {{ this.selected }}
             </clr-input-container>
-        </div>
+            <clr-textarea-container>
+                <label>Обоснование:</label>
+                <textarea>{{ selected }}</textarea>
+            </clr-textarea-container>
+        --></div>
     </div>
 </div>
 <!--

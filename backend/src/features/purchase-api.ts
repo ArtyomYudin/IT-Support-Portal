@@ -45,8 +45,9 @@ export function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: string):
     .then(conn => {
       conn.query(dbSelect.getFilteredEmployee(value)).then(rows => {
         rows.forEach((row: any, i: number) => {
-          filteredEmployeeArray[i] = { id: row.id, displayName: row.displayName };
+          filteredEmployeeArray[i] = { id: row.id, displayName: row.displayName, departmentId: row.departmentId };
         });
+        console.log(filteredEmployeeArray);
         ws.send(
           JSON.stringify({
             event: 'event_filtered_employee',
@@ -150,6 +151,99 @@ export function savePurcheseRequest(dbPool: Pool, ws: WebSocket, value: any): vo
         console.log(error);
       }
       console.log(value.purchaseTarget);
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+
+export function getUserRequestService(dbPool: Pool, ws: WebSocket, value?: number): void {
+  const userRequestServiceArray: any[] = [];
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getUserRequestService(value)).then(rows => {
+        rows.forEach((row: any, i: number) => {
+          userRequestServiceArray[i] = { id: row.id, name: row.name };
+        });
+        console.log(userRequestServiceArray);
+        ws.send(
+          JSON.stringify({
+            event: 'event_user_request_service',
+            data: userRequestServiceArray,
+          }),
+        );
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+export function getUserRequestStatus(dbPool: Pool, ws: WebSocket, value?: number): void {
+  const userRequestStatusArray: any[] = [];
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getUserRequestStatus(value)).then(rows => {
+        rows.forEach((row: any, i: number) => {
+          userRequestStatusArray[i] = { id: row.id, name: row.name };
+        });
+        console.log(userRequestStatusArray);
+        ws.send(
+          JSON.stringify({
+            event: 'event_user_request_status',
+            data: userRequestStatusArray,
+          }),
+        );
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+export function getUserRequestPriority(dbPool: Pool, ws: WebSocket, value?: number): void {
+  const userRequestPriorityArray: any[] = [];
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getUserRequestPriority(value)).then(rows => {
+        rows.forEach((row: any, i: number) => {
+          userRequestPriorityArray[i] = { id: row.id, name: row.name };
+        });
+        console.log(userRequestPriorityArray);
+        ws.send(
+          JSON.stringify({
+            event: 'event_user_request_priority',
+            data: userRequestPriorityArray,
+          }),
+        );
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+export function getDepartment(dbPool: Pool, ws: WebSocket, value?: number): void {
+  const departmentArray: any[] = [];
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getDepartment(value)).then(rows => {
+        rows.forEach((row: any, i: number) => {
+          departmentArray[i] = { id: row.id, name: row.name, parentName: row.parentDepartmentName };
+        });
+        console.log(departmentArray);
+        ws.send(
+          JSON.stringify({
+            event: 'event_department',
+            data: departmentArray,
+          }),
+        );
+      });
       conn.release(); // release to pool
     })
     .catch(err => {

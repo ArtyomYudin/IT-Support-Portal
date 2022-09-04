@@ -1,7 +1,44 @@
+/* eslint-disable no-template-curly-in-string */
+export const getUserRequestService = (serviceId?: number) => `
+                            SELECT ur_service.id AS id,
+                                   ur_service.name AS name
+                            FROM ur_service
+                            ${serviceId ? ` WHERE ur_service.id  =${serviceId}` : ''}
+                            order by ur_service.name`;
+
+export const getUserRequestStatus = (statusId?: number) => `
+                            SELECT ur_status.id AS id,
+                                   ur_status.name AS name
+                            FROM ur_status
+                            ${statusId ? ` WHERE ur_status.id  =${statusId}` : ''}
+                            order by ur_status.id`;
+
+export const getUserRequestPriority = (priorityId?: number) => `
+                            SELECT ur_priority.id AS id,
+                                   ur_priority.name AS name
+                            FROM ur_priority
+                            ${priorityId ? ` WHERE ur_priority.id  =${priorityId}` : ''}
+                            order by ur_priority.id`;
+
+export const getDepartment = (departmentId?: number) => `
+                            SELECT department.id AS id,
+                                   department.name AS name,
+                                   dep.id as parentDepartmentId,
+                                   dep.name as parentDepartmentName
+                            FROM department
+                            LEFT JOIN (
+                                   select id,
+                                   name
+                            FROM department
+                            ) dep on dep.id = department.parent_id
+                            ${departmentId ? ` WHERE department.id  =${departmentId}` : ''}
+                            order by department.name`;
+
 export const getFilteredEmployee = (filterValue: string) => `
                             SELECT employee.id AS id,
                                    employee.display_name AS displayName,
-                                   employee.user_principal_name AS userPrincipalName
+                                   employee.user_principal_name AS userPrincipalName,
+                                   employee.department_id AS departmentId
                             FROM employee
                             WHERE employee.display_name LIKE  '${filterValue}%'
                                    order by employee.display_name desc`;
@@ -75,6 +112,7 @@ export const purchaseRequestList = `
                                    employee_full_info.department_name AS authorDepartmentName,
                                    employee.display_name AS responsibleDisplayName,
                                    purchase_request.target AS purchaseTarget,
+                                   purchase_request.reason AS purchaseReason,
                                    purchase_request.status_id AS statusId
                             FROM purchase_request
                             LEFT OUTER JOIN employee_full_info on(purchase_request.author_id = employee_full_info.id)

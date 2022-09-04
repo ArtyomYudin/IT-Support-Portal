@@ -53,7 +53,7 @@
             <clr-input-container>
                 <label>Ответственное лицо, за которым будет закреплено ОС, ТМЦ:</label>
                 <input type="text" formControlName="responsiblePerson" clrInput [matAutocomplete]="auto" />
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
                     <ng-container *ngIf="!isLoading">
                         <mat-option

@@ -92,7 +92,11 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
   const parseMsg = JSON.parse(msg);
   switch (parseMsg.event) {
     case 'getFilteredRespPerson':
-      // console.log(`Connection test ${parseMsg.data}`);
+      console.log(`Connection test ${parseMsg.data}`);
+      purchaseAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
+      break;
+    case 'getFilteredRequestInitiator':
+      console.log(`Request Initiator ${parseMsg.data}`);
       purchaseAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
       break;
     case 'purchaseRequestInit':
@@ -103,9 +107,24 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
       purchaseAPI.savePurcheseRequest(dbPool, ws, parseMsg.data);
       console.log(parseMsg.data);
       break;
-
     case 'getAllPurchaseRequest':
       purchaseAPI.allPurchaseRequest(dbPool, ws);
+      break;
+    case 'getUserRequestService':
+      console.log(`Service ${parseMsg.data}`);
+      purchaseAPI.getUserRequestService(dbPool, ws, parseMsg.data);
+      break;
+    case 'getUserRequestStatus':
+      console.log(`Status ${parseMsg.data}`);
+      purchaseAPI.getUserRequestStatus(dbPool, ws, parseMsg.data);
+      break;
+    case 'getUserRequestPriority':
+      console.log(`Priority ${parseMsg.data}`);
+      purchaseAPI.getUserRequestPriority(dbPool, ws, parseMsg.data);
+      break;
+    case 'getDepartment':
+      console.log(`Service ${parseMsg.data}`);
+      purchaseAPI.getDepartment(dbPool, ws, parseMsg.data);
       break;
     default:
       break;

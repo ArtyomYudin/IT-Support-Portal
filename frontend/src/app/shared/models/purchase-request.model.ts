@@ -11,5 +11,7 @@ export class PurchaseRequest {
 
   public purchaseTarget: { id: number; target: string };
 
+  public purchaseReason: string;
+
   public statusId: number;
 }

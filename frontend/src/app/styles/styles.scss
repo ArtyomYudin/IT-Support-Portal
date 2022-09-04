@@ -8,13 +8,14 @@ body {
   background-color: #1b2a32;
   // height: 100%;
 }
+*/
 .main-container .content-container .content-area {
   //padding: 0rem 1rem 1rem 1rem;
-  padding: 0;
-  //padding-bottom: 0;
+  //padding: 0;
+  padding-bottom: 0;
 }
 
-
+/*
 .app-loading {
   position: absolute;
   top: 50%;
@@ -51,6 +52,10 @@ body {
   width: 100%;
 }
 
+.tabs-vertical .nav {
+  margin-right: 0rem;
+}
+
 .tabs-vertical .nav .nav-link.active {
   background-color: #fafafa;
   color: #0072a3;
@@ -69,6 +74,16 @@ body {
   outline: none;
   // box-shadow: none;
 }
+
+.btn:focus {
+  outline: none;
+}
+/*
+.btn:active {
+  box-shadow: 0;
+  transform: none;
+}
+*/
 .datagrid-table .datagrid-cell:focus,
 .datagrid-table .datagrid-column:focus {
   outline: none;
@@ -82,4 +97,12 @@ body {
 
 .clr-radio-wrapper input[type='radio']:focus + label:before {
   outline: none !important;
+}
+
+.clr-select-wrapper select:hover {
+  background: unset !important;
+  border-color: #0072a3;
+}
+.clr-input-group .clr-input-group-icon-action {
+  outline: none;
 }
