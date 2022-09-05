@@ -1,4 +1,35 @@
 /* eslint-disable no-template-curly-in-string */
+export const userRequestList = `
+              SELECT user_request.id AS id,
+                     user_request.creation_date AS creationDate,
+                     user_request.change_date AS changeDate,
+                     user_request.number AS requestNumber,
+                     employee.display_name AS initiator,
+                     department.name AS department,
+                     user_request.executor_id AS executorId,
+                     executor.display_name AS executorName,
+                     ur_service.name AS service,
+                     user_request.topic AS topic,
+                     user_request.description AS description,
+                     user_request.deadline AS deadline,
+                     user_request.status_id AS statusId,
+                     ur_status.name AS statusName,
+                     user_request.priority_id AS priorityId,	
+                     ur_priority.name AS priorityName,
+                     ur_priority.color AS priorityColor
+              FROM user_request
+                     LEFT JOIN employee on(user_request.initiator_id = employee.id)
+                     LEFT JOIN department on(user_request.department_id = department.id)
+                     LEFT JOIN ur_service on(user_request.service_id = ur_service.id)
+                     LEFT JOIN ur_status on(user_request.status_id = ur_status.id)
+                     LEFT JOIN ur_priority on(user_request.priority_id = ur_priority.id)
+                     LEFT JOIN (
+                            select id,
+                            display_name
+                     FROM employee
+                     ) executor on executor.id = user_request.executor_id
+              ORDER by user_request.creation_date desc`;
+
 export const getUserRequestService = (serviceId?: number) => `
                             SELECT ur_service.id AS id,
                                    ur_service.name AS name
@@ -55,6 +86,13 @@ export const getEmployeeByUPN = (email: string) => `
                                    order by employee.display_name desc
                             LIMIT 1`;
 
+export const getEmployeeByParentDepartment = (parentDepartmentId: number) => `
+                            SELECT employee.id AS id,
+                                   employee.display_name AS displayName
+                            FROM employee
+                                   INNER JOIN department on(employee.department_id = department.id)
+                            WHERE department.parent_id = ${parentDepartmentId} or department.id = ${parentDepartmentId}
+                                   order by employee.display_name`;
 /*                            
 export const getPurchaseRequestInitInfoByUPN = (email: string) => `
                             SELECT employee.id AS id,
@@ -118,17 +156,3 @@ export const purchaseRequestList = `
                             LEFT OUTER JOIN employee_full_info on(purchase_request.author_id = employee_full_info.id)
                             LEFT OUTER JOIN employee on(purchase_request.responsible_person_id = employee.id)
                             ORDER by purchase_request.date desc`;
-
-/*
-                            SELECT 
-*
-FROM employee_full_info
-LEFT JOIN (
-	select id,
-	display_name as direction_manager
-	from employee
-
-) d on d.id = employee_full_info.direction_manager_id
-
-WHERE employee_full_info.user_principal_name = 'a.yudin@center-inform.ru'
-*/

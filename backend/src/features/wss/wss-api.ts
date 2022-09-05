@@ -110,6 +110,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
     case 'getAllPurchaseRequest':
       purchaseAPI.allPurchaseRequest(dbPool, ws);
       break;
+    case 'getAllUserRequest':
+      purchaseAPI.allUserRequest(dbPool, ws);
+      break;
     case 'getUserRequestService':
       console.log(`Service ${parseMsg.data}`);
       purchaseAPI.getUserRequestService(dbPool, ws, parseMsg.data);
@@ -125,6 +128,14 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
     case 'getDepartment':
       console.log(`Service ${parseMsg.data}`);
       purchaseAPI.getDepartment(dbPool, ws, parseMsg.data);
+      break;
+    case 'getEmployeeByParentDepartment':
+      console.log(`Connection test ${parseMsg.data}`);
+      purchaseAPI.getEmployeeByParentDepartment(dbPool, ws, parseMsg.data);
+      break;
+    case 'saveNewUserRequest':
+      console.log(`Service ${parseMsg.data}`);
+      purchaseAPI.saveNewUserRequest(dbPool, ws, parseMsg.data);
       break;
     default:
       break;

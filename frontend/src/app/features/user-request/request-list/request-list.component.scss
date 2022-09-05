@@ -1,0 +1,34 @@
+.datagrid-action-bar {
+  margin-top: 0.3rem;
+}
+
+::ng-deep .datagrid {
+  margin-top: 0.3rem;
+}
+
+.datagrid-action-bar {
+  margin-top: 0rem;
+}
+
+clr-icon {
+  margin-right: 0.1rem;
+}
+
+.btn-group .btn:focus {
+  outline: none;
+}
+
+.limit-height clr-datagrid {
+  height: calc(100vh - 144px);
+}
+.color-column {
+  min-width: 16px !important;
+}
+.color-square {
+  display: inline-block;
+  vertical-align: bottom;
+  height: 13px;
+  width: 13px;
+  border: 1px solid black;
+  border-radius: 4px;
+}

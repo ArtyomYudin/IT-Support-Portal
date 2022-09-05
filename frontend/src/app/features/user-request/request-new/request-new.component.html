@@ -145,7 +145,18 @@
             </clr-input-container>
             <clr-input-container>
                 <label>Исполнитель:</label>
-                <input formControlName="executor" type="text" clrInput />
+                <input formControlName="executor" type="text" clrInput [matAutocomplete]="executorList" />
+                <mat-autocomplete #executorList="matAutocomplete">
+                    <ng-container>
+                        <mat-option
+                            (onSelectionChange)="onExecutorSelected(executor)"
+                            *ngFor="let executor of executorListArray | async"
+                            [value]="executor.name"
+                        >
+                            {{ executor.name }}
+                        </mat-option>
+                    </ng-container>
+                </mat-autocomplete>
             </clr-input-container>
             <clr-input-container>
                 <label>Услуга:</label>
@@ -193,7 +204,7 @@
         --></form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="onClose()">Отмена</button>
-        <button type="button" class="btn btn-primary" (click)="onSave()">Сохранить</button>
+        <button type="button" class="btn btn-link" (click)="onClose()">Отмена</button>
+        <button type="button" class="btn btn-link" (click)="onSave()" [disabled]="userRequest.invalid">Сохранить</button>
     </div>
 </clr-modal>

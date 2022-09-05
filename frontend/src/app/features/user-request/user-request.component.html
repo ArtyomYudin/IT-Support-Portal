@@ -1,3 +1,6 @@
-<button class="btn" (click)="userRequestNew.onOpen()"><clr-icon shape="file"></clr-icon>Создать заявку</button>
-
-<fe-user-request-new #userRequestNew></fe-user-request-new>
+<clr-tabs clrLayout="vertical">
+    <clr-tab>
+        <button clrTabLink>Все обращения</button>
+        <clr-tab-content *clrIfActive><fe-user-request-list #userRequestList></fe-user-request-list></clr-tab-content>
+    </clr-tab>
+</clr-tabs>

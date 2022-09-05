@@ -1,5 +1,6 @@
 import { Pool } from 'mariadb';
 import { Server, WebSocket } from 'ws';
+import { resolveObjectURL } from 'buffer';
 import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
 
@@ -84,7 +85,29 @@ export function getEmployeeByUPN(dbPool: Pool, ws: WebSocket, value: string): vo
       console.log(`not connected due to error: ${err}`);
     });
 }
-
+export function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket, value: number): void {
+  const employeeByParentDepartment: any[] = [];
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getEmployeeByParentDepartment(value)).then(rows => {
+        rows.forEach((row: any, i: number) => {
+          employeeByParentDepartment[i] = { id: row.id, name: row.displayName };
+        });
+        console.log(employeeByParentDepartment);
+        ws.send(
+          JSON.stringify({
+            event: 'event_employee_by_parent_department',
+            data: employeeByParentDepartment,
+          }),
+        );
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
 export function getPurchaseRequestInitInfo(dbPool: Pool, ws: WebSocket, value: string): void {
   let purchaseRequestInitByUPN: any = {};
   dbPool
@@ -151,6 +174,43 @@ export function savePurcheseRequest(dbPool: Pool, ws: WebSocket, value: any): vo
         console.log(error);
       }
       console.log(value.purchaseTarget);
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+
+export function allUserRequest(dbPool: Pool, ws: WebSocket): void {
+  const allUserRequestArray: any[] = [];
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.userRequestList).then(rows => {
+        rows.forEach((row: any, i: number) => {
+          allUserRequestArray[i] = {
+            id: row.id,
+            creationDate: row.creationDate,
+            changeDate: row.changeDate,
+            requestNumber: row.requestNumber,
+            initiator: row.initiator,
+            department: row.department,
+            executor: { id: row.executorId, name: row.executorName },
+            service: row.service,
+            topic: row.topic,
+            description: row.description,
+            status: { id: row.status_id, name: row.statusName },
+            priority: { id: row.priority_id, name: row.priorityName, color: row.priorityColor },
+            deadline: row.deadline,
+          };
+        });
+        ws.send(
+          JSON.stringify({
+            event: 'event_user_request_all',
+            data: { results: allUserRequestArray, total: allUserRequestArray.length },
+          }),
+        );
+      });
       conn.release(); // release to pool
     })
     .catch(err => {
@@ -244,6 +304,37 @@ export function getDepartment(dbPool: Pool, ws: WebSocket, value?: number): void
           }),
         );
       });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
+export function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any): void {
+  dbPool
+    .getConnection()
+    .then(conn => {
+      try {
+        conn.query(
+          dbInsert.insertUserRequest(
+            changeDateFormat(new Date()),
+            changeDateFormat(new Date()),
+            value.requestNumber,
+            value.initiatorId,
+            value.departmentId,
+            value.executorId,
+            value.serviceId,
+            value.topic,
+            value.description,
+            value.statusId,
+            value.priorityId,
+            value.deadline,
+          ),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+      console.log(value.purchaseTarget);
       conn.release(); // release to pool
     })
     .catch(err => {

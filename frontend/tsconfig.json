@@ -26,7 +26,8 @@
       "@model/*": ["src/app/shared/models/*"],
       "@feature/*": ["src/app/features/*"],
       "@pipe/*": ["src/app/shared/pipes/*"],
-      "@service/*": ["src/app/shared/services/*"]
+      "@service/*": ["src/app/shared/services/*"],
+      "@translation/*": ["src/app/shared/translations/*"]
     }
   },
   "angularCompilerOptions": {
