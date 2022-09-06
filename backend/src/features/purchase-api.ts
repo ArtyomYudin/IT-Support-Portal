@@ -1,6 +1,7 @@
 import { Pool } from 'mariadb';
 import { Server, WebSocket } from 'ws';
-import { resolveObjectURL } from 'buffer';
+import { Blob } from 'buffer';
+import fs from 'fs';
 import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
 
@@ -16,6 +17,29 @@ function changeDateFormat(newDate: Date) {
   ].join(':')}`;
 }
 
+function base64ToBlob(dataURI: any) {
+  console.log(dataURI);
+  const byteString = Buffer.from(dataURI.split(',')[1], 'base64').toString();
+  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i += 1) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  const blob = new Blob([ia], { type: mimeString });
+  return blob;
+}
+
+function decodeBase64(dataString: any) {
+  const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  if (matches.length !== 3) {
+    return new Error('Invalid input string');
+  }
+  // response.type = matches[1];
+  // response.data = Buffer.from(matches[2], 'base64');
+  const response = Buffer.from(matches[2], 'base64').toString;
+  return response;
+}
 export function allPurchaseRequest(dbPool: Pool, ws: WebSocket): void {
   const allPurchaseRequestArray: any[] = [];
   dbPool
@@ -85,6 +109,7 @@ export function getEmployeeByUPN(dbPool: Pool, ws: WebSocket, value: string): vo
       console.log(`not connected due to error: ${err}`);
     });
 }
+
 export function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket, value: number): void {
   const employeeByParentDepartment: any[] = [];
   dbPool
@@ -108,6 +133,7 @@ export function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket, value
       console.log(`not connected due to error: ${err}`);
     });
 }
+
 export function getPurchaseRequestInitInfo(dbPool: Pool, ws: WebSocket, value: string): void {
   let purchaseRequestInitByUPN: any = {};
   dbPool
@@ -241,6 +267,7 @@ export function getUserRequestService(dbPool: Pool, ws: WebSocket, value?: numbe
       console.log(`not connected due to error: ${err}`);
     });
 }
+
 export function getUserRequestStatus(dbPool: Pool, ws: WebSocket, value?: number): void {
   const userRequestStatusArray: any[] = [];
   dbPool
@@ -264,6 +291,7 @@ export function getUserRequestStatus(dbPool: Pool, ws: WebSocket, value?: number
       console.log(`not connected due to error: ${err}`);
     });
 }
+
 export function getUserRequestPriority(dbPool: Pool, ws: WebSocket, value?: number): void {
   const userRequestPriorityArray: any[] = [];
   dbPool
@@ -287,6 +315,7 @@ export function getUserRequestPriority(dbPool: Pool, ws: WebSocket, value?: numb
       console.log(`not connected due to error: ${err}`);
     });
 }
+
 export function getDepartment(dbPool: Pool, ws: WebSocket, value?: number): void {
   const departmentArray: any[] = [];
   dbPool
@@ -310,7 +339,15 @@ export function getDepartment(dbPool: Pool, ws: WebSocket, value?: number): void
       console.log(`not connected due to error: ${err}`);
     });
 }
-export function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any): void {
+
+export async function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any): Promise<void> {
+  // value.attachments.forEach((attachment: any) => {
+  //  fs.writeFileSync(attachment.name, decodeBase64(attachment.data), {
+  //    flag: 'w',
+  //  });
+  //  // conn.query(dbInsert.insertUserRequestAttachment(value.requestNumber, base64ToBlob(attachment.data)));
+  // });
+
   dbPool
     .getConnection()
     .then(conn => {
@@ -331,10 +368,13 @@ export function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any): voi
             value.deadline,
           ),
         );
+        // value.attachments.forEach((attachment: any) => {
+        //   fs.writeFile(attachment.name, attachment.data);
+        //   // conn.query(dbInsert.insertUserRequestAttachment(value.requestNumber, base64ToBlob(attachment.data)));
+        // });
       } catch (error) {
         console.log(error);
       }
-      console.log(value.purchaseTarget);
       conn.release(); // release to pool
     })
     .catch(err => {

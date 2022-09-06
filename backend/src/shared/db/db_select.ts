@@ -51,6 +51,13 @@ export const getUserRequestPriority = (priorityId?: number) => `
                             ${priorityId ? ` WHERE ur_priority.id  =${priorityId}` : ''}
                             order by ur_priority.id`;
 
+export const getUserRequestAttachment = (requestNumber?: number) => `
+                            SELECT ur_attachment.id AS id,
+                                   ur_attachment.attachment AS attachment
+                            FROM ur_attachment
+                            ${requestNumber ? ` WHERE ur_attachment.request_number  =${requestNumber}` : ''}
+                            order by ur_attachment.id`;
+
 export const getDepartment = (departmentId?: number) => `
                             SELECT department.id AS id,
                                    department.name AS name,

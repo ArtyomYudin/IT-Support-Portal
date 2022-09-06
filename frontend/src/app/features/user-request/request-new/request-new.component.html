@@ -1,5 +1,5 @@
 <clr-modal #userRequestModal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false" [clrModalSize]="'lg'">
-    <h3 class="modal-title">Новое обращение пользователея № 000001 от 01 сентября 2022г.</h3>
+    <h3 class="modal-title">Новое обращение пользователея № 000001 от {{ this.currentDate.toLocaleDateString() }} г.</h3>
     <div class="modal-body">
         <form [formGroup]="userRequest" clrForm [clrLayout]="'horizontal'" autocomplete="off">
             <!--
@@ -183,26 +183,29 @@
             </clr-textarea-container>
             <label class="image-upload-btn btn btn-link btn-icon clr-col-0">
                 <clr-icon shape="attachment"></clr-icon>
-                <input type="file" (change)="onChange($event)" placeholder="Upload file" class="button-input" accept="*" />
+                <input
+                    multiple
+                    type="file"
+                    (change)="onAttacheFile($any($event).target.files)"
+                    placeholder="Upload file"
+                    class="button-input"
+                    accept="image/*"
+                />
                 Прикрепить файл
             </label>
-            <!--
-            <div class="card">
-                <div class="title">Выбранные файлы:</div>
-                <div class="value">
-                    <ul>
-                        <li *ngFor="let item of files">{{ item?.name }}</li>
-                    </ul>
-                </div>
+            <div class="file-List">
+                <ul class="list-unstyled">
+                    <li *ngFor="let file of listOfFiles; let index = index">
+                        <button type="button" class="btn btn-icon btn-sm btn-link delete-file-btn" (click)="onDeleteAttachFile(index)">
+                            <clr-icon shape="trash"></clr-icon>
+                        </button>
+                        {{ file }}
+                    </li>
+                </ul>
             </div>
-        -->
-            <!--
-            <clr-textarea-container>
-                <label>Объект приобретения (наименование, количество):</label>
-                <textarea formControlName="purchaseTarget" clrTextarea rows="4"></textarea>
-            </clr-textarea-container>
-        --></form>
+        </form>
     </div>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-link" (click)="onClose()">Отмена</button>
         <button type="button" class="btn btn-link" (click)="onSave()" [disabled]="userRequest.invalid">Сохранить</button>

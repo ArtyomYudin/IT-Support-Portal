@@ -20,7 +20,11 @@ import { Observable } from 'rxjs';
 export class RequestNewComponent implements OnInit, OnDestroy {
   public modalOpen: boolean;
 
-  public files: any;
+  public fileList: File[] = [];
+
+  public listOfFiles: any[] = [];
+
+  public attachFilesArray: any[] = [];
 
   public userRequest: FormGroup;
 
@@ -49,6 +53,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     statusId?: number;
     priorityId?: number;
     deadline?: string;
+    attachments?: any[];
   } = {};
 
   private ngUnsubscribe$: Subject<any> = new Subject();
@@ -114,10 +119,22 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
+  public readFiles(file: any) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        return resolve({ data: fileReader.result, name: file.name, size: file.size, type: file.type });
+      };
+      fileReader.readAsDataURL(file);
+    });
+  }
+
   public resetRequestPage(): void {
     Object.keys(this.userRequest.controls).forEach(key => {
       this.userRequest.get(key).reset('');
     });
+    this.fileList = [];
+    this.listOfFiles = [];
   }
 
   public onOpen(): void {
@@ -139,11 +156,20 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.userRequestAllData.requestNumber = '000001';
   }
 
-  public onChange(event: any): void {
-    console.log(event.target.files);
+  public onAttacheFile(files: FileList): void {
+    for (let i = 0; i <= files.length - 1; i += 1) {
+      this.fileList.push(files[i]);
+      this.listOfFiles.push(files[i].name);
+    }
   }
 
-  public onClose(): void {
+  public onDeleteAttachFile(index: any): void {
+    this.listOfFiles.splice(index, 1);
+    this.fileList.splice(index, 1);
+    console.log(this.fileList);
+  }
+
+  public async onClose(): Promise<void> {
     this.modalOpen = false;
     // console.log(this.requestInfo.controls.test.value);
     this.resetRequestPage();
@@ -172,11 +198,16 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.userRequestAllData.serviceId = service.id;
   }
 
-  public onSave(): void {
+  public async onSave(): Promise<void> {
     this.modalOpen = false;
     this.userRequestAllData.deadline = this.datePipe.transform(this.userRequest.controls.deadline.value, 'yyyy-dd-MM');
     this.userRequestAllData.topic = this.userRequest.controls.topic.value;
     this.userRequestAllData.description = this.userRequest.controls.description.value;
+    this.userRequestAllData.attachments = await Promise.all(
+      this.fileList.map(file => {
+        return this.readFiles(file);
+      }),
+    );
     this.wsService.send('saveNewUserRequest', this.userRequestAllData);
     console.log(this.userRequestAllData);
     this.resetRequestPage();

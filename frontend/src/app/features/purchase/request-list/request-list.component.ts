@@ -13,6 +13,8 @@ import { PurchaseRequest } from '@model/purchase-request.model';
 export class PurchaseRequestListComponent implements OnInit, OnDestroy {
   public purchaseRequestArray$: PurchaseRequest | any;
 
+  public attachmentArray$: any;
+
   // public loading = true;
   public selected: any = [];
 
@@ -29,10 +31,23 @@ export class PurchaseRequestListComponent implements OnInit, OnDestroy {
         // this.loading = false;
       }),
     );
+
+    this.attachmentArray$ = this.wsService.on<any>(Event.EV_USER_REQUEST_ATTACHMENT).pipe(
+      share(),
+      distinctUntilChanged(),
+      takeUntil(this.ngUnsubscribe$),
+      tap(() => {
+        // this.loading = false;
+      }),
+    );
   }
 
   ngOnInit(): void {
     this.wsService.send('getAllPurchaseRequest');
+    this.wsService.send('getUserRequestAttachment', '000001');
+    this.attachmentArray$.subscribe((attach: any) => {
+      console.log(attach);
+    });
   }
 
   public ngOnDestroy(): void {

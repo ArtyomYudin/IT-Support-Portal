@@ -125,6 +125,10 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
       console.log(`Priority ${parseMsg.data}`);
       purchaseAPI.getUserRequestPriority(dbPool, ws, parseMsg.data);
       break;
+    // case 'getUserRequestAttachment':
+    //  console.log(`Priority ${parseMsg.data}`);
+    //  purchaseAPI.getUserRequestAttachment(dbPool, ws, parseMsg.data);
+    //  break;
     case 'getDepartment':
       console.log(`Service ${parseMsg.data}`);
       purchaseAPI.getDepartment(dbPool, ws, parseMsg.data);
