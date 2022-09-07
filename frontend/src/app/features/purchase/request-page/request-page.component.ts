@@ -167,7 +167,7 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
 
   public onCancel(): void {
     this.isConfirmModalVisible = true;
-    this.savePurchaseRequest();
+    this.resetRequestPage();
   }
 
   public resetRequestPage(): void {

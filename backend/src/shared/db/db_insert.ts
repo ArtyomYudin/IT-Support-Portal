@@ -1,5 +1,3 @@
-import { Blob } from 'buffer';
-
 export const insertPurchaseRequest = (
   prDate: string,
   prTarget: string,
@@ -56,7 +54,7 @@ export const insertUserRequest = (
     '${dateCreation}','${dateChange}','${requestNumber}','${initiatorId}','${departmentId}',
     '${executorId}','${serviceId}','${topic}','${description}','${statusId}','${priorityId}','${deadline}')`;
 
-export const insertUserRequestAttachment = (requestNumber: string, attachment: Blob) => `
+export const insertUserRequestAttachment = (requestNumber: string, attachment: any) => `
   INSERT INTO ur_attachment (
           request_number,
           attachment)

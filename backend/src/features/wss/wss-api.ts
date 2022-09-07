@@ -2,6 +2,7 @@ import { Pool } from 'mariadb';
 import { WebSocket } from 'ws';
 
 import * as purchaseAPI from '../purchase-api';
+import * as userRequestAPI from '../user-request-api';
 
 export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
   /*
@@ -93,11 +94,11 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
   switch (parseMsg.event) {
     case 'getFilteredRespPerson':
       console.log(`Connection test ${parseMsg.data}`);
-      purchaseAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
+      userRequestAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
       break;
     case 'getFilteredRequestInitiator':
       console.log(`Request Initiator ${parseMsg.data}`);
-      purchaseAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
+      userRequestAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
       break;
     case 'purchaseRequestInit':
       purchaseAPI.getPurchaseRequestInitInfo(dbPool, ws, parseMsg.data);
@@ -111,35 +112,35 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
       purchaseAPI.allPurchaseRequest(dbPool, ws);
       break;
     case 'getAllUserRequest':
-      purchaseAPI.allUserRequest(dbPool, ws);
+      userRequestAPI.allUserRequest(dbPool, ws);
       break;
     case 'getUserRequestService':
       console.log(`Service ${parseMsg.data}`);
-      purchaseAPI.getUserRequestService(dbPool, ws, parseMsg.data);
+      userRequestAPI.getUserRequestService(dbPool, ws, parseMsg.data);
       break;
     case 'getUserRequestStatus':
       console.log(`Status ${parseMsg.data}`);
-      purchaseAPI.getUserRequestStatus(dbPool, ws, parseMsg.data);
+      userRequestAPI.getUserRequestStatus(dbPool, ws, parseMsg.data);
       break;
     case 'getUserRequestPriority':
       console.log(`Priority ${parseMsg.data}`);
-      purchaseAPI.getUserRequestPriority(dbPool, ws, parseMsg.data);
+      userRequestAPI.getUserRequestPriority(dbPool, ws, parseMsg.data);
       break;
-    // case 'getUserRequestAttachment':
-    //  console.log(`Priority ${parseMsg.data}`);
-    //  purchaseAPI.getUserRequestAttachment(dbPool, ws, parseMsg.data);
-    //  break;
+    case 'getUserRequestAttachment':
+      console.log(`Priority ${parseMsg.data}`);
+      userRequestAPI.getUserRequestAttachment(dbPool, ws, parseMsg.data);
+      break;
     case 'getDepartment':
       console.log(`Service ${parseMsg.data}`);
-      purchaseAPI.getDepartment(dbPool, ws, parseMsg.data);
+      userRequestAPI.getDepartment(dbPool, ws, parseMsg.data);
       break;
     case 'getEmployeeByParentDepartment':
       console.log(`Connection test ${parseMsg.data}`);
-      purchaseAPI.getEmployeeByParentDepartment(dbPool, ws, parseMsg.data);
+      userRequestAPI.getEmployeeByParentDepartment(dbPool, ws, parseMsg.data);
       break;
     case 'saveNewUserRequest':
       console.log(`Service ${parseMsg.data}`);
-      purchaseAPI.saveNewUserRequest(dbPool, ws, parseMsg.data);
+      userRequestAPI.saveNewUserRequest(dbPool, ws, parseMsg.data);
       break;
     default:
       break;

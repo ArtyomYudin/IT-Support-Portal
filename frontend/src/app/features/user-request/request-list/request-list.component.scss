@@ -19,7 +19,8 @@ clr-icon {
 }
 
 .limit-height clr-datagrid {
-  height: calc(100vh - 144px);
+  //height: calc(100vh - 144px);
+  height: 45vh;
 }
 .color-column {
   min-width: 16px !important;
@@ -31,4 +32,13 @@ clr-icon {
   width: 13px;
   border: 1px solid black;
   border-radius: 4px;
+}
+
+.user-request-card {
+  height: calc(55vh - 150px);
+  margin-top: 6px;
+}
+
+.limit {
+  height: calc(100vh - 144px);
 }

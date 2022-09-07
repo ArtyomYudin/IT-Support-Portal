@@ -1,57 +1,60 @@
-<div class="limit-height">
-    <clr-datagrid [(clrDgSelected)]="selected" class="datagrid-compact">
-        <clr-dg-action-bar>
-            <div class="btn-group btn-link btn-sm">
-                <button class="btn" (click)="userRequestNew.onOpen()"><clr-icon shape="file"></clr-icon>Создать обращения</button>
-                <!--
+<div class="limit">
+    <div class="limit-height">
+        <clr-datagrid [(clrDgSelected)]="selected" class="datagrid-compact">
+            <clr-dg-action-bar>
+                <div class="btn-group btn-link btn-sm">
+                    <button class="btn" (click)="userRequestNew.onOpen()"><clr-icon shape="file"></clr-icon>Создать обращения</button>
+                    <!--
             <button class="btn" (click)="purchaseRequestPage.onOpen()" [disabled]="!(selected.length == 1 && selected[0].statusId == 1)">
                 <clr-icon shape="pencil"></clr-icon>Редактировать
             </button>
         -->
 
-                <!--<button class="btn" (click)="(null)" [disabled]="!(selected.length == 1)">
+                    <!--<button class="btn" (click)="(null)" [disabled]="!(selected.length == 1)">
                     <clr-icon shape="pencil"></clr-icon>Подписать заявку
                 </button>-->
-                <button class="btn" (click)="(null)" [disabled]="selected.length == 0"><clr-icon shape="trash"></clr-icon>Удалить</button>
-            </div>
-        </clr-dg-action-bar>
+                    <button class="btn" (click)="(null)" [disabled]="selected.length == 0">
+                        <clr-icon shape="trash"></clr-icon>Удалить
+                    </button>
+                </div>
+            </clr-dg-action-bar>
 
-        <clr-dg-column>
-            <ng-container *clrDgHideableColumn="{ hidden: false }">Дата обращения</ng-container>
-        </clr-dg-column>
-        <clr-dg-column class="color-column"></clr-dg-column>
-        <clr-dg-column>Номер</clr-dg-column>
-        <clr-dg-column>
-            <ng-container *clrDgHideableColumn="{ hidden: true }">Услуга</ng-container>
-        </clr-dg-column>
-        <clr-dg-column>Тема</clr-dg-column> -->
-        <clr-dg-column>Инициатор</clr-dg-column>
-        <clr-dg-column>Исполнитель</clr-dg-column>
-        <clr-dg-column>Статус</clr-dg-column>
-        <clr-dg-placeholder>Не создана ни одна заявка !</clr-dg-placeholder>
+            <clr-dg-column>
+                <ng-container *clrDgHideableColumn="{ hidden: false }">Дата обращения</ng-container>
+            </clr-dg-column>
+            <clr-dg-column class="color-column"></clr-dg-column>
+            <clr-dg-column>Номер</clr-dg-column>
+            <clr-dg-column>
+                <ng-container *clrDgHideableColumn="{ hidden: true }">Услуга</ng-container>
+            </clr-dg-column>
+            <clr-dg-column>Тема</clr-dg-column> -->
+            <clr-dg-column>Инициатор</clr-dg-column>
+            <clr-dg-column>Исполнитель</clr-dg-column>
+            <clr-dg-column>Статус</clr-dg-column>
+            <clr-dg-placeholder>Не создана ни одна заявка !</clr-dg-placeholder>
 
-        <clr-dg-row
-            *clrDgItems="let userRequest of (this.userRequestArray | async)?.results"
-            [clrDgItem]="userRequest"
-            [(clrDgSelected)]="userRequest.selected"
-        >
-            <clr-dg-cell>{{ userRequest.creationDate | date: 'dd MM YYYY, HH:mm' }}</clr-dg-cell>
-            <clr-dg-cell><span class="color-square" [style.backgroundColor]="userRequest.priority.color"></span></clr-dg-cell>
-            <clr-dg-cell>{{ userRequest.requestNumber }}</clr-dg-cell>
-            <clr-dg-cell>{{ userRequest.service }}</clr-dg-cell>
-            <clr-dg-cell>{{ userRequest.topic }}</clr-dg-cell>
-            <clr-dg-cell>{{ userRequest.initiator | employeeName }}</clr-dg-cell>
-            <clr-dg-cell>{{ userRequest.executor.name | employeeName }}</clr-dg-cell>
-            <clr-dg-cell>{{ userRequest.status.name }}</clr-dg-cell>
-        </clr-dg-row>
+            <clr-dg-row
+                *clrDgItems="let userRequest of (this.userRequestArray | async)?.results"
+                [clrDgItem]="userRequest"
+                [(clrDgSelected)]="userRequest.selected"
+            >
+                <clr-dg-cell>{{ userRequest.creationDate | date: 'dd MM YYYY, HH:mm' }}</clr-dg-cell>
+                <clr-dg-cell><span class="color-square" [style.backgroundColor]="userRequest.priority.color"></span></clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.requestNumber }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.service }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.topic }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.initiator | employeeName }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.executor.name | employeeName }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.status.name }}</clr-dg-cell>
+            </clr-dg-row>
 
-        <clr-dg-column-toggle>
-            <clr-dg-column-toggle-title>Column Toggle Title</clr-dg-column-toggle-title>
-            <clr-dg-column-toggle-button>Select All Button</clr-dg-column-toggle-button>
-        </clr-dg-column-toggle>
+            <clr-dg-column-toggle>
+                <clr-dg-column-toggle-title>Column Toggle Title</clr-dg-column-toggle-title>
+                <clr-dg-column-toggle-button>Select All Button</clr-dg-column-toggle-button>
+            </clr-dg-column-toggle>
 
-        <clr-dg-footer> {{ (this.userRequestArray | async)?.total }} заявок </clr-dg-footer>
-        <!--
+            <clr-dg-footer> {{ (this.userRequestArray | async)?.total }} заявок </clr-dg-footer>
+            <!--
         <clr-dg-footer>
             <clr-dg-pagination #paginationUser [clrDgPageSize]="20">
                 <clr-dg-page-size [clrPageSizeOptions]="[20, 50, 100]">Заявок на страницу</clr-dg-page-size>
@@ -59,7 +62,25 @@
             </clr-dg-pagination>
         </clr-dg-footer>
     -->
-    </clr-datagrid>
+        </clr-datagrid>
+    </div>
+    <div class="card user-request-card">
+        <h3 class="card-header">Header</h3>
+        <div class="card-block">
+            <h4 class="card-title">Block</h4>
+            <div class="card-text">...</div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-sm btn-link">Action 1</button>
+            <button class="btn btn-sm btn-link">Action 2</button>
+            <div class="dropdown top-left open">
+                <button class="dropdown-toggle btn btn-sm btn-link">
+                    Dropdown 1
+                    <clr-icon shape="caret down"></clr-icon>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 <!--
     Selected users: <span *ngFor="let user of selected">{{ user.id }}</span>
