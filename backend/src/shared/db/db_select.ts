@@ -53,7 +53,10 @@ export const getUserRequestPriority = (priorityId?: number) => `
 
 export const getUserRequestAttachment = (requestNumber?: number) => `
                             SELECT ur_attachment.id AS id,
-                                   ur_attachment.attachment AS attachment
+                                   ur_attachment.file_name AS fileName,
+                                   ur_attachment.file_size AS fileSize,
+                                   ur_attachment.file_type AS fileType,
+                                   ur_attachment.file_path AS filePath
                             FROM ur_attachment
                             ${requestNumber ? ` WHERE ur_attachment.request_number  =${requestNumber}` : ''}
                             order by ur_attachment.id`;
@@ -71,6 +74,8 @@ export const getDepartment = (departmentId?: number) => `
                             ) dep on dep.id = department.parent_id
                             ${departmentId ? ` WHERE department.id  =${departmentId}` : ''}
                             order by department.name`;
+
+export const getUserRequestNewNumber = `SELECT user_request_new_number() AS newNumber`;
 
 export const getFilteredEmployee = (filterValue: string) => `
                             SELECT employee.id AS id,

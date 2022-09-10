@@ -54,9 +54,18 @@ export const insertUserRequest = (
     '${dateCreation}','${dateChange}','${requestNumber}','${initiatorId}','${departmentId}',
     '${executorId}','${serviceId}','${topic}','${description}','${statusId}','${priorityId}','${deadline}')`;
 
-export const insertUserRequestAttachment = (requestNumber: string, attachment: any) => `
+export const insertUserRequestAttachment = (
+  requestNumber: string,
+  fileName: string,
+  fileSiza: number,
+  fileType: string,
+  filePath: string,
+) => `
   INSERT INTO ur_attachment (
           request_number,
-          attachment)
+          file_name,
+          file_size,
+          file_type,
+          file_path)
   VALUES (
-  '${requestNumber}','${attachment}')`;
+  '${requestNumber}','${fileName}','${fileSiza}','${fileType}','${filePath}')`;

@@ -1,0 +1,47 @@
+<!--[ngStyle]="{ display: userRequest.length != 1 ? 'none' : '' }"-->
+<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false" [clrModalSize]="'lg'">
+    <h3 class="modal-title">
+        Обращение пользователея № {{ this.userRequest?.requestNumber }} от {{ userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
+    </h3>
+    <div class="modal-body">
+        <clr-input-container class="request-topic-container">
+            <label>Тема:</label>
+            <input type="text" clrInput value="{{ userRequest?.topic }}" [readonly]="true" />
+        </clr-input-container>
+        <clr-input-container class="request-description-container">
+            <label>Описание:</label>
+            <input type="text" clrInput value="{{ userRequest?.description }}" [readonly]="true" />
+        </clr-input-container>
+
+        <div class="clr-row clr-justify-content-start request-control-container">
+            <div class="clr-form-control status-form-control">
+                <label class="clr-control-label status-list-label">Статус:</label>
+                <div class="clr-control-container status-list">
+                    <div class="clr-input-wrapper">
+                        <input class="clr-input" type="text" value="{{ userRequest?.status.name }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="clr-form-control priority-form-control">
+                <label class="clr-control-label priority-list-label">Приоритет:</label>
+                <div class="clr-control-container priority-list">
+                    <div class="clr-input-wrapper">
+                        <input class="clr-input" type="text" value="{{ userRequest?.priority.name }}" [readonly]="true" />
+                    </div>
+                </div>
+            </div>
+            <div class="clr-form-control priority-form-control">
+                <label class="clr-control-label data-list-label">Срок:</label>
+                <input class="clr-input" type="text" value="{{ userRequest?.deadline }}" [readonly]="true" />
+            </div>
+        </div>
+        <clr-textarea-container>
+            <label>Комментарии:</label>
+            <textarea clrTextarea rows="5" contenteditable="true"></textarea>
+        </clr-textarea-container>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-link" (click)="onClose()">Отмена</button>
+        <button type="button" class="btn btn-link" (click)="(null)">Сохранить</button>
+    </div>
+</clr-modal>

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs/internal/Subject';
-import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap, first } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { Department } from '@model/department.model';
@@ -30,17 +30,19 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public filteredInitiator: Employee | any;
 
-  public serviceListArray: Observable<any>;
+  public serviceListArray$: Observable<any>;
 
-  public department: Observable<any>;
+  public department$: Observable<any>;
 
   public currentDate: Date = new Date();
 
-  public statusListArray: Observable<any>;
+  public newNumber: string;
 
-  public priorityListArray: Observable<any>;
+  public statusListArray$: Observable<any>;
 
-  public executorListArray: Observable<any>;
+  public priorityListArray$: Observable<any>;
+
+  public executorListArray$: Observable<any>;
 
   public userRequestAllData: {
     requestNumber?: string;
@@ -59,23 +61,25 @@ export class RequestNewComponent implements OnInit, OnDestroy {
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private datePipe: DatePipe) {
-    this.serviceListArray = this.wsService
-      .on<RequestService>(Event.EV_USER_REQUEST_SERVICE)
-      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.serviceListArray$ = this.wsService.on<RequestService>(Event.EV_USER_REQUEST_SERVICE).pipe(first(), takeUntil(this.ngUnsubscribe$));
 
-    this.statusListArray = this.wsService
-      .on<RequestStatus>(Event.EV_USER_REQUEST_STATUS)
-      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.wsService
+      .on<any>(Event.EV_USER_REQUEST_NEW_NUMBER)
+      .pipe(first(), takeUntil(this.ngUnsubscribe$))
+      .subscribe(number => {
+        this.newNumber = number.newNumber.toString().padStart(6, 0);
+        this.userRequestAllData.requestNumber = this.newNumber;
+      });
 
-    this.priorityListArray = this.wsService
+    this.statusListArray$ = this.wsService.on<RequestStatus>(Event.EV_USER_REQUEST_STATUS).pipe(first(), takeUntil(this.ngUnsubscribe$));
+
+    this.priorityListArray$ = this.wsService
       .on<RequestPriority>(Event.EV_USER_REQUEST_PRIORITY)
-      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+      .pipe(first(), takeUntil(this.ngUnsubscribe$));
 
-    this.executorListArray = this.wsService
-      .on<any>(Event.EV_EMPLOYEE_BY_PARENT_DEPARTMENT)
-      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.executorListArray$ = this.wsService.on<any>(Event.EV_EMPLOYEE_BY_PARENT_DEPARTMENT).pipe(first(), takeUntil(this.ngUnsubscribe$));
 
-    this.department = this.wsService.on<Department>(Event.EV_DEPARTMENT).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.department$ = this.wsService.on<Department>(Event.EV_DEPARTMENT).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
   }
 
   ngOnInit(): void {
@@ -139,21 +143,25 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public onOpen(): void {
     this.modalOpen = true;
+    this.wsService.send('getUserRequestNewNumber', null);
     this.wsService.send('getUserRequestStatus', null);
     this.wsService.send('getUserRequestPriority', null);
     this.wsService.send('getUserRequestService', null);
     this.wsService.send('getEmployeeByParentDepartment', 39);
-    this.statusListArray.subscribe(statuses => {
+
+    this.statusListArray$.subscribe(statuses => {
       this.userRequest.controls.status.setValue(statuses[0].name);
       this.userRequestAllData.statusId = statuses[0].id;
     });
-    this.priorityListArray.subscribe(priorities => {
+    this.priorityListArray$.subscribe(priorities => {
       this.userRequest.controls.priority.setValue(priorities[0].name);
       this.userRequestAllData.priorityId = priorities[0].id;
     });
     this.userRequest.controls.deadline.setValue(this.currentDate.toLocaleDateString());
     // this.userRequestAllData.deadline = this.currentDate.toLocaleDateString();
-    this.userRequestAllData.requestNumber = '000001';
+    // this.userRequest.controls.requestNumber.setValue(this.lastNumber);
+    // this.userRequestAllData.requestNumber = this.newNumber;
+    console.log(this.newNumber);
   }
 
   public onAttacheFile(files: FileList): void {
@@ -185,7 +193,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public onInitiatorSelected(initiator: any): void {
     this.wsService.send('getDepartment', initiator.departmentId);
-    this.department.subscribe(dep => this.userRequest.controls.initiatorDepartment.setValue(dep[0].name));
+    this.department$.subscribe(dep => this.userRequest.controls.initiatorDepartment.setValue(dep[0].name));
     this.userRequestAllData.initiatorId = initiator.id;
     this.userRequestAllData.departmentId = initiator.departmentId;
   }

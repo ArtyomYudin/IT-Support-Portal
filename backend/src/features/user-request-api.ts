@@ -1,12 +1,8 @@
 import { Pool } from 'mariadb';
 import { Server, WebSocket } from 'ws';
-import fetch from 'node-fetch';
-import { Blob } from 'buffer';
+import fs, { existsSync } from 'fs';
 import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const FileReader = require('filereader');
 
 function ConvertTo2Digits(newNum: number) {
   return newNum.toString().padStart(2, '0');
@@ -20,40 +16,17 @@ function changeDateFormat(newDate: Date) {
   ].join(':')}`;
 }
 
-function base64ToBlob(dataURI: any) {
-  const byteString = atob(dataURI.split(',')[1]);
-  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
-
-  for (let i = 0; i < byteString.length; i += 1) {
-    ia[i] = byteString.charCodeAt(i);
+function decodeBase64(dataString: any) {
+  const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  const response: any = {};
+  if (matches?.length !== 3) {
+    return new Error('Invalid input string');
   }
-  console.log(mimeString);
-  const blob = new Blob([ia], { type: mimeString });
-  return blob;
-}
+  // eslint-disable-next-line prefer-destructuring
+  response.type = matches[1];
+  response.data = Buffer.from(matches[2], 'base64');
 
-async function blobToBase64(blob: any) {
-  // const testBase64 =
-  //  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
-  /*
-  return new Promise((resolve, _) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(blob);
-  });
-  */
-  // const testBlob: any = base64ToBlob(testBase64);
-
-  console.log(blob);
-
-  // console.log(blob);
-  const buffer = Buffer.from(blob);
-
-  console.log(`data:${blob.type};base64,${buffer.toString('base64')}`);
-  // return buffer.toString('base64');
+  return response;
 }
 
 export function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: string): void {
@@ -145,7 +118,7 @@ export function allUserRequest(dbPool: Pool, ws: WebSocket): void {
             service: row.service,
             topic: row.topic,
             description: row.description,
-            status: { id: row.status_id, name: row.statusName },
+            status: { id: row.statusId, name: row.statusName },
             priority: { id: row.priority_id, name: row.priorityName, color: row.priorityColor },
             deadline: row.deadline,
           };
@@ -158,6 +131,12 @@ export function allUserRequest(dbPool: Pool, ws: WebSocket): void {
           }),
         );
       });
+      ws.send(
+        JSON.stringify({
+          event: 'event_notify',
+          data: { type: 'info', error: false, event: 'All read!' },
+        }),
+      );
       conn.release(); // release to pool
     })
     .catch(err => {
@@ -165,6 +144,26 @@ export function allUserRequest(dbPool: Pool, ws: WebSocket): void {
     });
 }
 
+export function getUserRequestNewNumber(dbPool: Pool, ws: WebSocket): void {
+  dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getUserRequestNewNumber).then(rows => {
+        const newNumber = rows[0];
+        console.log(newNumber);
+        ws.send(
+          JSON.stringify({
+            event: 'event_user_request_new_number',
+            data: newNumber,
+          }),
+        );
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+}
 export function getUserRequestService(dbPool: Pool, ws: WebSocket, value?: number): void {
   const userRequestServiceArray: any[] = [];
   dbPool
@@ -268,12 +267,8 @@ export function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, value?: nu
     .then(conn => {
       conn.query(dbSelect.getUserRequestAttachment(value)).then(rows => {
         rows.forEach(async (row: any, i: number) => {
-          blobToBase64(row.attachment);
-          userRequestAttachmentArray[i] = { id: row.id, attachment: row.attachment };
+          userRequestAttachmentArray[i] = { id: row.id, fileName: row.fileName };
         });
-        // blobToBase64(rows[0].attachment);
-        //  console.log(rows[0].attachment);
-        //  console.log(userRequestAttachmentArray);
         ws.send(
           JSON.stringify({
             event: 'event_user_request_attachment',
@@ -288,19 +283,12 @@ export function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, value?: nu
     });
 }
 
-export async function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any): Promise<void> {
-  // value.attachments.forEach((attachment: any) => {
-  //  fs.writeFileSync(attachment.name, decodeBase64(attachment.data), {
-  //    flag: 'w',
-  //  });
-  //  // conn.query(dbInsert.insertUserRequestAttachment(value.requestNumber, base64ToBlob(attachment.data)));
-  // });
-
+export function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any): void {
   dbPool
     .getConnection()
-    .then(conn => {
+    .then(async conn => {
       try {
-        conn.query(
+        await conn.query(
           dbInsert.insertUserRequest(
             changeDateFormat(new Date()),
             changeDateFormat(new Date()),
@@ -316,12 +304,30 @@ export async function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any
             value.deadline,
           ),
         );
-        value.attachments.forEach((attachment: any) => {
-          //   fs.writeFile(attachment.name, attachment.data);
 
-          conn.query(dbInsert.insertUserRequestAttachment(value.requestNumber, base64ToBlob(attachment.data)));
-          // const ttt = base64ToBlob(attachment.data);
-        });
+        if (!existsSync(value.requestNumber)) {
+          fs.mkdir(value.requestNumber, { recursive: true }, e => {
+            if (!e) {
+              value.attachments.forEach((attachment: any) => {
+                // console.log(attachment.data);
+                fs.writeFile(`${value.requestNumber}/${attachment.name}`, decodeBase64(attachment.data).data, error => {
+                  if (error) {
+                    console.log('write error');
+                  } else {
+                    conn.query(
+                      dbInsert.insertUserRequestAttachment(value.requestNumber, attachment.name, attachment.size, attachment.type, ''),
+                    );
+                    console.log('write file');
+                  }
+                });
+              });
+            } else {
+              console.log('Exception while creating new directory....');
+              throw e;
+            }
+          });
+        }
+        console.log('Request create!');
       } catch (error) {
         console.log(error);
       }

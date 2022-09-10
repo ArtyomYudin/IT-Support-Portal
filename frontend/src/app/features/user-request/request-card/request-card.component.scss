@@ -1,0 +1,57 @@
+.user-request-card {
+  //height: calc(60vh - 7.5rem);
+  //margin-top: 6px;
+}
+/*
+.status-list {
+  margin-left: 1.4rem;
+  max-width: 8rem;
+}
+
+.priority-list {
+  margin-left: 2.3rem;
+  max-width: 8rem;
+}
+.data-list-input {
+  //margin-left: -0.2rem;
+  width: 6.7rem;
+}
+*/
+
+.request-topic-container,
+.request-description-container,
+.data-form-control,
+.status-form-control,
+.priority-form-control {
+  margin-top: 0.5rem;
+}
+.request-control-container {
+  //padding-left: 0.15rem;
+  //margin-right: -0.6rem;
+  margin-left: 0rem;
+}
+.data-form-control {
+  flex: 0 0 27%;
+  max-width: 27%;
+  flex-direction: row;
+}
+.status-form-control {
+  flex: 0 0 26%;
+  max-width: 26%;
+  flex-direction: row;
+}
+.priority-form-control {
+  flex: 0 0 32%;
+  max-width: 32%;
+  flex-direction: row;
+}
+/*
+.status-list-icon,
+.priority-list-icon {
+  margin-left: -1.4rem;
+}
+.status-list-label,
+.priority-list-label {
+  padding-left: 0.8rem;
+}
+*/

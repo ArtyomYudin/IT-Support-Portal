@@ -1,5 +1,5 @@
 <clr-modal #userRequestModal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false" [clrModalSize]="'lg'">
-    <h3 class="modal-title">Новое обращение пользователея № 000001 от {{ this.currentDate.toLocaleDateString() }} г.</h3>
+    <h3 class="modal-title">Новое обращение пользователя № {{ this.newNumber }} от {{ this.currentDate.toLocaleDateString() }} г.</h3>
     <div class="modal-body">
         <form [formGroup]="userRequest" clrForm [clrLayout]="'horizontal'" autocomplete="off">
             <!--
@@ -19,7 +19,7 @@
                 </clr-date-container>
 
                 <div class="clr-form-control status-form-control">
-                    <label for="example" class="clr-control-label status-list-label">Статус:</label>
+                    <label class="clr-control-label status-list-label">Статус:</label>
                     <div class="clr-control-container status-list">
                         <div class="clr-input-wrapper">
                             <input
@@ -34,7 +34,7 @@
                                 <ng-container>
                                     <mat-option
                                         (onSelectionChange)="onStatusSelected(status)"
-                                        *ngFor="let status of statusListArray | async"
+                                        *ngFor="let status of statusListArray$ | async"
                                         [value]="status.name"
                                     >
                                         {{ status.name }}
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="clr-form-control priority-form-control">
-                    <label for="example" class="clr-control-label priority-list-label">Приоритет:</label>
+                    <label class="clr-control-label priority-list-label">Приоритет:</label>
                     <div class="clr-control-container priority-list">
                         <div class="clr-input-wrapper">
                             <input
@@ -60,7 +60,7 @@
                                 <ng-container>
                                     <mat-option
                                         (onSelectionChange)="onPrioritySelected(priority)"
-                                        *ngFor="let priority of priorityListArray | async"
+                                        *ngFor="let priority of priorityListArray$ | async"
                                         [value]="priority.name"
                                     >
                                         {{ priority.name }}
@@ -150,7 +150,7 @@
                     <ng-container>
                         <mat-option
                             (onSelectionChange)="onExecutorSelected(executor)"
-                            *ngFor="let executor of executorListArray | async"
+                            *ngFor="let executor of executorListArray$ | async"
                             [value]="executor.name"
                         >
                             {{ executor.name }}
@@ -165,7 +165,7 @@
                     <ng-container>
                         <mat-option
                             (onSelectionChange)="onServiceSelected(service)"
-                            *ngFor="let service of serviceListArray | async"
+                            *ngFor="let service of serviceListArray$ | async"
                             [value]="service.name"
                         >
                             {{ service.name }}

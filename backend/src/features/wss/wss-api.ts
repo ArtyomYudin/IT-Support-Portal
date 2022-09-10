@@ -114,6 +114,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
     case 'getAllUserRequest':
       userRequestAPI.allUserRequest(dbPool, ws);
       break;
+    case 'getUserRequestNewNumber':
+      userRequestAPI.getUserRequestNewNumber(dbPool, ws);
+      break;
     case 'getUserRequestService':
       console.log(`Service ${parseMsg.data}`);
       userRequestAPI.getUserRequestService(dbPool, ws, parseMsg.data);
