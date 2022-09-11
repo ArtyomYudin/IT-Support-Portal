@@ -3,6 +3,8 @@ import { dbPool } from '../shared/db/db_pool';
 import { websocketServer } from '../features/wss/wss-server';
 import { wsParseMessage } from '../features/wss/wss-api';
 import * as purchaseAPI from '../features/purchase-api';
+import { getEmails } from '../features/imap-client';
+
 // import { monitoringBot } from '../features/jabber-bot';
 
 (async () => {
@@ -25,6 +27,7 @@ import * as purchaseAPI from '../features/purchase-api';
       wsParseMessage(dbPool, ws, msg);
     });
   });
+  getEmails();
   console.log(httpServer.address());
   // monitoringBot.say({
   //  user: 'a.yudin@center-inform.ru',
