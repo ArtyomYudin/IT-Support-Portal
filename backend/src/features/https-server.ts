@@ -2,11 +2,8 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import { constants } from 'crypto';
-import { config } from 'dotenv';
 import { Pool } from 'mariadb';
 import { checkUserCredentials } from './ldap-auth';
-
-config();
 
 const headers = {
   'Access-Control-Allow-Origin': '*',

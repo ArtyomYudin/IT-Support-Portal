@@ -7,6 +7,13 @@ import { getEmails } from '../features/imap-client';
 
 // import { monitoringBot } from '../features/jabber-bot';
 
+// Отлов событий uncaughtException и закрытие процесса. Далее pm2 перезапускает службу
+process.on('uncaughtException', err => {
+  console.log('Uncaught Exception, Restart service !!!');
+  console.log(err.stack);
+  process.exit(1);
+});
+
 (async () => {
   const httpServer = await initHTTPSServer(dbPool);
   const wss = websocketServer(httpServer);
@@ -27,7 +34,11 @@ import { getEmails } from '../features/imap-client';
       wsParseMessage(dbPool, ws, msg);
     });
   });
-  getEmails();
+
+  setInterval(() => {
+    getEmails();
+  }, 10000);
+
   console.log(httpServer.address());
   // monitoringBot.say({
   //  user: 'a.yudin@center-inform.ru',

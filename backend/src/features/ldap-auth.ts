@@ -1,11 +1,8 @@
 import jwt from 'jsonwebtoken';
 import * as ldap from 'ldapjs';
 import { ServerResponse } from 'http';
-import { config } from 'dotenv';
 import { Pool } from 'mariadb';
 import * as dbSelect from '../shared/db/db_select';
-
-config();
 
 export async function checkUserCredentials(reqBody: string, res: ServerResponse, dbPool: Pool): Promise<any> {
   let employeeIdByEmail: any;

@@ -1,15 +1,37 @@
 import Imap from 'imap';
 import { simpleParser } from 'mailparser';
+import { dbPool } from '../shared/db/db_pool';
+import * as dbSelect from '../shared/db/db_select';
+import * as dbInsert from '../shared/db/db_insert';
 
 const imapConfig = {
   user: process.env.IMAP_USER as string,
   password: process.env.IMAP_PASSWORD as string,
   host: process.env.IMAP_HOST as string,
-  port: 143,
+  port: process.env.IMAP_PORT as number | undefined,
   tls: false,
 };
 
+async function getUserRequestNewNumber(): Promise<any> {
+  let newNumber = 0;
+  await dbPool
+    .getConnection()
+    .then(conn => {
+      conn.query(dbSelect.getUserRequestNewNumber).then(rows => {
+        // eslint-disable-next-line prefer-destructuring
+        newNumber = rows[0];
+        console.log(newNumber);
+      });
+      conn.release(); // release to pool
+    })
+    .catch(err => {
+      console.log(`not connected due to error: ${err}`);
+    });
+  return newNumber;
+}
+
 export const getEmails = () => {
+  console.log(process.env.IMAP_TLS);
   try {
     const imap = new Imap(imapConfig);
     imap.once('ready', () => {
@@ -21,11 +43,10 @@ export const getEmails = () => {
               msg.on('body', stream => {
                 simpleParser(stream, async (er, parsed) => {
                   // const {from, subject, textAsHtml, text} = parsed;
-                  console.log(parsed);
-                  /* Make API call to save the data
-                           Save the retrieved data into a database.
-                           E.t.c
-                        */
+                  // console.log(parsed);
+                  getUserRequestNewNumber().then((e: any) => {
+                    console.log(e);
+                  });
                 });
               });
               msg.once('attributes', attrs => {
