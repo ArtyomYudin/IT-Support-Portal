@@ -1,37 +1,109 @@
 import Imap from 'imap';
-import { simpleParser } from 'mailparser';
+import { ParsedMail, simpleParser } from 'mailparser';
 import { dbPool } from '../shared/db/db_pool';
 import * as dbSelect from '../shared/db/db_select';
-import * as dbInsert from '../shared/db/db_insert';
+import * as userRequestAPI from './user-request-api';
 
 const imapConfig = {
   user: process.env.IMAP_USER as string,
   password: process.env.IMAP_PASSWORD as string,
   host: process.env.IMAP_HOST as string,
   port: process.env.IMAP_PORT as number | undefined,
-  tls: false,
+  tls: true,
 };
 
-async function getUserRequestNewNumber(): Promise<any> {
-  let newNumber = 0;
-  await dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getUserRequestNewNumber).then(rows => {
-        // eslint-disable-next-line prefer-destructuring
-        newNumber = rows[0];
-        console.log(newNumber);
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+async function getUserRequestNewNumber(): Promise<string> {
+  let conn;
+  let newNumber;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getUserRequestNewNumber);
+    newNumber = rows[0].newNumber;
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    // Close Connection
+    if (conn) conn.release();
+  }
+  console.log(newNumber);
+  return newNumber.toString().padStart(6, 0);
+}
+
+async function getEmployeeByUPN(value: any): Promise<any> {
+  let conn;
+  let employeeByUPN;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getEmployeeByUPN(value));
+    employeeByUPN = rows;
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    // Close Connection
+    if (conn) conn.release();
+  }
+  console.log(employeeByUPN);
+  return employeeByUPN[0];
+}
+
+async function createUserRequest(mail: ParsedMail) {
+  const userRequestAllData: {
+    creationDate: any;
+    changeDate: any;
+    requestNumber: string;
+    initiatorId: any;
+    departmentId: number;
+    executorId: number;
+    serviceId: number;
+    topic: string;
+    description: string;
+    statusId: number;
+    priorityId: number;
+    deadline: string;
+    attachments: any[];
+  } = {
+    creationDate: new Date(),
+    changeDate: new Date(),
+    requestNumber: '',
+    initiatorId: 0,
+    departmentId: 0,
+    executorId: 0,
+    serviceId: 1,
+    topic: '',
+    description: '',
+    statusId: 1,
+    priorityId: 1,
+    deadline: '',
+    attachments: [],
+  };
+
+  const employee = await getEmployeeByUPN(mail.from?.value[0].address);
+  userRequestAllData.creationDate = mail.headers.get('date');
+  userRequestAllData.changeDate = mail.headers.get('date');
+  userRequestAllData.requestNumber = await getUserRequestNewNumber();
+  userRequestAllData.initiatorId = employee.id;
+  userRequestAllData.departmentId = employee.departmentId;
+  userRequestAllData.topic = mail.subject ? mail.subject : '';
+  userRequestAllData.description = mail.text ? mail.text : '';
+  userRequestAllData.deadline = new Date().toISOString().replace(/T.+/, '');
+  userRequestAllData.priorityId = mail.headers.get('priority') === 'high' ? 2 : 1;
+
+  const attachArray: any[] = [];
+  mail.attachments.forEach((att: any) => {
+    attachArray.push({
+      name: att.filename,
+      type: att.contentType,
+      size: att.size,
+      data: `data:${att.contentType};base64,${Buffer.from(att.content).toString('base64')}`,
     });
-  return newNumber;
+  });
+  userRequestAllData.attachments = attachArray;
+  // const att = `data:${mail.attachments[0].contentType};base64,${Buffer.from(mail.attachments[0].content).toString('base64')}`;
+  userRequestAPI.saveNewUserRequest(dbPool, userRequestAllData);
+  console.log(attachArray);
 }
 
 export const getEmails = () => {
-  console.log(process.env.IMAP_TLS);
   try {
     const imap = new Imap(imapConfig);
     imap.once('ready', () => {
@@ -42,11 +114,8 @@ export const getEmails = () => {
             f.on('message', msg => {
               msg.on('body', stream => {
                 simpleParser(stream, async (er, parsed) => {
-                  // const {from, subject, textAsHtml, text} = parsed;
                   // console.log(parsed);
-                  getUserRequestNewNumber().then((e: any) => {
-                    console.log(e);
-                  });
+                  createUserRequest(parsed);
                 });
               });
               msg.once('attributes', attrs => {

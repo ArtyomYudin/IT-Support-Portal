@@ -161,7 +161,6 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     // this.userRequestAllData.deadline = this.currentDate.toLocaleDateString();
     // this.userRequest.controls.requestNumber.setValue(this.lastNumber);
     // this.userRequestAllData.requestNumber = this.newNumber;
-    console.log(this.newNumber);
   }
 
   public onAttacheFile(files: FileList): void {
@@ -208,7 +207,8 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public async onSave(): Promise<void> {
     this.modalOpen = false;
-    this.userRequestAllData.deadline = this.datePipe.transform(this.userRequest.controls.deadline.value, 'yyyy-dd-MM');
+    const deadline = this.userRequest.controls.deadline.value.split('.');
+    this.userRequestAllData.deadline = `${deadline[2]}-${deadline[1]}-${deadline[0]}`;
     this.userRequestAllData.topic = this.userRequest.controls.topic.value;
     this.userRequestAllData.description = this.userRequest.controls.description.value;
     this.userRequestAllData.attachments = await Promise.all(

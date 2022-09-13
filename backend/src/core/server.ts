@@ -37,7 +37,7 @@ process.on('uncaughtException', err => {
 
   setInterval(() => {
     getEmails();
-  }, 10000);
+  }, 30000);
 
   console.log(httpServer.address());
   // monitoringBot.say({

@@ -90,6 +90,7 @@ export const getEmployeeByUPN = (email: string) => `
                             SELECT employee.id AS id,
                                    employee.display_name AS displayName,
                                    department.name AS departmentName,
+                                   department.id AS departmentId,
                                    position.name AS positionName
                             FROM employee
                                    INNER JOIN department on(employee.department_id = department.id)

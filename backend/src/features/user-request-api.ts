@@ -283,15 +283,15 @@ export function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, value?: nu
     });
 }
 
-export function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any): void {
+export function saveNewUserRequest(dbPool: Pool, value: any, ws?: WebSocket): void {
   dbPool
     .getConnection()
     .then(async conn => {
       try {
         await conn.query(
           dbInsert.insertUserRequest(
-            changeDateFormat(new Date()),
-            changeDateFormat(new Date()),
+            value.creationDate ? changeDateFormat(value.creationDate) : changeDateFormat(new Date()),
+            value.changeDate ? changeDateFormat(value.changeDate) : changeDateFormat(new Date()),
             value.requestNumber,
             value.initiatorId,
             value.departmentId,
@@ -305,7 +305,7 @@ export function saveNewUserRequest(dbPool: Pool, ws: WebSocket, value: any): voi
           ),
         );
 
-        if (!existsSync(value.requestNumber)) {
+        if (!existsSync(value.requestNumber) && value.attachments.length > 0) {
           fs.mkdir(value.requestNumber, { recursive: true }, e => {
             if (!e) {
               value.attachments.forEach((attachment: any) => {

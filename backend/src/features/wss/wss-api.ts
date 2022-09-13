@@ -143,7 +143,7 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
       break;
     case 'saveNewUserRequest':
       console.log(`Service ${parseMsg.data}`);
-      userRequestAPI.saveNewUserRequest(dbPool, ws, parseMsg.data);
+      userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, ws);
       break;
     default:
       break;

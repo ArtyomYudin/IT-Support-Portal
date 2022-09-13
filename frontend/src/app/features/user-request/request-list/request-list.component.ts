@@ -8,7 +8,6 @@ import { IUserRequest } from '@model/user-request.model';
 import { Observable } from 'rxjs';
 import { ClrCommonStringsService } from '@clr/angular';
 import { russionLocale } from '@translation/russion';
-import { ControlClassService } from '@clr/angular/forms/common/providers/control-class.service';
 
 @Component({
   selector: 'fe-user-request-list',

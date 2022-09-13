@@ -8,10 +8,18 @@
             <label>Тема:</label>
             <input type="text" clrInput value="{{ userRequest?.topic }}" [readonly]="true" />
         </clr-input-container>
-        <clr-input-container class="request-description-container">
+
+        <clr-textarea-container class="request-description-container">
             <label>Описание:</label>
-            <input type="text" clrInput value="{{ userRequest?.description }}" [readonly]="true" />
-        </clr-input-container>
+            <textarea
+                type="text"
+                clrTextarea
+                rows="5"
+                contenteditable="true"
+                value="{{ userRequest?.description }}"
+                [readonly]="true"
+            ></textarea>
+        </clr-textarea-container>
 
         <div class="clr-row clr-justify-content-start request-control-container">
             <div class="clr-form-control status-form-control">
