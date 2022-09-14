@@ -147,7 +147,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.wsService.send('getUserRequestStatus', null);
     this.wsService.send('getUserRequestPriority', null);
     this.wsService.send('getUserRequestService', null);
-    this.wsService.send('getEmployeeByParentDepartment', 39);
+    this.wsService.send('getEmployeeByParentDepartment', 49);
 
     this.statusListArray$.subscribe(statuses => {
       this.userRequest.controls.status.setValue(statuses[0].name);

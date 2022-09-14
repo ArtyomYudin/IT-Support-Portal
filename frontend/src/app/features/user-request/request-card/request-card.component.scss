@@ -1,5 +1,5 @@
 .user-request-card {
-  //height: calc(60vh - 7.5rem);
+  height: 50vh; //calc(60vh - 7.5rem);
   //margin-top: 6px;
 }
 /*
@@ -18,9 +18,20 @@
 }
 */
 
+.card {
+  margin-top: 0rem;
+  box-shadow: none;
+  height: 100%;
+}
+
+.clr-input,
 .clr-textarea {
   width: 100%;
 }
+
+//.clr-textarea {
+//  width: 100%;
+//}
 
 .clr-textarea {
   border-top: none;
@@ -40,19 +51,24 @@
   //margin-right: -0.6rem;
   margin-left: 0rem;
 }
+.tttt {
+  flex: 0 0 55%;
+  max-width: 55%;
+  flex-direction: row;
+}
 .data-form-control {
-  flex: 0 0 27%;
-  max-width: 27%;
+  flex: 0 0 25%;
+  max-width: 25%;
   flex-direction: row;
 }
 .status-form-control {
-  flex: 0 0 26%;
-  max-width: 26%;
+  flex: 0 0 12%;
+  max-width: 12%;
   flex-direction: row;
 }
 .priority-form-control {
-  flex: 0 0 32%;
-  max-width: 32%;
+  flex: 0 0 15%;
+  max-width: 15%;
   flex-direction: row;
 }
 /*

@@ -17,10 +17,10 @@
             <clr-dg-column class="color-column">
                 <ng-container *clrDgHideableColumn="{ hidden: false }">Приоритет</ng-container>
             </clr-dg-column>
-            <clr-dg-column class="date-column">
+            <clr-dg-column class="date-column" [clrDgSortBy]="'creationDate'">
                 <ng-container *clrDgHideableColumn="{ hidden: false }">Дата обращения</ng-container>
             </clr-dg-column>
-            <clr-dg-column class="number-column">Номер</clr-dg-column>
+            <clr-dg-column class="number-column" [clrDgSortBy]="'requestNumber'">Номер</clr-dg-column>
             <clr-dg-column>
                 <ng-container *clrDgHideableColumn="{ hidden: false }">Инициатор</ng-container>
             </clr-dg-column>

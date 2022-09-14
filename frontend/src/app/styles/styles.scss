@@ -84,6 +84,18 @@ body {
   transform: none;
 }
 */
+button.datagrid-column-title:focus {
+  outline: none;
+  // box-shadow: none;
+}
+
+.datagrid-table .datagrid-column .datagrid-filter-toggle {
+  outline: none;
+}
+button.datagrid-column-title {
+  text-decoration: none !important;
+}
+
 .datagrid-table .datagrid-cell:focus,
 .datagrid-table .datagrid-column:focus {
   outline: none;

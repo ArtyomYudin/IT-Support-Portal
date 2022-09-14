@@ -31,12 +31,12 @@ process.on('uncaughtException', err => {
     });
 
     ws.on('message', msg => {
-      wsParseMessage(dbPool, ws, msg);
+      wsParseMessage(dbPool, ws, wss, msg);
     });
   });
 
   setInterval(() => {
-    getEmails();
+    getEmails(wss);
   }, 30000);
 
   console.log(httpServer.address());

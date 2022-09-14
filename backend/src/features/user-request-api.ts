@@ -100,7 +100,7 @@ export function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket, value
     });
 }
 
-export function allUserRequest(dbPool: Pool, ws: WebSocket): void {
+export function allUserRequest(dbPool: Pool, ws?: WebSocket | null, wss?: any): void {
   const allUserRequestArray: any[] = [];
   dbPool
     .getConnection()
@@ -123,20 +123,30 @@ export function allUserRequest(dbPool: Pool, ws: WebSocket): void {
             deadline: row.deadline,
           };
         });
-
-        ws.send(
-          JSON.stringify({
-            event: 'event_user_request_all',
-            data: { results: allUserRequestArray, total: allUserRequestArray.length },
-          }),
-        );
+        if (ws) {
+          ws.send(
+            JSON.stringify({
+              event: 'event_user_request_all',
+              data: { results: allUserRequestArray, total: allUserRequestArray.length },
+            }),
+          );
+        } else {
+          wss.clients.forEach((client: any) => {
+            client.send(
+              JSON.stringify({
+                event: 'event_user_request_all',
+                data: { results: allUserRequestArray, total: allUserRequestArray.length },
+              }),
+            );
+          });
+        }
       });
-      ws.send(
-        JSON.stringify({
-          event: 'event_notify',
-          data: { type: 'info', error: false, event: 'All read!' },
-        }),
-      );
+      // ws.send(
+      //   JSON.stringify({
+      //     event: 'event_notify',
+      //     data: { type: 'info', error: false, event: 'All read!' },
+      //   }),
+      // );
       conn.release(); // release to pool
     })
     .catch(err => {
@@ -283,59 +293,68 @@ export function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, value?: nu
     });
 }
 
-export function saveNewUserRequest(dbPool: Pool, value: any, ws?: WebSocket): void {
-  dbPool
-    .getConnection()
-    .then(async conn => {
-      try {
-        await conn.query(
-          dbInsert.insertUserRequest(
-            value.creationDate ? changeDateFormat(value.creationDate) : changeDateFormat(new Date()),
-            value.changeDate ? changeDateFormat(value.changeDate) : changeDateFormat(new Date()),
-            value.requestNumber,
-            value.initiatorId,
-            value.departmentId,
-            value.executorId,
-            value.serviceId,
-            value.topic,
-            value.description,
-            value.statusId,
-            value.priorityId,
-            value.deadline,
-          ),
-        );
-
-        if (!existsSync(value.requestNumber) && value.attachments.length > 0) {
-          fs.mkdir(value.requestNumber, { recursive: true }, e => {
-            if (!e) {
-              value.attachments.forEach((attachment: any) => {
-                // console.log(attachment.data);
-                fs.writeFile(`${value.requestNumber}/${attachment.name}`, decodeBase64(attachment.data).data, error => {
-                  if (error) {
-                    console.log('write error');
-                  } else {
-                    conn.query(
-                      dbInsert.insertUserRequestAttachment(value.requestNumber, attachment.name, attachment.size, attachment.type, ''),
-                    );
-                    console.log('write file');
-                  }
-                });
-              });
-            } else {
-              console.log('Exception while creating new directory....');
-              throw e;
-            }
+export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<WebSocket>): Promise<any> {
+  let conn: any;
+  let response;
+  try {
+    conn = await dbPool.getConnection();
+    response = await conn.query(
+      dbInsert.insertUserRequest(
+        value.creationDate ? changeDateFormat(value.creationDate) : changeDateFormat(new Date()),
+        value.changeDate ? changeDateFormat(value.changeDate) : changeDateFormat(new Date()),
+        value.requestNumber,
+        value.initiatorId,
+        value.departmentId,
+        value.executorId,
+        value.serviceId,
+        value.topic,
+        value.description,
+        value.statusId,
+        value.priorityId,
+        value.deadline,
+      ),
+    );
+    if (!existsSync(value.requestNumber) && value.attachments.length > 0) {
+      fs.mkdir(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.requestNumber}`, { recursive: true }, e => {
+        if (!e) {
+          value.attachments.forEach((attachment: any) => {
+            // console.log(attachment.data);
+            fs.writeFile(
+              `${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.requestNumber}/${attachment.name}`,
+              decodeBase64(attachment.data).data,
+              error => {
+                if (error) {
+                  console.log('write error');
+                } else {
+                  conn.query(
+                    dbInsert.insertUserRequestAttachment(
+                      value.requestNumber,
+                      attachment.name,
+                      attachment.size,
+                      attachment.type,
+                      `${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.requestNumber}`,
+                    ),
+                  );
+                  console.log('write file');
+                }
+              },
+            );
           });
+        } else {
+          console.log('Exception while creating new directory....');
+          throw e;
         }
-        console.log('Request create!');
-      } catch (error) {
-        console.log(error);
-      }
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
-    });
+      });
+    }
+    allUserRequest(dbPool, null, wss);
+    console.log('Request create!');
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    // Close Connection
+    if (conn) conn.release();
+  }
+  return response;
 }
 
 export function init(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {

@@ -1,5 +1,7 @@
 import Imap from 'imap';
 import { ParsedMail, simpleParser } from 'mailparser';
+import { Server, WebSocket } from 'ws';
+import { sendEmailNotification } from './email-sender';
 import { dbPool } from '../shared/db/db_pool';
 import * as dbSelect from '../shared/db/db_select';
 import * as userRequestAPI from './user-request-api';
@@ -12,6 +14,7 @@ const imapConfig = {
   tls: true,
 };
 
+const executorIdList = [86, 129];
 async function getUserRequestNewNumber(): Promise<string> {
   let conn;
   let newNumber;
@@ -25,7 +28,6 @@ async function getUserRequestNewNumber(): Promise<string> {
     // Close Connection
     if (conn) conn.release();
   }
-  console.log(newNumber);
   return newNumber.toString().padStart(6, 0);
 }
 
@@ -42,11 +44,11 @@ async function getEmployeeByUPN(value: any): Promise<any> {
     // Close Connection
     if (conn) conn.release();
   }
-  console.log(employeeByUPN);
+  // console.log(employeeByUPN);
   return employeeByUPN[0];
 }
 
-async function createUserRequest(mail: ParsedMail) {
+async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Promise<boolean> {
   const userRequestAllData: {
     creationDate: any;
     changeDate: any;
@@ -77,45 +79,51 @@ async function createUserRequest(mail: ParsedMail) {
     attachments: [],
   };
 
-  const employee = await getEmployeeByUPN(mail.from?.value[0].address);
-  userRequestAllData.creationDate = mail.headers.get('date');
-  userRequestAllData.changeDate = mail.headers.get('date');
-  userRequestAllData.requestNumber = await getUserRequestNewNumber();
-  userRequestAllData.initiatorId = employee.id;
-  userRequestAllData.departmentId = employee.departmentId;
-  userRequestAllData.topic = mail.subject ? mail.subject : '';
-  userRequestAllData.description = mail.text ? mail.text : '';
-  userRequestAllData.deadline = new Date().toISOString().replace(/T.+/, '');
-  userRequestAllData.priorityId = mail.headers.get('priority') === 'high' ? 2 : 1;
+  try {
+    const employee = await getEmployeeByUPN(mail.from?.value[0].address);
+    // console.log(mail.from?.value[0].address);
+    userRequestAllData.creationDate = mail.headers.get('date');
+    userRequestAllData.changeDate = mail.headers.get('date');
+    userRequestAllData.requestNumber = await getUserRequestNewNumber();
+    userRequestAllData.initiatorId = employee.id;
+    userRequestAllData.departmentId = employee.departmentId;
+    userRequestAllData.executorId = executorIdList[Math.floor(Math.random() * executorIdList.length)];
+    userRequestAllData.topic = mail.subject ? mail.subject : '';
+    userRequestAllData.description = mail.text ? mail.text : '';
+    userRequestAllData.priorityId = mail.headers.get('priority') === 'high' ? 2 : 1;
+    userRequestAllData.deadline = new Date().toISOString().replace(/T.+/, '');
 
-  const attachArray: any[] = [];
-  mail.attachments.forEach((att: any) => {
-    attachArray.push({
-      name: att.filename,
-      type: att.contentType,
-      size: att.size,
-      data: `data:${att.contentType};base64,${Buffer.from(att.content).toString('base64')}`,
+    const attachArray: any[] = [];
+    mail.attachments.forEach((att: any) => {
+      attachArray.push({
+        name: att.filename,
+        type: att.contentType,
+        size: att.size,
+        data: `data:${att.contentType};base64,${Buffer.from(att.content).toString('base64')}`,
+      });
     });
-  });
-  userRequestAllData.attachments = attachArray;
-  // const att = `data:${mail.attachments[0].contentType};base64,${Buffer.from(mail.attachments[0].content).toString('base64')}`;
-  userRequestAPI.saveNewUserRequest(dbPool, userRequestAllData);
-  console.log(attachArray);
+    userRequestAllData.attachments = attachArray;
+    // const att = `data:${mail.attachments[0].contentType};base64,${Buffer.from(mail.attachments[0].content).toString('base64')}`;
+    await userRequestAPI.saveNewUserRequest(dbPool, userRequestAllData, wss);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
-export const getEmails = () => {
+export const getEmails = (wss: Server<WebSocket>) => {
   try {
     const imap = new Imap(imapConfig);
     imap.once('ready', () => {
       imap.openBox('INBOX', false, () => {
-        imap.search(['UNSEEN', ['SINCE', new Date()]], (err, results) => {
+        imap.search(['UNSEEN'], (err, results) => {
           try {
             const f = imap.fetch(results, { bodies: '' });
             f.on('message', msg => {
               msg.on('body', stream => {
                 simpleParser(stream, async (er, parsed) => {
                   // console.log(parsed);
-                  createUserRequest(parsed);
+                  createUserRequest(parsed, wss);
                 });
               });
               msg.once('attributes', attrs => {
@@ -135,6 +143,7 @@ export const getEmails = () => {
             });
           } catch (e: any) {
             console.log(e.message);
+            // sendEmailNotification({ subject: 'test' });
             // if (e.message === 'Nothing to fetch') {
             //  console.log('no mails fetched, temp directory not created');
             //  console.log('Read mail executor finished …..');

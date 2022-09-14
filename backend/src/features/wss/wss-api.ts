@@ -1,10 +1,10 @@
 import { Pool } from 'mariadb';
-import { WebSocket } from 'ws';
+import { Server, WebSocket } from 'ws';
 
 import * as purchaseAPI from '../purchase-api';
 import * as userRequestAPI from '../user-request-api';
 
-export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
+export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocket>, msg: any): void {
   /*
   function ConvertTo2Digits(newNum: number) {
     return newNum.toString().padStart(2, '0');
@@ -143,7 +143,7 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, msg: any): void {
       break;
     case 'saveNewUserRequest':
       console.log(`Service ${parseMsg.data}`);
-      userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, ws);
+      userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, wss);
       break;
     default:
       break;
