@@ -27,18 +27,24 @@ clr-icon {
   height: calc(100vh - 7.2rem);
 }
 
-.color-column {
-  min-width: 16px !important;
-  //display: none;
+.priority-column,
+.status-column {
+  min-width: 25px !important;
+  max-width: 25px !important;
+  //padding-left: 0px !important;
+  //padding-right: 0px !important;
 }
+
 .date-column {
   max-width: 145px;
 }
+
 .number-column {
   max-width: 120px;
 }
 
-::ng-deep .color-column .datagrid-column-title {
+::ng-deep .priority-column .datagrid-column-title,
+::ng-deep .status-column .datagrid-column-title {
   display: none !important;
 }
 .color-square {

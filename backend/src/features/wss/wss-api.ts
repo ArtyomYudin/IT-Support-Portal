@@ -93,20 +93,17 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
   const parseMsg = JSON.parse(msg);
   switch (parseMsg.event) {
     case 'getFilteredRespPerson':
-      console.log(`Connection test ${parseMsg.data}`);
       userRequestAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
       break;
     case 'getFilteredRequestInitiator':
-      console.log(`Request Initiator ${parseMsg.data}`);
       userRequestAPI.getFilteredEmployee(dbPool, ws, parseMsg.data);
       break;
     case 'purchaseRequestInit':
       purchaseAPI.getPurchaseRequestInitInfo(dbPool, ws, parseMsg.data);
-      console.log(parseMsg.data);
       break;
     case 'purchaseRequestAsDraft':
       purchaseAPI.savePurcheseRequest(dbPool, ws, parseMsg.data);
-      console.log(parseMsg.data);
+
       break;
     case 'getAllPurchaseRequest':
       purchaseAPI.allPurchaseRequest(dbPool, ws);
@@ -118,31 +115,27 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
       userRequestAPI.getUserRequestNewNumber(dbPool, ws);
       break;
     case 'getUserRequestService':
-      console.log(`Service ${parseMsg.data}`);
       userRequestAPI.getUserRequestService(dbPool, ws, parseMsg.data);
       break;
     case 'getUserRequestStatus':
-      console.log(`Status ${parseMsg.data}`);
       userRequestAPI.getUserRequestStatus(dbPool, ws, parseMsg.data);
       break;
     case 'getUserRequestPriority':
-      console.log(`Priority ${parseMsg.data}`);
       userRequestAPI.getUserRequestPriority(dbPool, ws, parseMsg.data);
       break;
     case 'getUserRequestAttachment':
-      console.log(`Priority ${parseMsg.data}`);
       userRequestAPI.getUserRequestAttachment(dbPool, ws, parseMsg.data);
       break;
     case 'getDepartment':
-      console.log(`Service ${parseMsg.data}`);
       userRequestAPI.getDepartment(dbPool, ws, parseMsg.data);
       break;
     case 'getEmployeeByParentDepartment':
-      console.log(`Connection test ${parseMsg.data}`);
       userRequestAPI.getEmployeeByParentDepartment(dbPool, ws, parseMsg.data);
       break;
     case 'saveNewUserRequest':
-      console.log(`Service ${parseMsg.data}`);
+      userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, wss);
+      break;
+    case 'takeRequestToWork':
       userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, wss);
       break;
     default:

@@ -18,6 +18,8 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
+  public listOfFiles: any[] = [];
+
   constructor(private wsService: WebsocketService) {
     this.attachmentArray$ = this.wsService.on<any>(Event.EV_USER_REQUEST_ATTACHMENT).pipe(first(), takeUntil(this.ngUnsubscribe$));
   }
@@ -35,7 +37,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     console.log(this.userRequest.requestNumber);
     this.wsService.send('getUserRequestAttachment', this.userRequest.requestNumber);
     this.attachmentArray$.subscribe((attach: any) => {
-      console.log(attach);
+      this.listOfFiles = attach;
       // console.log(Buffer.from(attach[6].attachment).toString('base64'));
     });
   }
@@ -44,5 +46,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.modalOpen = false;
     // this.attachmentArray$.unsubscribe();
     // console.log(this.requestInfo.controls.test.value);
+  }
+
+  public takeRequestToWork() {
+    this.wsService.send('takeRequestToWork', 2);
   }
 }

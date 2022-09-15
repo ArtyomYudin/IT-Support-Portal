@@ -14,7 +14,7 @@
                 </div>
             </clr-dg-action-bar>
 
-            <clr-dg-column class="color-column">
+            <clr-dg-column class="priority-column">
                 <ng-container *clrDgHideableColumn="{ hidden: false }">Приоритет</ng-container>
             </clr-dg-column>
             <clr-dg-column class="date-column" [clrDgSortBy]="'creationDate'">
@@ -30,7 +30,7 @@
             <clr-dg-column>
                 <ng-container *clrDgHideableColumn="{ hidden: false }">Тема</ng-container>
             </clr-dg-column>
-            <clr-dg-column class="color-column">
+            <clr-dg-column class="status-column">
                 <ng-container *clrDgHideableColumn="{ hidden: false }">Статус</ng-container>
             </clr-dg-column>
             <clr-dg-column>
@@ -51,7 +51,7 @@
                 <!--[ngStyle]="{
                     color: (userRequest.deadline | date: 'dd.MM.YYYY') < (this.currentDate | date: 'dd.MM.YYYY') ? 'red' : '#666666'
                 }"-->
-                <clr-dg-cell>
+                <clr-dg-cell class="priority-column">
                     <!--<span class="color-square" [style.backgroundColor]="userRequest.priority.color"></span>-->
                     <clr-icon class="priority-icon is-solid" [style.fill]="userRequest.priority.color" shape="flag"></clr-icon>
                 </clr-dg-cell>
@@ -61,7 +61,7 @@
                 <clr-dg-cell>{{ userRequest.initiator | employeeName }}</clr-dg-cell>
                 <clr-dg-cell>{{ userRequest.service }}</clr-dg-cell>
                 <clr-dg-cell>{{ userRequest.topic }}</clr-dg-cell>
-                <clr-dg-cell>
+                <clr-dg-cell class="status-column">
                     <clr-icon
                         class="status-icon"
                         [attr.shape]="changeStatusIcon(userRequest.status.id)"
