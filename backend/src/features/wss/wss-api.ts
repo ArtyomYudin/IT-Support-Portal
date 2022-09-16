@@ -111,6 +111,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
     case 'getAllUserRequest':
       userRequestAPI.allUserRequest(dbPool, ws);
       break;
+    case 'getUserRequestByNumber':
+      userRequestAPI.getUserRequestByNumber(dbPool, ws, parseMsg.data);
+      break;
     case 'getUserRequestNewNumber':
       userRequestAPI.getUserRequestNewNumber(dbPool, ws);
       break;
@@ -135,8 +138,8 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
     case 'saveNewUserRequest':
       userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, wss);
       break;
-    case 'takeRequestToWork':
-      userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, wss);
+    case 'updateUserRequestStatus':
+      userRequestAPI.updateUserRequestStatus(dbPool, parseMsg.data, ws, wss);
       break;
     default:
       break;

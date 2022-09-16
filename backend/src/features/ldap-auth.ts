@@ -57,7 +57,7 @@ export async function checkUserCredentials(reqBody: string, res: ServerResponse,
         ldapSearchRes.on('searchEntry', (entry: any) => {
           // Sign JWT and send it to Client
           const userToken = jwt.sign({ email }, process.env.JWT_SECRET as string, {
-            expiresIn: '1h',
+            expiresIn: '8h',
             subject: 'IT-Support-Portal',
           });
           res.statusCode = 200;

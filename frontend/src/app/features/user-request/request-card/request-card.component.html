@@ -1,22 +1,23 @@
 <!--[ngStyle]="{ display: userRequest.length != 1 ? 'none' : '' }"-->
-<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false" [clrModalSize]="'xl'">
+<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="true" [clrModalSize]="'xl'">
     <h3 class="modal-title">
         <div class="clr-row clr-justify-content-start request-title-container">
             <div class="request-title">
-                Обращение пользователея № {{ this.userRequest?.requestNumber }} от {{ userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
+                Обращение пользователея № {{ this.userRequest?.requestNumber }} от
+                {{ this.userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
             </div>
 
             <clr-input-container class="request-title-status">
                 <label>Статус:</label>
-                <input clrInput type="text" value="{{ userRequest?.status.name }}" [readonly]="true" />
+                <input clrInput type="text" value="{{ this.userRequest?.status.name }}" [readonly]="true" />
             </clr-input-container>
             <clr-input-container class="request-title-priority">
                 <label>Приоритет:</label>
-                <input clrInput type="text" value="{{ userRequest?.priority.name }}" [readonly]="true" />
+                <input clrInput type="text" value="{{ this.userRequest?.priority.name }}" [readonly]="true" />
             </clr-input-container>
             <clr-input-container class="request-title-deadline">
                 <label>Срок:</label>
-                <input clrInput type="text" value="{{ userRequest?.deadline }}" [readonly]="true" />
+                <input clrInput type="text" value="{{ this.userRequest?.deadline }}" [readonly]="true" />
             </clr-input-container>
             <!--
             <div class="clr-form-control status-form-control">
@@ -44,7 +45,8 @@
         --></div>
     </h3>
     <div class="modal-body">
-        <!--
+        <form [formGroup]="userRequestCard" clrForm [clrLayout]="'vertical'" autocomplete="off">
+            <!--
         <div class="clr-row clr-justify-content-start request-control-container">
             <div class="clr-form-control status-form-control">
                 <label class="clr-control-label status-list-label">Статус:</label>
@@ -68,81 +70,101 @@
             </div>
         </div>
     -->
-        <div class="clr-row user-request-card">
-            <div class="clr-col-12 clr-col-lg-8">
-                <div class="card">
-                    <div class="card-block request-info">
-                        <!--
+            <div class="clr-row user-request-card">
+                <div class="clr-col-12 clr-col-lg-7">
+                    <div class="card">
+                        <div class="card-block request-info">
+                            <!--
                         <clr-input-container class="request-initiator-container">
                             <label>Инициатор:</label>
                             <input type="text" clrInput value="{{ userRequest?.initiator }}" [readonly]="true" />
                         </clr-input-container>
                         -->
 
-                        <clr-input-container class="request-topic-container">
-                            <label>Тема:</label>
-                            <input type="text" clrInput value="{{ userRequest?.topic }}" [readonly]="true" />
-                        </clr-input-container>
+                            <clr-input-container class="request-topic-container">
+                                <label>Тема:</label>
+                                <input type="text" clrInput value="{{ this.userRequest?.topic }}" [readonly]="true" />
+                            </clr-input-container>
 
-                        <clr-textarea-container class="request-description-container">
-                            <label>Описание:</label>
-                            <textarea
-                                type="text"
-                                clrTextarea
-                                rows="10"
-                                contenteditable="true"
-                                value="{{ userRequest?.description }}"
-                                [readonly]="true"
-                            ></textarea>
-                        </clr-textarea-container>
-                        <label class="image-upload-btn clr-col-0">
-                            <clr-icon shape="attachment"></clr-icon>
-                            Вложенные файлы:
-                        </label>
-                        <div class="file-List">
-                            <ul class="list-unstyled">
-                                <div *ngIf="listOfFiles.length == 0">вложений нет</div>
+                            <clr-textarea-container class="request-description-container">
+                                <label>Описание:</label>
+                                <textarea
+                                    type="text"
+                                    clrTextarea
+                                    rows="10"
+                                    contenteditable="true"
+                                    value="{{ this.userRequest?.description }}"
+                                    [readonly]="true"
+                                ></textarea>
+                            </clr-textarea-container>
+                            <div class="request-attachment-container">
+                                <label class="image-upload-btn clr-col-0">
+                                    <clr-icon shape="attachment"></clr-icon>
+                                    Вложенные файлы:
+                                </label>
+                                <div class="file-List">
+                                    <ul class="list-unstyled">
+                                        <div *ngIf="listOfFiles.length == 0">вложений нет</div>
 
-                                <li *ngFor="let file of listOfFiles; let index = index">
-                                    {{ file.fileName }}
-                                </li>
-                            </ul>
+                                        <li *ngFor="let file of listOfFiles; let index = index">
+                                            {{ file.fileName }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <clr-textarea-container class="request-comment-container">
+                                <label>Добавить комментарий:</label>
+                                <textarea
+                                    formControlName="comment"
+                                    type="text"
+                                    clrTextarea
+                                    rows="3"
+                                    contenteditable="true"
+                                    value=""
+                                ></textarea>
+                            </clr-textarea-container>
                         </div>
-                        <clr-textarea-container class="request-description-container">
+                    </div>
+                </div>
+                <div class="clr-col-12 clr-col-lg-5">
+                    <div class="card">
+                        <div class="card-block request-execution">
+                            <clr-input-container class="request-initiator-container">
+                                <label>Инициатор:</label>
+                                <input type="text" clrInput value="{{ this.userRequest?.initiator }}" [readonly]="true" />
+                            </clr-input-container>
+                            <clr-input-container class="request-executor-container">
+                                <label>Исполнитель:</label>
+                                <input type="text" clrInput value="{{ this.userRequest?.executor.name }}" [readonly]="true" />
+                            </clr-input-container>
+
+                            <clr-input-container class="request-delegate-container">
+                                <label>Делегировать:</label>
+                                <input formControlName="delegate" type="text" clrInput [matAutocomplete]="delegateList" />
+                                <mat-autocomplete #delegateList="matAutocomplete">
+                                    <ng-container>
+                                        <mat-option
+                                            (onSelectionChange)="(null)"
+                                            *ngFor="let delegate of delegateListArray$ | async"
+                                            [value]="delegate.name"
+                                        >
+                                            {{ delegate.name }}
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-autocomplete>
+                            </clr-input-container>
+                            <!--<clr-textarea-container class="request-description-container">
                             <label>Ответ:</label>
                             <textarea type="text" clrTextarea rows="5" contenteditable="true" value=""></textarea>
                         </clr-textarea-container>
                     </div>
-                </div>
-            </div>
-            <div class="clr-col-12 clr-col-lg-4">
-                <div class="card">
-                    <div class="card-block request-execution">
-                        <clr-input-container class="request-initiator-container">
-                            <label>Инициатор:</label>
-                            <input type="text" clrInput value="{{ userRequest?.initiator }}" [readonly]="true" />
-                        </clr-input-container>
-                        <clr-input-container class="request-initiator-container">
-                            <label>Исполнитель:</label>
-                            <input type="text" clrInput value="{{ userRequest?.executor.name }}" [readonly]="true" />
-                        </clr-input-container>
-
-                        <clr-input-container class="request-initiator-container">
-                            <label>Делегировать:</label>
-                            <input type="text" clrInput value="" [readonly]="true" />
-                        </clr-input-container>
-                        <!--<clr-textarea-container class="request-description-container">
-                            <label>Ответ:</label>
-                            <textarea type="text" clrTextarea rows="5" contenteditable="true" value=""></textarea>
-                        </clr-textarea-container>
-                    </div>
-                        -->
+                        --></div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!--
+            <!--
         <clr-input-container class="request-topic-container">
             <label>Тема:</label>
             <input type="text" clrInput value="{{ userRequest?.topic }}" [readonly]="true" />
@@ -186,12 +208,14 @@
             <label>Комментарии:</label>
             <textarea clrTextarea rows="5" contenteditable="true"></textarea>
         </clr-textarea-container>
-    --></div>
+    -->
+        </form>
+    </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-link" (click)="onClose()">Отмена</button>
-        <button type="button" class="btn btn-link" (click)="(null)">Сохранить</button>
-        <button type="button" class="btn btn-link" (click)="(null)">Взять в работу</button>
-        <button type="button" class="btn btn-link" (click)="(null)">Закрыть заявку</button>
+        <button type="button" class="btn btn-outline btn-sm" (click)="onClose()">Отмена</button>
+        <button type="button" class="btn btn-outline btn-sm" (click)="(null)">Сохранить</button>
+        <button type="button" class="btn btn-outline btn-sm" (click)="takeRequestToWork()">Взять в работу</button>
+        <button type="button" class="btn btn-outline btn-sm" (click)="(null)">Закрыть заявку</button>
     </div>
 </clr-modal>

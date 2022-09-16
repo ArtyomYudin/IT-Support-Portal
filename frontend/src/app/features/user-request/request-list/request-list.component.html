@@ -4,8 +4,8 @@
         <clr-datagrid [(clrDgSelected)]="selected" class="datagrid-compact user-request-list-datagrid" [clrDgLoading]="loading">
             <clr-dg-action-bar>
                 <div class="btn-group btn-link btn-sm">
-                    <button class="btn" (click)="userRequestNew.onOpen()"><clr-icon shape="file"></clr-icon>Создать обращения</button>
-                    <button class="btn" (click)="userRequestCard.onOpen(selected[0])" [disabled]="selected.length != 1">
+                    <button class="btn" (click)="modalNew.onOpen()"><clr-icon shape="file"></clr-icon>Создать обращения</button>
+                    <button class="btn" (click)="modalCard.onOpen(selected[0])" [disabled]="selected.length != 1">
                         <clr-icon shape="pencil"></clr-icon>Редактировать
                     </button>
                     <button class="btn" (click)="(null)" [disabled]="selected.length == 0">
@@ -46,7 +46,7 @@
                 *clrDgItems="let userRequest of (this.userRequestArray$ | async)?.results"
                 [clrDgItem]="userRequest"
                 [(clrDgSelected)]="userRequest.selected"
-                (dblclick)="userRequestCard.onOpen(userRequest)"
+                (dblclick)="modalCard.onOpen(userRequest.requestNumber)"
             >
                 <!--[ngStyle]="{
                     color: (userRequest.deadline | date: 'dd.MM.YYYY') < (this.currentDate | date: 'dd.MM.YYYY') ? 'red' : '#666666'
@@ -99,6 +99,6 @@
     <fe-purchase-request-page [purchaseRequestDraftId]="selected" #purchaseRequestPage></fe-purchase-request-page>
 -->
 
-<fe-user-request-new #userRequestNew></fe-user-request-new>
+<fe-user-request-new></fe-user-request-new>
 
-<fe-user-request-card #userRequestCard></fe-user-request-card>
+<fe-user-request-card></fe-user-request-card>

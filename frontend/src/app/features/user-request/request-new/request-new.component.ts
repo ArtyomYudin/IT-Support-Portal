@@ -61,23 +61,29 @@ export class RequestNewComponent implements OnInit, OnDestroy {
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private datePipe: DatePipe) {
-    this.serviceListArray$ = this.wsService.on<RequestService>(Event.EV_USER_REQUEST_SERVICE).pipe(first(), takeUntil(this.ngUnsubscribe$));
+    this.serviceListArray$ = this.wsService
+      .on<RequestService>(Event.EV_USER_REQUEST_SERVICE)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
 
     this.wsService
       .on<any>(Event.EV_USER_REQUEST_NEW_NUMBER)
-      .pipe(first(), takeUntil(this.ngUnsubscribe$))
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$))
       .subscribe(number => {
         this.newNumber = number.newNumber.toString().padStart(6, 0);
         this.userRequestAllData.requestNumber = this.newNumber;
       });
 
-    this.statusListArray$ = this.wsService.on<RequestStatus>(Event.EV_USER_REQUEST_STATUS).pipe(first(), takeUntil(this.ngUnsubscribe$));
+    this.statusListArray$ = this.wsService
+      .on<RequestStatus>(Event.EV_USER_REQUEST_STATUS)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
 
     this.priorityListArray$ = this.wsService
       .on<RequestPriority>(Event.EV_USER_REQUEST_PRIORITY)
-      .pipe(first(), takeUntil(this.ngUnsubscribe$));
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
 
-    this.executorListArray$ = this.wsService.on<any>(Event.EV_EMPLOYEE_BY_PARENT_DEPARTMENT).pipe(first(), takeUntil(this.ngUnsubscribe$));
+    this.executorListArray$ = this.wsService
+      .on<any>(Event.EV_EMPLOYEE_BY_PARENT_DEPARTMENT)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
 
     this.department$ = this.wsService.on<Department>(Event.EV_DEPARTMENT).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
   }

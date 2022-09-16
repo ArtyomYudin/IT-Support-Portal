@@ -1,4 +1,4 @@
-<clr-modal #userRequestModal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false" [clrModalSize]="'lg'">
+<clr-modal #userRequestModal [(clrModalOpen)]="modalOpen" [clrModalClosable]="true" [clrModalSize]="'lg'">
     <h3 class="modal-title">Новое обращение пользователя № {{ this.newNumber }} от {{ this.currentDate.toLocaleDateString() }} г.</h3>
     <div class="modal-body">
         <form [formGroup]="userRequest" clrForm [clrLayout]="'horizontal'" autocomplete="off">

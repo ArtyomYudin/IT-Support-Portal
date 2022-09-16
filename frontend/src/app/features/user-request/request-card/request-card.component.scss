@@ -62,9 +62,10 @@
   flex-direction: row;
 }
 
+.request-attachment-container,
 .request-info .clr-form-control,
 .request-execution .clr-form-control {
-  margin-top: 0rem;
+  margin-top: 0.2rem;
 }
 
 ::ng-deep .request-title-status .clr-control-container,
@@ -103,7 +104,6 @@
 .image-upload-btn {
   padding: 0;
   color: #454545;
-
   font-size: 0.6rem;
   font-weight: 600;
   text-transform: none;
@@ -118,4 +118,17 @@ ul {
   columns: 2;
   -webkit-columns: 2;
   -moz-columns: 2;
+}
+.request-topic-container,
+.request-initiator-container,
+.request-executor-container,
+.request-delegate-container {
+  flex-direction: row;
+}
+
+::ng-deep .request-topic-container .clr-control-container,
+::ng-deep .request-initiator-container .clr-control-container,
+::ng-deep .request-executor-container .clr-control-container,
+::ng-deep .request-delegate-container .clr-control-container {
+  margin-top: -0.2rem;
 }

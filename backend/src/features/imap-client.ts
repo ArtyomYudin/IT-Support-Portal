@@ -25,7 +25,6 @@ async function getUserRequestNewNumber(): Promise<string> {
   } catch (error) {
     console.log(`not connected due to error: ${error}`);
   } finally {
-    // Close Connection
     if (conn) conn.release();
   }
   return newNumber.toString().padStart(6, 0);
@@ -41,10 +40,8 @@ async function getEmployeeByUPN(value: any): Promise<any> {
   } catch (error) {
     console.log(`not connected due to error: ${error}`);
   } finally {
-    // Close Connection
     if (conn) conn.release();
   }
-  // console.log(employeeByUPN);
   return employeeByUPN[0];
 }
 
@@ -81,7 +78,13 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
 
   try {
     const employee = await getEmployeeByUPN(mail.from?.value[0].address);
-    // console.log(mail.from?.value[0].address);
+    /**
+     * mailText содержит текст письма без пустых строк
+     */
+    const mailText = mail.text
+      ?.split(/\r?\n/)
+      .filter((line: any) => line.trim() !== '')
+      .join('\n');
     userRequestAllData.creationDate = mail.headers.get('date');
     userRequestAllData.changeDate = mail.headers.get('date');
     userRequestAllData.requestNumber = await getUserRequestNewNumber();
@@ -89,10 +92,9 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     userRequestAllData.departmentId = employee.departmentId;
     userRequestAllData.executorId = executorIdList[Math.floor(Math.random() * executorIdList.length)];
     userRequestAllData.topic = mail.subject ? mail.subject : '';
-    userRequestAllData.description = mail.text ? mail.text : '';
+    userRequestAllData.description = mailText || '';
     userRequestAllData.priorityId = mail.headers.get('priority') === 'high' ? 2 : 1;
     userRequestAllData.deadline = new Date().toISOString().replace(/T.+/, '');
-
     const attachArray: any[] = [];
     mail.attachments.forEach((att: any) => {
       attachArray.push({
@@ -103,7 +105,6 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
       });
     });
     userRequestAllData.attachments = attachArray;
-    // const att = `data:${mail.attachments[0].contentType};base64,${Buffer.from(mail.attachments[0].content).toString('base64')}`;
     await userRequestAPI.saveNewUserRequest(dbPool, userRequestAllData, wss);
     return true;
   } catch (error) {
@@ -122,14 +123,13 @@ export const getEmails = (wss: Server<WebSocket>) => {
             f.on('message', msg => {
               msg.on('body', stream => {
                 simpleParser(stream, async (er, parsed) => {
-                  // console.log(parsed);
                   createUserRequest(parsed, wss);
                 });
               });
               msg.once('attributes', attrs => {
                 const { uid } = attrs;
                 imap.addFlags(uid, ['\\Seen'], () => {
-                  // Mark the email as read after reading it
+                  // Помечаем письма как прочитанные
                   console.log('Marked as read!');
                 });
               });

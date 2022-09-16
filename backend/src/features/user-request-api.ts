@@ -3,6 +3,7 @@ import { Server, WebSocket } from 'ws';
 import fs, { existsSync } from 'fs';
 import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
+import * as dbUpdate from '../shared/db/db_update';
 
 function ConvertTo2Digits(newNum: number) {
   return newNum.toString().padStart(2, '0');
@@ -29,273 +30,294 @@ function decodeBase64(dataString: any) {
   return response;
 }
 
-export function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: string): void {
+export async function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: string): Promise<void> {
   const filteredEmployeeArray: any[] = [];
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getFilteredEmployee(value)).then(rows => {
-        rows.forEach((row: any, i: number) => {
-          filteredEmployeeArray[i] = { id: row.id, displayName: row.displayName, departmentId: row.departmentId };
-        });
-        console.log(filteredEmployeeArray);
-        ws.send(
-          JSON.stringify({
-            event: 'event_filtered_employee',
-            data: filteredEmployeeArray,
-          }),
-        );
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getFilteredEmployee(value));
+    rows.forEach((row: any, i: number) => {
+      filteredEmployeeArray[i] = { id: row.id, displayName: row.displayName, departmentId: row.departmentId };
     });
+    console.log(filteredEmployeeArray);
+    ws.send(
+      JSON.stringify({
+        event: 'event_filtered_employee',
+        data: filteredEmployeeArray,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
 
-export function getEmployeeByUPN(dbPool: Pool, ws: WebSocket, value: string): void {
+export async function getEmployeeByUPN(dbPool: Pool, ws: WebSocket, value: string): Promise<void> {
   let employeeByUPN: any = {};
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getEmployeeByUPN(value)).then(rows => {
-        rows.forEach((row: any) => {
-          employeeByUPN = row;
-        });
-        ws.send(
-          JSON.stringify({
-            event: 'event_employee_by_upn',
-            data: employeeByUPN,
-          }),
-        );
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getEmployeeByUPN(value));
+    rows.forEach((row: any) => {
+      employeeByUPN = row;
     });
+    ws.send(
+      JSON.stringify({
+        event: 'event_employee_by_upn',
+        data: employeeByUPN,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
 
-export function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket, value: number): void {
+export async function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket, value: number): Promise<void> {
   const employeeByParentDepartment: any[] = [];
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getEmployeeByParentDepartment(value)).then(rows => {
-        rows.forEach((row: any, i: number) => {
-          employeeByParentDepartment[i] = { id: row.id, name: row.displayName };
-        });
-        console.log(employeeByParentDepartment);
-        ws.send(
-          JSON.stringify({
-            event: 'event_employee_by_parent_department',
-            data: employeeByParentDepartment,
-          }),
-        );
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getEmployeeByParentDepartment(value));
+    rows.forEach((row: any, i: number) => {
+      employeeByParentDepartment[i] = { id: row.id, name: row.displayName };
     });
+    console.log(employeeByParentDepartment);
+    ws.send(
+      JSON.stringify({
+        event: 'event_employee_by_parent_department',
+        data: employeeByParentDepartment,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
 
-export function allUserRequest(dbPool: Pool, ws?: WebSocket | null, wss?: any): void {
+export async function allUserRequest(dbPool: Pool, ws: WebSocket | null, wss?: Server<WebSocket>): Promise<void> {
+  let conn;
   const allUserRequestArray: any[] = [];
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.userRequestList).then(rows => {
-        rows.forEach((row: any, i: number) => {
-          allUserRequestArray[i] = {
-            id: row.id,
-            creationDate: row.creationDate,
-            changeDate: row.changeDate,
-            requestNumber: row.requestNumber,
-            initiator: row.initiator,
-            department: row.department,
-            executor: { id: row.executorId, name: row.executorName },
-            service: row.service,
-            topic: row.topic,
-            description: row.description,
-            status: { id: row.statusId, name: row.statusName },
-            priority: { id: row.priority_id, name: row.priorityName, color: row.priorityColor },
-            deadline: row.deadline,
-          };
-        });
-        if (ws) {
-          ws.send(
-            JSON.stringify({
-              event: 'event_user_request_all',
-              data: { results: allUserRequestArray, total: allUserRequestArray.length },
-            }),
-          );
-        } else {
-          wss.clients.forEach((client: any) => {
-            client.send(
-              JSON.stringify({
-                event: 'event_user_request_all',
-                data: { results: allUserRequestArray, total: allUserRequestArray.length },
-              }),
-            );
-          });
-        }
-      });
-      // ws.send(
-      //   JSON.stringify({
-      //     event: 'event_notify',
-      //     data: { type: 'info', error: false, event: 'All read!' },
-      //   }),
-      // );
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.userRequestList);
+    rows.forEach((row: any, i: number) => {
+      allUserRequestArray[i] = {
+        id: row.id,
+        creationDate: row.creationDate,
+        changeDate: row.changeDate,
+        requestNumber: row.requestNumber,
+        initiator: row.initiator,
+        department: row.department,
+        executor: { id: row.executorId, name: row.executorName },
+        service: row.service,
+        topic: row.topic,
+        description: row.description,
+        status: { id: row.statusId, name: row.statusName },
+        priority: { id: row.priority_id, name: row.priorityName, color: row.priorityColor },
+        deadline: row.deadline,
+      };
     });
-}
-
-export function getUserRequestNewNumber(dbPool: Pool, ws: WebSocket): void {
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getUserRequestNewNumber).then(rows => {
-        const newNumber = rows[0];
-        console.log(newNumber);
-        ws.send(
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          event: 'event_user_request_all',
+          data: { results: allUserRequestArray, total: allUserRequestArray.length },
+        }),
+      );
+    } else {
+      wss?.clients.forEach((client: any) => {
+        client.send(
           JSON.stringify({
-            event: 'event_user_request_new_number',
-            data: newNumber,
+            event: 'event_user_request_all',
+            data: { results: allUserRequestArray, total: allUserRequestArray.length },
           }),
         );
       });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
-    });
+    }
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
-export function getUserRequestService(dbPool: Pool, ws: WebSocket, value?: number): void {
+
+export async function getUserRequestByNumber(dbPool: Pool, ws: WebSocket, value: string): Promise<void> {
+  let conn;
+  let userRequest: any = {};
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.userRequestbyNumber(value));
+    rows.forEach((row: any) => {
+      userRequest = {
+        id: row.id,
+        creationDate: row.creationDate,
+        changeDate: row.changeDate,
+        requestNumber: row.requestNumber,
+        initiator: row.initiator,
+        department: row.department,
+        executor: { id: row.executorId, name: row.executorName },
+        service: row.service,
+        topic: row.topic,
+        description: row.description,
+        status: { id: row.statusId, name: row.statusName },
+        priority: { id: row.priority_id, name: row.priorityName, color: row.priorityColor },
+        deadline: row.deadline,
+      };
+    });
+    ws.send(
+      JSON.stringify({
+        event: 'event_user_request_by_number',
+        data: userRequest,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
+export async function getUserRequestNewNumber(dbPool: Pool, ws: WebSocket): Promise<void> {
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getUserRequestNewNumber);
+    const newNumber = rows[0];
+    console.log(newNumber);
+    ws.send(
+      JSON.stringify({
+        event: 'event_user_request_new_number',
+        data: newNumber,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+export async function getUserRequestService(dbPool: Pool, ws: WebSocket, value?: number): Promise<void> {
   const userRequestServiceArray: any[] = [];
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getUserRequestService(value)).then(rows => {
-        rows.forEach((row: any, i: number) => {
-          userRequestServiceArray[i] = { id: row.id, name: row.name };
-        });
-        console.log(userRequestServiceArray);
-        ws.send(
-          JSON.stringify({
-            event: 'event_user_request_service',
-            data: userRequestServiceArray,
-          }),
-        );
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getUserRequestService(value));
+    rows.forEach((row: any, i: number) => {
+      userRequestServiceArray[i] = { id: row.id, name: row.name };
     });
+    console.log(userRequestServiceArray);
+    ws.send(
+      JSON.stringify({
+        event: 'event_user_request_service',
+        data: userRequestServiceArray,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
 
-export function getUserRequestStatus(dbPool: Pool, ws: WebSocket, value?: number): void {
+export async function getUserRequestStatus(dbPool: Pool, ws: WebSocket, value?: number): Promise<void> {
   const userRequestStatusArray: any[] = [];
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getUserRequestStatus(value)).then(rows => {
-        rows.forEach((row: any, i: number) => {
-          userRequestStatusArray[i] = { id: row.id, name: row.name };
-        });
-        console.log(userRequestStatusArray);
-        ws.send(
-          JSON.stringify({
-            event: 'event_user_request_status',
-            data: userRequestStatusArray,
-          }),
-        );
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getUserRequestStatus(value));
+    rows.forEach((row: any, i: number) => {
+      userRequestStatusArray[i] = { id: row.id, name: row.name };
     });
+    console.log(userRequestStatusArray);
+    ws.send(
+      JSON.stringify({
+        event: 'event_user_request_status',
+        data: userRequestStatusArray,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
 
-export function getUserRequestPriority(dbPool: Pool, ws: WebSocket, value?: number): void {
+export async function getUserRequestPriority(dbPool: Pool, ws: WebSocket, value?: number): Promise<void> {
   const userRequestPriorityArray: any[] = [];
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getUserRequestPriority(value)).then(rows => {
-        rows.forEach((row: any, i: number) => {
-          userRequestPriorityArray[i] = { id: row.id, name: row.name };
-        });
-        console.log(userRequestPriorityArray);
-        ws.send(
-          JSON.stringify({
-            event: 'event_user_request_priority',
-            data: userRequestPriorityArray,
-          }),
-        );
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getUserRequestPriority(value));
+    rows.forEach((row: any, i: number) => {
+      userRequestPriorityArray[i] = { id: row.id, name: row.name };
     });
+    console.log(userRequestPriorityArray);
+    ws.send(
+      JSON.stringify({
+        event: 'event_user_request_priority',
+        data: userRequestPriorityArray,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
 
-export function getDepartment(dbPool: Pool, ws: WebSocket, value?: number): void {
+export async function getDepartment(dbPool: Pool, ws: WebSocket, value?: number): Promise<void> {
   const departmentArray: any[] = [];
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getDepartment(value)).then(rows => {
-        rows.forEach((row: any, i: number) => {
-          departmentArray[i] = { id: row.id, name: row.name, parentName: row.parentDepartmentName };
-        });
-        console.log(departmentArray);
-        ws.send(
-          JSON.stringify({
-            event: 'event_department',
-            data: departmentArray,
-          }),
-        );
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getDepartment(value));
+    rows.forEach((row: any, i: number) => {
+      departmentArray[i] = { id: row.id, name: row.name, parentName: row.parentDepartmentName };
     });
+    console.log(departmentArray);
+    ws.send(
+      JSON.stringify({
+        event: 'event_department',
+        data: departmentArray,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
 
-export function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, value?: number): void {
+export async function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, value?: number): Promise<void> {
   const userRequestAttachmentArray: any[] = [];
-  dbPool
-    .getConnection()
-    .then(conn => {
-      conn.query(dbSelect.getUserRequestAttachment(value)).then(rows => {
-        rows.forEach(async (row: any, i: number) => {
-          userRequestAttachmentArray[i] = { id: row.id, fileName: row.fileName };
-        });
-        ws.send(
-          JSON.stringify({
-            event: 'event_user_request_attachment',
-            data: userRequestAttachmentArray,
-          }),
-        );
-      });
-      conn.release(); // release to pool
-    })
-    .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getUserRequestAttachment(value));
+    rows.forEach(async (row: any, i: number) => {
+      userRequestAttachmentArray[i] = { id: row.id, fileName: row.fileName };
     });
+    ws.send(
+      JSON.stringify({
+        event: 'event_user_request_attachment',
+        data: userRequestAttachmentArray,
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
 }
 
 export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<WebSocket>): Promise<any> {
   let conn: any;
   let response;
+
   try {
     conn = await dbPool.getConnection();
     response = await conn.query(
@@ -351,12 +373,41 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
   } catch (error) {
     console.log(`not connected due to error: ${error}`);
   } finally {
-    // Close Connection
+    if (conn) conn.release();
+  }
+  return response;
+}
+
+export async function updateUserRequestStatus(dbPool: Pool, value: any, ws: WebSocket, wss: Server<WebSocket>): Promise<any> {
+  let conn: any;
+  let response;
+
+  try {
+    conn = await dbPool.getConnection();
+    response = await conn.query(dbUpdate.updateUserRequestStatus(value.statusId, value.requestNumber));
+
+    allUserRequest(dbPool, null, wss);
+    getUserRequestByNumber(dbPool, ws, value.requestNumber);
+    ws.send(
+      JSON.stringify({
+        event: 'event_notify',
+        data: { event_type: 'userRequestStatusChange', event_status: 'success', event_message: 'Статус заявки изменен' },
+      }),
+    );
+  } catch (error) {
+    ws.send(
+      JSON.stringify({
+        event: 'event_notify',
+        data: { event_type: 'userRequestStatusChange', event_status: 'error', event_message: 'Невозможно изменить статус заявки' },
+      }),
+    );
+    console.log(`not connected due to error: ${error}`);
+  } finally {
     if (conn) conn.release();
   }
   return response;
 }
 
 export function init(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {
-  allUserRequest(dbPool, ws);
+  allUserRequest(dbPool, ws, wss);
 }

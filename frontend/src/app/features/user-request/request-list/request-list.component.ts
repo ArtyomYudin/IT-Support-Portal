@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,6 +8,8 @@ import { IUserRequest } from '@model/user-request.model';
 import { Observable } from 'rxjs';
 import { ClrCommonStringsService } from '@clr/angular';
 import { russionLocale } from '@translation/russion';
+import { RequestNewComponent } from '../request-new/request-new.component';
+import { RequestCardComponent } from '../request-card/request-card.component';
 
 @Component({
   selector: 'fe-user-request-list',
@@ -26,6 +28,10 @@ export class RequestListComponent implements OnInit, OnDestroy {
   public snackBarEvent$: Observable<any>;
 
   private ngUnsubscribe$: Subject<any> = new Subject();
+
+  @ViewChild(RequestNewComponent) modalNew: RequestNewComponent;
+
+  @ViewChild(RequestCardComponent) modalCard: RequestCardComponent;
 
   constructor(private wsService: WebsocketService, private commonStrings: ClrCommonStringsService, private notifyBar: MatSnackBar) {
     commonStrings.localize(russionLocale);
@@ -50,7 +56,7 @@ export class RequestListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.wsService.send('getAllUserRequest');
+    this.wsService.send('getAllUserRequest', null);
   }
 
   ngOnDestroy(): void {

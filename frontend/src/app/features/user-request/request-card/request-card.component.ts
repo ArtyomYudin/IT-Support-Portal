@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
-import { first, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs/internal/Observable';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
+import { Notify } from '@model/notify.model';
+import { IUserRequest } from '@model/user-request.model';
 
 @Component({
   selector: 'fe-user-request-card',
@@ -16,39 +20,75 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public attachmentArray$: any;
 
+  // public userRequestCardModel: any;
+
   private ngUnsubscribe$: Subject<any> = new Subject();
+
+  public userRequest$: Observable<any>;
+
+  public delegateListArray$: Observable<any>;
+
+  public requestStatus: any;
+
+  public userRequestCard: FormGroup;
 
   public listOfFiles: any[] = [];
 
-  constructor(private wsService: WebsocketService) {
-    this.attachmentArray$ = this.wsService.on<any>(Event.EV_USER_REQUEST_ATTACHMENT).pipe(first(), takeUntil(this.ngUnsubscribe$));
+  constructor(private wsService: WebsocketService, private formBuilder: FormBuilder) {
+    this.userRequest$ = this.wsService
+      .on<IUserRequest>(Event.EV_USER_REQUEST_BY_NUMBER)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.delegateListArray$ = this.wsService
+      .on<any>(Event.EV_EMPLOYEE_BY_PARENT_DEPARTMENT)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.attachmentArray$ = this.wsService
+      .on<any>(Event.EV_USER_REQUEST_ATTACHMENT)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userRequestCard = this.formBuilder.group({
+      comment: [''],
+      delegate: [''],
+    });
+  }
 
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
   }
 
-  public onOpen(card: any): void {
-    this.modalOpen = true;
-    this.userRequest = card;
-    console.log(this.userRequest.requestNumber);
-    this.wsService.send('getUserRequestAttachment', this.userRequest.requestNumber);
+  public onOpen(requestNumber: any): void {
+    console.log(requestNumber);
+    this.wsService.send('getUserRequestByNumber', requestNumber);
+    this.wsService.send('getEmployeeByParentDepartment', 49);
+    this.wsService.send('getUserRequestAttachment', requestNumber);
+    this.userRequest$.subscribe(request => {
+      console.log(request);
+      // eslint-disable-next-line prefer-destructuring
+      this.userRequest = request;
+    });
     this.attachmentArray$.subscribe((attach: any) => {
       this.listOfFiles = attach;
-      // console.log(Buffer.from(attach[6].attachment).toString('base64'));
     });
+    this.modalOpen = true;
+    // this.userRequest = card;
+    // console.log(this.userRequest.requestNumber);
   }
 
   public onClose(): void {
     this.modalOpen = false;
-    // this.attachmentArray$.unsubscribe();
-    // console.log(this.requestInfo.controls.test.value);
+    this.attachmentArray$.unsubscribe();
+    this.userRequestCard.reset();
   }
 
   public takeRequestToWork() {
-    this.wsService.send('takeRequestToWork', 2);
+    this.wsService.send('updateUserRequestStatus', { statusId: 2, requestNumber: this.userRequest.requestNumber });
+    this.wsService
+      .on<Notify>(Event.EV_NOTIFY)
+      .pipe(first(), takeUntil(this.ngUnsubscribe$))
+      .subscribe(status => {
+        this.requestStatus = status;
+      });
   }
 }

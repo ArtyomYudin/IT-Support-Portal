@@ -124,3 +124,24 @@ button.datagrid-column-title {
 .clr-input-group .clr-input-group-icon-action {
   outline: none;
 }
+
+.mat-option {
+  font-family: 'Metropolis', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+  //color: #adbbc4;
+  height: 30px !important;
+  //box-shadow: 0 0.05rem 0.15rem #8c8c8c40;
+  min-height: 0%;
+}
+.mat-autocomplete-panel {
+  border-radius: 0.15rem !important;
+  width: inherit !important;
+}
+.mat-autocomplete-panel:not([class*='mat-elevation-z']) {
+  box-shadow: 0 0.05rem 0.15rem #8c8c8c40 !important;
+  border-top: 0 !important;
+  border-right: 0.05rem solid !important;
+  border-bottom: 0.05rem solid !important;
+  border-left: 0.05rem solid !important;
+  border-color: #ccc !important;
+}
