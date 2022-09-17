@@ -69,3 +69,19 @@ export const insertUserRequestAttachment = (
           file_path)
   VALUES (
   '${requestNumber}','${fileName}','${fileSiza}','${fileType}','${filePath}')`;
+
+export const insertUserRequestLifeCycle = (
+  requestNumber: string,
+  employeeId: number,
+  eventDate: string,
+  eventType: string,
+  eventValue: string,
+) => `
+    INSERT INTO ur_life_cycle (
+            request_number,
+            employee_id,
+            event_date,
+            event_type,
+            event_value)
+    VALUES (
+    '${requestNumber}','${employeeId}','${eventDate}','${eventType}', '${eventValue}')`;

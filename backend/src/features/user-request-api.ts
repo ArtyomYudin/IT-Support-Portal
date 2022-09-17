@@ -1,4 +1,4 @@
-import { Pool } from 'mariadb';
+import { Pool, PoolConnection } from 'mariadb';
 import { Server, WebSocket } from 'ws';
 import fs, { existsSync } from 'fs';
 import * as dbSelect from '../shared/db/db_select';
@@ -381,11 +381,12 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
 export async function updateUserRequestStatus(dbPool: Pool, value: any, ws: WebSocket, wss: Server<WebSocket>): Promise<any> {
   let conn: any;
   let response;
-
   try {
     conn = await dbPool.getConnection();
     response = await conn.query(dbUpdate.updateUserRequestStatus(value.statusId, value.requestNumber));
-
+    await conn.query(
+      dbInsert.insertUserRequestLifeCycle(value.requestNumber, value.employeeId, changeDateFormat(new Date()), 'status', value.statusId),
+    );
     allUserRequest(dbPool, null, wss);
     getUserRequestByNumber(dbPool, ws, value.requestNumber);
     ws.send(
@@ -408,6 +409,41 @@ export async function updateUserRequestStatus(dbPool: Pool, value: any, ws: WebS
   return response;
 }
 
+export async function getUserRequestLifeCycle(dbPool: Pool, ws: WebSocket, value: string): Promise<void> {
+  let conn: any;
+  const eventValue = '';
+  const requestLifeCycle: any[] = [];
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getUserRequestLifeCycle(value));
+    rows.forEach((row: any, i: number) => {
+      // f (row.eventType === 'status') {
+      //  await conn.query(dbSelect.getUserRequestStatus(row.eventValue as number)).then((status: any) => {
+      //    eventValue = status[0].name;
+      //  });
+      // console.log(status[0].name);
+      // }
+      requestLifeCycle[i] = {
+        employee: row.employee,
+        eventDate: row.eventDate,
+        eventType: row.eventType,
+        eventValue: row.eventValue,
+      };
+      // console.log(row);
+    });
+    console.log(requestLifeCycle);
+    ws.send(
+      JSON.stringify({
+        event: 'event_user_request_life_cycle',
+        data: requestLifeCycle[0],
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
+}
 export function init(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {
   allUserRequest(dbPool, ws, wss);
 }

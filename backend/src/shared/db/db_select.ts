@@ -93,6 +93,17 @@ export const getUserRequestAttachment = (requestNumber?: number) => `
                             ${requestNumber ? ` WHERE ur_attachment.request_number  =${requestNumber}` : ''}
                             order by ur_attachment.id`;
 
+export const getUserRequestLifeCycle = (requestNumber: string) => `
+                            SELECT ur_life_cycle.id AS id,
+                                   employee.display_name AS employee,
+                                   ur_life_cycle.event_date AS eventDate,
+                                   ur_life_cycle.event_type AS eventType,
+                                   ur_life_cycle.event_value AS eventValue
+                            FROM ur_life_cycle
+                                   LEFT JOIN employee on(ur_life_cycle.employee_id = employee.id)
+                            WHERE ur_life_cycle.request_number  ='${requestNumber}'
+                            order by ur_life_cycle.event_date`;
+
 export const getDepartment = (departmentId?: number) => `
                             SELECT department.id AS id,
                                    department.name AS name,

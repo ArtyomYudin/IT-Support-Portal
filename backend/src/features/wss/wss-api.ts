@@ -103,7 +103,6 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
       break;
     case 'purchaseRequestAsDraft':
       purchaseAPI.savePurcheseRequest(dbPool, ws, parseMsg.data);
-
       break;
     case 'getAllPurchaseRequest':
       purchaseAPI.allPurchaseRequest(dbPool, ws);
@@ -140,6 +139,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
       break;
     case 'updateUserRequestStatus':
       userRequestAPI.updateUserRequestStatus(dbPool, parseMsg.data, ws, wss);
+      break;
+    case 'getUserRequestLifeCycle':
+      userRequestAPI.getUserRequestLifeCycle(dbPool, ws, parseMsg.data);
       break;
     default:
       break;

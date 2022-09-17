@@ -154,6 +154,10 @@
                                     </ng-container>
                                 </mat-autocomplete>
                             </clr-input-container>
+
+                            .....
+
+                            {{ (userRequestLifeCycle$ | async)?.eventValue }}
                             <!--<clr-textarea-container class="request-description-container">
                             <label>Ответ:</label>
                             <textarea type="text" clrTextarea rows="5" contenteditable="true" value=""></textarea>
@@ -215,7 +219,11 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-outline btn-sm" (click)="onClose()">Отмена</button>
         <button type="button" class="btn btn-outline btn-sm" (click)="(null)">Сохранить</button>
-        <button type="button" class="btn btn-outline btn-sm" (click)="takeRequestToWork()">Взять в работу</button>
-        <button type="button" class="btn btn-outline btn-sm" (click)="(null)">Закрыть заявку</button>
+        <button *ngIf="this.userRequest?.status.id == 1" type="button" class="btn btn-outline btn-sm" (click)="takeRequestToWork()">
+            Взять в работу
+        </button>
+        <button *ngIf="this.userRequest?.status.id == 2" type="button" class="btn btn-outline btn-sm" (click)="(null)">
+            Закрыть заявку
+        </button>
     </div>
 </clr-modal>

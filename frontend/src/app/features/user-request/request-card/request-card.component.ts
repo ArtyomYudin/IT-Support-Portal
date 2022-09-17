@@ -7,6 +7,7 @@ import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { Notify } from '@model/notify.model';
 import { IUserRequest } from '@model/user-request.model';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'fe-user-request-card',
@@ -26,6 +27,8 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public userRequest$: Observable<any>;
 
+  public userRequestLifeCycle$: Observable<any>;
+
   public delegateListArray$: Observable<any>;
 
   public requestStatus: any;
@@ -34,7 +37,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public listOfFiles: any[] = [];
 
-  constructor(private wsService: WebsocketService, private formBuilder: FormBuilder) {
+  public token = JSON.parse(localStorage.getItem('IT-Support-Portal'));
+
+  constructor(private wsService: WebsocketService, private formBuilder: FormBuilder, private jwtHelper: JwtHelperService) {
     this.userRequest$ = this.wsService
       .on<IUserRequest>(Event.EV_USER_REQUEST_BY_NUMBER)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
@@ -43,6 +48,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
     this.attachmentArray$ = this.wsService
       .on<any>(Event.EV_USER_REQUEST_ATTACHMENT)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.userRequestLifeCycle$ = this.wsService
+      .on<any>(Event.EV_USER_REQUEST_LIFE_CYCLE)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
   }
 
@@ -61,10 +69,10 @@ export class RequestCardComponent implements OnInit, OnDestroy {
   public onOpen(requestNumber: any): void {
     console.log(requestNumber);
     this.wsService.send('getUserRequestByNumber', requestNumber);
+    this.wsService.send('getUserRequestLifeCycle', requestNumber);
     this.wsService.send('getEmployeeByParentDepartment', 49);
     this.wsService.send('getUserRequestAttachment', requestNumber);
     this.userRequest$.subscribe(request => {
-      console.log(request);
       // eslint-disable-next-line prefer-destructuring
       this.userRequest = request;
     });
@@ -83,7 +91,11 @@ export class RequestCardComponent implements OnInit, OnDestroy {
   }
 
   public takeRequestToWork() {
-    this.wsService.send('updateUserRequestStatus', { statusId: 2, requestNumber: this.userRequest.requestNumber });
+    this.wsService.send('updateUserRequestStatus', {
+      statusId: 2,
+      requestNumber: this.userRequest.requestNumber,
+      employeeId: this.token.id,
+    });
     this.wsService
       .on<Notify>(Event.EV_NOTIFY)
       .pipe(first(), takeUntil(this.ngUnsubscribe$))

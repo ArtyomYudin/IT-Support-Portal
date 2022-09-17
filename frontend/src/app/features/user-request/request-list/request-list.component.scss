@@ -70,3 +70,7 @@ clr-icon {
   top: 1.5rem !important;
   height: calc(100% - 1.5rem) !important;
 }
+
+::ng-deep .user-request-list-datagrid .datagrid-table-wrapper {
+  overflow-x: hidden;
+}
