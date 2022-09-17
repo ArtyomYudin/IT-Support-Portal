@@ -1,4 +1,4 @@
-import { Pool, PoolConnection } from 'mariadb';
+import { Pool } from 'mariadb';
 import { Server, WebSocket } from 'ws';
 import fs, { existsSync } from 'fs';
 import * as dbSelect from '../shared/db/db_select';
@@ -416,28 +416,32 @@ export async function getUserRequestLifeCycle(dbPool: Pool, ws: WebSocket, value
   try {
     conn = await dbPool.getConnection();
     const rows = await conn.query(dbSelect.getUserRequestLifeCycle(value));
-    rows.forEach((row: any, i: number) => {
-      // f (row.eventType === 'status') {
-      //  await conn.query(dbSelect.getUserRequestStatus(row.eventValue as number)).then((status: any) => {
-      //    eventValue = status[0].name;
-      //  });
-      // console.log(status[0].name);
-      // }
-      requestLifeCycle[i] = {
+    const pr = rows.map((row: { employee: any; eventDate: any; eventType: any; eventValue: any }) => {
+      let eventName;
+      console.log(row.eventValue);
+      if (row.eventType === 'status') {
+        console.log('row.event');
+        eventName = conn.query(dbSelect.getUserRequestStatus(row.eventValue as number));
+      } else {
+        eventName = row.eventValue;
+      }
+      return {
         employee: row.employee,
         eventDate: row.eventDate,
         eventType: row.eventType,
-        eventValue: row.eventValue,
+        eventValue: eventName,
       };
-      // console.log(row);
     });
-    console.log(requestLifeCycle);
+
+    console.log(pr);
+    /*
     ws.send(
       JSON.stringify({
         event: 'event_user_request_life_cycle',
         data: requestLifeCycle[0],
       }),
     );
+    */
   } catch (error) {
     console.log(`not connected due to error: ${error}`);
   } finally {
