@@ -103,4 +103,18 @@ export class RequestCardComponent implements OnInit, OnDestroy {
         this.requestStatus = status;
       });
   }
+
+  public changeStatusIcon(id: number) {
+    switch (id) {
+      case 2:
+        return 'clock';
+        break;
+      case 3:
+        return 'success-standard';
+        break;
+      default:
+        return 'new';
+        break;
+    }
+  }
 }

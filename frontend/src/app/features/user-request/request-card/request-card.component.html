@@ -6,7 +6,7 @@
                 Обращение пользователея № {{ this.userRequest?.requestNumber }} от
                 {{ this.userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
             </div>
-
+            <!--
             <clr-input-container class="request-title-status">
                 <label>Статус:</label>
                 <input clrInput type="text" value="{{ this.userRequest?.status.name }}" [readonly]="true" />
@@ -19,7 +19,7 @@
                 <label>Срок:</label>
                 <input clrInput type="text" value="{{ this.userRequest?.deadline }}" [readonly]="true" />
             </clr-input-container>
-            <!--
+            
             <div class="clr-form-control status-form-control">
                 <label class="clr-control-label status-list-label">Статус:</label>
                 <div class="clr-control-container status-list">
@@ -130,6 +130,30 @@
                 <div class="clr-col-12 clr-col-lg-5">
                     <div class="card">
                         <div class="card-block request-execution">
+                            <div class="clr-row clr-justify-content-start">
+                                <div class="request-title-deadline">
+                                    <label class="clr-control-label">Срок:</label>
+                                    {{ this.userRequest?.deadline | date: 'dd.MM.YYYY' }}
+                                </div>
+                                <div class="request-title-status">
+                                    <label class="clr-control-label">Статус:</label>
+                                    <clr-icon
+                                        class="status-icon"
+                                        [attr.shape]="changeStatusIcon(this.userRequest?.status.id)"
+                                        [style.fill]="this.userRequest?.status.id == 3 ? 'hsl(93, 85%, 32%)' : '#0072a3'"
+                                    >
+                                    </clr-icon>
+                                </div>
+                                <div class="request-title-priority">
+                                    <label class="clr-control-label">Приоритет:</label>
+                                    <clr-icon
+                                        class="priority-icon is-solid"
+                                        [style.fill]="this.userRequest?.priority.color"
+                                        shape="flag"
+                                    ></clr-icon>
+                                </div>
+                            </div>
+
                             <clr-input-container class="request-initiator-container">
                                 <label>Инициатор:</label>
                                 <input type="text" clrInput value="{{ this.userRequest?.initiator }}" [readonly]="true" />
@@ -155,9 +179,14 @@
                                 </mat-autocomplete>
                             </clr-input-container>
 
-                            .....
+                            <div class="file-List">
+                                <ul class="list-unstyled">
+                                    <li *ngFor="let file of userRequestLifeCycle$ | async; let index = index">
+                                        {{ file.eventValue }}
+                                    </li>
+                                </ul>
+                            </div>
 
-                            {{ (userRequestLifeCycle$ | async)?.eventValue }}
                             <!--<clr-textarea-container class="request-description-container">
                             <label>Ответ:</label>
                             <textarea type="text" clrTextarea rows="5" contenteditable="true" value=""></textarea>
@@ -217,7 +246,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline btn-sm" (click)="onClose()">Отмена</button>
+        <button type="button" class="btn btn-primary btn-sm" (click)="onClose()">Отмена</button>
         <button type="button" class="btn btn-outline btn-sm" (click)="(null)">Сохранить</button>
         <button *ngIf="this.userRequest?.status.id == 1" type="button" class="btn btn-outline btn-sm" (click)="takeRequestToWork()">
             Взять в работу

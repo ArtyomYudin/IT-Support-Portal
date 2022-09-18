@@ -200,6 +200,7 @@ export async function getUserRequestNewNumber(dbPool: Pool, ws: WebSocket): Prom
     if (conn) conn.release();
   }
 }
+
 export async function getUserRequestService(dbPool: Pool, ws: WebSocket, value?: number): Promise<void> {
   const userRequestServiceArray: any[] = [];
   let conn;
@@ -378,6 +379,40 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
   return response;
 }
 
+export async function getUserRequestLifeCycle(dbPool: Pool, ws: WebSocket, value: string): Promise<void> {
+  let conn: any;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getUserRequestLifeCycle(value));
+    const requestLifeCycle = rows.map(async (row: { employee: any; eventDate: any; eventType: any; eventValue: any }) => {
+      let eventName = row.eventValue;
+      if (row.eventType === 'status') {
+        eventName = await conn.query(dbSelect.getUserRequestStatus(row.eventValue as number));
+        eventName = eventName[0].name;
+      }
+      return {
+        employee: row.employee,
+        eventDate: row.eventDate,
+        eventType: row.eventType,
+        eventValue: eventName,
+      };
+    });
+
+    // console.log(await Promise.all(requestLifeCycle));
+
+    ws.send(
+      JSON.stringify({
+        event: 'event_user_request_life_cycle',
+        data: await Promise.all(requestLifeCycle),
+      }),
+    );
+  } catch (error) {
+    console.log(`not connected due to error: ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
 export async function updateUserRequestStatus(dbPool: Pool, value: any, ws: WebSocket, wss: Server<WebSocket>): Promise<any> {
   let conn: any;
   let response;
@@ -389,6 +424,7 @@ export async function updateUserRequestStatus(dbPool: Pool, value: any, ws: WebS
     );
     allUserRequest(dbPool, null, wss);
     getUserRequestByNumber(dbPool, ws, value.requestNumber);
+    getUserRequestLifeCycle(dbPool, ws, value.requestNumber);
     ws.send(
       JSON.stringify({
         event: 'event_notify',
@@ -409,45 +445,6 @@ export async function updateUserRequestStatus(dbPool: Pool, value: any, ws: WebS
   return response;
 }
 
-export async function getUserRequestLifeCycle(dbPool: Pool, ws: WebSocket, value: string): Promise<void> {
-  let conn: any;
-  const eventValue = '';
-  const requestLifeCycle: any[] = [];
-  try {
-    conn = await dbPool.getConnection();
-    const rows = await conn.query(dbSelect.getUserRequestLifeCycle(value));
-    const pr = rows.map((row: { employee: any; eventDate: any; eventType: any; eventValue: any }) => {
-      let eventName;
-      console.log(row.eventValue);
-      if (row.eventType === 'status') {
-        console.log('row.event');
-        eventName = conn.query(dbSelect.getUserRequestStatus(row.eventValue as number));
-      } else {
-        eventName = row.eventValue;
-      }
-      return {
-        employee: row.employee,
-        eventDate: row.eventDate,
-        eventType: row.eventType,
-        eventValue: eventName,
-      };
-    });
-
-    console.log(pr);
-    /*
-    ws.send(
-      JSON.stringify({
-        event: 'event_user_request_life_cycle',
-        data: requestLifeCycle[0],
-      }),
-    );
-    */
-  } catch (error) {
-    console.log(`not connected due to error: ${error}`);
-  } finally {
-    if (conn) conn.release();
-  }
-}
 export function init(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {
   allUserRequest(dbPool, ws, wss);
 }
