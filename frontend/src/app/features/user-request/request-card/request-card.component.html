@@ -118,8 +118,11 @@
                                                 >
                                                     <clr-icon shape="eye"> </clr-icon>
                                                 </button>
-                                                <clr-signpost-content [clrPosition]="'bottom-middle'" *clrIfOpen>
-                                                    Lorem ipsum...
+                                                <clr-signpost-content [clrPosition]="'top-right'" *clrIfOpen>
+                                                    <img
+                                                        src="{{ this.images }}"
+                                                        style="width: 300px; transform-origin: left; transform: scale(1)"
+                                                    />
                                                 </clr-signpost-content>
                                             </clr-signpost>
                                         </li>

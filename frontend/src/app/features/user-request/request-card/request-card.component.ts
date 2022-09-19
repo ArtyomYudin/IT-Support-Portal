@@ -21,6 +21,8 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public attachmentArray$: any;
 
+  public attachmentBase64$: any;
+
   // public userRequestCardModel: any;
 
   private ngUnsubscribe$: Subject<any> = new Subject();
@@ -36,6 +38,8 @@ export class RequestCardComponent implements OnInit, OnDestroy {
   public userRequestCard: FormGroup;
 
   public listOfFiles: any[] = [];
+
+  public images: string;
 
   public userRequestNewData: {
     delegate?: number;
@@ -58,6 +62,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
     this.userRequestLifeCycle$ = this.wsService
       .on<any>(Event.EV_USER_REQUEST_LIFE_CYCLE)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.attachmentBase64$ = this.wsService
+      .on<any>(Event.EV_USER_REQUEST_ATTACHMENT_BASE64)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
   }
 
@@ -141,6 +148,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       requestNumber: this.userRequest.requestNumber,
       fileName: file.fileName,
       filePath: file.filePath,
+    });
+    this.attachmentBase64$.subscribe((attach: any) => {
+      this.images = attach;
     });
     console.log(file);
   }

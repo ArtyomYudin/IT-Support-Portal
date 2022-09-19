@@ -15,6 +15,7 @@ export enum Event {
   EV_USER_REQUEST_STATUS = 'event_user_request_status',
   EV_USER_REQUEST_PRIORITY = 'event_user_request_priority',
   EV_USER_REQUEST_ATTACHMENT = 'event_user_request_attachment',
+  EV_USER_REQUEST_ATTACHMENT_BASE64 = 'event_user_request_attachment_base64',
   EV_USER_REQUEST_LIFE_CYCLE = 'event_user_request_life_cycle',
   EV_NOTIFY = 'event_notify',
   EV_DEPARTMENT = 'event_department',
