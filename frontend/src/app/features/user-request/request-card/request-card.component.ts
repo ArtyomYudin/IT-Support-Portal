@@ -37,6 +37,13 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public listOfFiles: any[] = [];
 
+  public userRequestNewData: {
+    delegate?: number;
+    serviceId?: number;
+    attachments?: any[];
+    comment?: string;
+  } = {};
+
   public token = JSON.parse(localStorage.getItem('IT-Support-Portal'));
 
   constructor(private wsService: WebsocketService, private formBuilder: FormBuilder, private jwtHelper: JwtHelperService) {
@@ -71,7 +78,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.wsService.send('getUserRequestByNumber', requestNumber);
     this.wsService.send('getUserRequestLifeCycle', requestNumber);
     this.wsService.send('getEmployeeByParentDepartment', 49);
-    this.wsService.send('getUserRequestAttachment', requestNumber);
+    this.wsService.send('getUserRequestAttachment', { requestNumber });
     this.userRequest$.subscribe(request => {
       // eslint-disable-next-line prefer-destructuring
       this.userRequest = request;
@@ -91,10 +98,10 @@ export class RequestCardComponent implements OnInit, OnDestroy {
   }
 
   public takeRequestToWork() {
-    this.wsService.send('updateUserRequestStatus', {
-      statusId: 2,
+    this.wsService.send('updateUserRequest', {
       requestNumber: this.userRequest.requestNumber,
       employeeId: this.token.id,
+      newData: { status: 2 },
     });
     this.wsService
       .on<Notify>(Event.EV_NOTIFY)
@@ -116,5 +123,25 @@ export class RequestCardComponent implements OnInit, OnDestroy {
         return 'new';
         break;
     }
+  }
+
+  public onSave() {
+    this.modalOpen = false;
+    this.userRequestNewData.comment = this.userRequestCard.controls.comment.value;
+    this.wsService.send('updateUserRequest', {
+      requestNumber: this.userRequest.requestNumber,
+      employeeId: this.token.id,
+      newData: this.userRequestNewData,
+    });
+    this.userRequestCard.reset();
+  }
+
+  public viewAttachment(file: any) {
+    this.wsService.send('getUserRequestAttachment', {
+      requestNumber: this.userRequest.requestNumber,
+      fileName: file.fileName,
+      filePath: file.filePath,
+    });
+    console.log(file);
   }
 }

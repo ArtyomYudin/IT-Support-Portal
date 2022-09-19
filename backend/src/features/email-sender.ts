@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { logger } from './logger';
 
 export async function sendEmailNotification(msg: any) {
   // create reusable transporter object using the default SMTP transport
@@ -22,8 +23,8 @@ export async function sendEmailNotification(msg: any) {
       html: `${msg.textAsHTML}`,
     });
 
-    console.log(`Message sent: ${info.messageId}`);
+    logger.info(`Message sent: ${info.messageId}`);
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }

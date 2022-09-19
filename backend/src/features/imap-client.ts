@@ -1,10 +1,12 @@
 import Imap from 'imap';
 import { ParsedMail, simpleParser } from 'mailparser';
 import { Server, WebSocket } from 'ws';
+import { convert } from 'html-to-text';
 import { sendEmailNotification } from './email-sender';
 import { dbPool } from '../shared/db/db_pool';
 import * as dbSelect from '../shared/db/db_select';
 import * as userRequestAPI from './user-request-api';
+import { logger } from './logger';
 
 const imapConfig = {
   user: process.env.IMAP_USER as string,
@@ -23,7 +25,7 @@ async function getUserRequestNewNumber(): Promise<string> {
     const rows = await conn.query(dbSelect.getUserRequestNewNumber);
     newNumber = rows[0].newNumber;
   } catch (error) {
-    console.log(`not connected due to error: ${error}`);
+    logger.error(`not connected due to error: ${error}`);
   } finally {
     if (conn) conn.release();
   }
@@ -38,7 +40,7 @@ async function getEmployeeByUPN(value: any): Promise<any> {
     const rows = await conn.query(dbSelect.getEmployeeByUPN(value));
     employeeByUPN = rows;
   } catch (error) {
-    console.log(`not connected due to error: ${error}`);
+    logger.error(`not connected due to error: ${error}`);
   } finally {
     if (conn) conn.release();
   }
@@ -81,7 +83,11 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     /**
      * mailText содержит текст письма без пустых строк
      */
-    const mailText = mail.text
+    const mailText = Object.prototype.hasOwnProperty.call(mail, 'text')
+      ? mail.text
+      : convert(mail.html as string, { selectors: [{ selector: 'img', format: 'skip' }] });
+
+    const clearText = mailText
       ?.split(/\r?\n/)
       .filter((line: any) => line.trim() !== '')
       .join('\n');
@@ -92,7 +98,7 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     userRequestAllData.departmentId = employee.departmentId;
     userRequestAllData.executorId = executorIdList[Math.floor(Math.random() * executorIdList.length)];
     userRequestAllData.topic = mail.subject ? mail.subject : '';
-    userRequestAllData.description = mailText || '';
+    userRequestAllData.description = clearText || '';
     userRequestAllData.priorityId = mail.headers.get('priority') === 'high' ? 2 : 1;
     userRequestAllData.deadline = new Date().toISOString().replace(/T.+/, '');
     const attachArray: any[] = [];
@@ -108,6 +114,7 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     await userRequestAPI.saveNewUserRequest(dbPool, userRequestAllData, wss);
     return true;
   } catch (error) {
+    logger.error(`createUserRequest - ${error}`);
     return false;
   }
 }
@@ -130,7 +137,7 @@ export const getEmails = (wss: Server<WebSocket>) => {
                 const { uid } = attrs;
                 imap.addFlags(uid, ['\\Seen'], () => {
                   // Помечаем письма как прочитанные
-                  console.log('Marked as read!');
+                  logger.info('Marked as read!');
                 });
               });
             });
@@ -138,11 +145,11 @@ export const getEmails = (wss: Server<WebSocket>) => {
               return Promise.reject(ex);
             });
             f.once('end', () => {
-              console.log('Done fetching all messages!');
+              logger.info('Done fetching all messages!');
               imap.end();
             });
           } catch (e: any) {
-            console.log(e.message);
+            // logger.error(e.message);
             // sendEmailNotification({ subject: 'test' });
             // if (e.message === 'Nothing to fetch') {
             //  console.log('no mails fetched, temp directory not created');
@@ -157,15 +164,15 @@ export const getEmails = (wss: Server<WebSocket>) => {
     });
 
     imap.once('error', (err: any) => {
-      console.log(err);
+      logger.error(`IMAP - ${err}`);
     });
 
     imap.once('end', () => {
-      console.log('Connection ended');
+      logger.info('IMAP - Connection ended');
     });
 
     imap.connect();
   } catch (ex) {
-    console.log('an error occurred');
+    logger.error(`IMAP - ${ex}`);
   }
 };

@@ -137,8 +137,8 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
     case 'saveNewUserRequest':
       userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, wss);
       break;
-    case 'updateUserRequestStatus':
-      userRequestAPI.updateUserRequestStatus(dbPool, parseMsg.data, ws, wss);
+    case 'updateUserRequest':
+      userRequestAPI.updateUserRequest(dbPool, parseMsg.data, ws, wss);
       break;
     case 'getUserRequestLifeCycle':
       userRequestAPI.getUserRequestLifeCycle(dbPool, ws, parseMsg.data);

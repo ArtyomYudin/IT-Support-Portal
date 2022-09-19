@@ -62,7 +62,6 @@
   flex-direction: row;
 }
 
-.request-attachment-container,
 .request-info .clr-form-control,
 .request-execution .clr-form-control {
   margin-top: 0.2rem;
@@ -118,21 +117,22 @@
 .image-upload-btn {
   padding: 0;
   color: #454545;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   font-weight: 600;
   text-transform: none;
   letter-spacing: 0rem;
+  line-height: 0.9rem;
 }
 .file-List {
   font-size: 0.55rem;
   width: fit-content;
 }
 
-ul {
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
-}
+//ul {
+//  columns: 2;
+//  -webkit-columns: 2;
+//  -moz-columns: 2;
+//}
 .request-topic-container,
 .request-initiator-container,
 .request-executor-container,
@@ -145,4 +145,46 @@ ul {
 ::ng-deep .request-executor-container .clr-control-container,
 ::ng-deep .request-delegate-container .clr-control-container {
   margin-top: -0.2rem;
+}
+
+.request-description-container,
+.request-attachment-container,
+.request-comment-container,
+.request-initiator-container,
+.request-executor-container,
+.request-delegate-container,
+.request-lifecycle-container {
+  margin-top: 0.3rem !important;
+}
+
+.request-lifecycle-container {
+  height: 30vh;
+  overflow-y: scroll;
+}
+.request-lifecycle-label {
+  padding: 0;
+  color: #454545;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0rem;
+  line-height: 0.9rem;
+}
+.request-lifecycle-header {
+  margin-top: 0rem;
+  color: #454545;
+  font-size: 0.6rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0rem;
+  margin-left: 0.4rem;
+}
+.request-lifecycle-event {
+  margin-top: 0rem;
+  color: #454545;
+  font-size: 0.6rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0rem;
+  margin-left: 0.6rem;
 }

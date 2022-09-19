@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { constants } from 'crypto';
 import { Pool } from 'mariadb';
+import { logger } from './logger';
 import { checkUserCredentials } from './ldap-auth';
 
 const headers = {
@@ -24,7 +25,7 @@ export function initHTTPSServer(dbPool: Pool): https.Server {
   function onError(error: any) {
     if (error.syscall !== 'listen') {
       // throw error;
-      console.log("Well, this didn't work...");
+      logger.error(`HTTPS - ${error}`);
     }
   }
 
@@ -41,13 +42,13 @@ export function initHTTPSServer(dbPool: Pool): https.Server {
       let body: any = [];
 
       req.on('error', err => {
-        console.log('REQ error:', err);
+        logger.error('HTTPS - REQ error:', err);
       });
       req.on('data', chunk => body.push(chunk));
       req.on('end', () => {
         body = Buffer.concat(body).toString();
         res.on('error', err => {
-          console.log('RES error:', err);
+          logger.error('HTTPS - RES error:', err);
         });
         if (req.url === '/api/auth' && req.method === 'POST') {
           // console.log('Resive post', body);
@@ -56,7 +57,7 @@ export function initHTTPSServer(dbPool: Pool): https.Server {
       });
     })
     .listen(parseInt(process.env.HTTPS_PORT as string, 10), process.env.HTTPS_HOST as string, () => {
-      console.log(`Server is listening on port ${process.env.HTTPS_PORT}`);
+      logger.info(`HTTPS - Server is listening on port ${process.env.HTTPS_PORT}`);
     })
     .on('error', onError);
   return server;

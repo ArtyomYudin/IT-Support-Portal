@@ -1,5 +1,5 @@
 <!--[ngStyle]="{ display: userRequest.length != 1 ? 'none' : '' }"-->
-<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="true" [clrModalSize]="'xl'">
+<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false" [clrModalSize]="'xl'">
     <h3 class="modal-title">
         <div class="clr-row clr-justify-content-start request-title-container">
             <div class="request-title">
@@ -108,6 +108,20 @@
 
                                         <li *ngFor="let file of listOfFiles; let index = index">
                                             {{ file.fileName }}
+                                            <clr-signpost>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-link btn-icon"
+                                                    aria-label="Icon Button Trigger"
+                                                    clrSignpostTrigger
+                                                    (click)="viewAttachment(file)"
+                                                >
+                                                    <clr-icon shape="eye"> </clr-icon>
+                                                </button>
+                                                <clr-signpost-content [clrPosition]="'bottom-middle'" *clrIfOpen>
+                                                    Lorem ipsum...
+                                                </clr-signpost-content>
+                                            </clr-signpost>
                                         </li>
                                     </ul>
                                 </div>
@@ -179,12 +193,17 @@
                                 </mat-autocomplete>
                             </clr-input-container>
 
-                            <div class="file-List">
-                                <ul class="list-unstyled">
-                                    <li *ngFor="let file of userRequestLifeCycle$ | async; let index = index">
-                                        {{ file.eventValue }}
-                                    </li>
-                                </ul>
+                            <div class="request-lifecycle-container file-List">
+                                <label class="request-lifecycle-label">Жизненный цыкл заявки:</label>
+                                <div *ngFor="let event of userRequestLifeCycle$ | async; let index = index">
+                                    <p class="request-lifecycle-header">
+                                        {{ event.eventDate | date: 'dd.MM.YYYY HH:mm' }} {{ event.employee | employeeName }}
+                                    </p>
+                                    <p class="request-lifecycle-event" *ngIf="event.eventType !== 'comment'">
+                                        изменен стаут заявки <clr-icon shape="arrow right"></clr-icon> {{ event.eventValue }}
+                                    </p>
+                                    <p class="request-lifecycle-event" *ngIf="event.eventType === 'comment'">{{ event.eventValue }}</p>
+                                </div>
                             </div>
 
                             <!--<clr-textarea-container class="request-description-container">
@@ -247,11 +266,11 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-sm" (click)="onClose()">Отмена</button>
-        <button type="button" class="btn btn-outline btn-sm" (click)="(null)">Сохранить</button>
-        <button *ngIf="this.userRequest?.status.id == 1" type="button" class="btn btn-outline btn-sm" (click)="takeRequestToWork()">
+        <button *ngIf="this.userRequest?.status.id !== 1" type="button" class="btn btn-primary btn-sm" (click)="onSave()">Сохранить</button>
+        <button *ngIf="this.userRequest?.status.id == 1" type="button" class="btn btn-primary btn-sm" (click)="takeRequestToWork()">
             Взять в работу
         </button>
-        <button *ngIf="this.userRequest?.status.id == 2" type="button" class="btn btn-outline btn-sm" (click)="(null)">
+        <button *ngIf="this.userRequest?.status.id == 2" type="button" class="btn btn-primary btn-sm" (click)="(null)">
             Закрыть заявку
         </button>
     </div>

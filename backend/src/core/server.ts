@@ -1,3 +1,5 @@
+import winston from 'winston';
+import { logger } from '../features/logger';
 import { initHTTPSServer } from '../features/https-server';
 import { dbPool } from '../shared/db/db_pool';
 import { websocketServer } from '../features/wss/wss-server';
@@ -7,10 +9,22 @@ import { getEmails } from '../features/imap-client';
 
 // import { monitoringBot } from '../features/jabber-bot';
 
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize({
+          all: true,
+        }),
+      ),
+    }),
+  );
+}
+
 // Отлов событий uncaughtException и закрытие процесса. Далее pm2 перезапускает службу
 process.on('uncaughtException', err => {
-  console.log('Uncaught Exception, Restart service !!!');
-  console.log(err.stack);
+  logger.error('Uncaught Exception, Restart service !!!');
+  logger.error(err.stack);
   process.exit(1);
 });
 
@@ -22,11 +36,11 @@ process.on('uncaughtException', err => {
   wss.on('connection', ws => {
     const id = Math.random();
     clients[id] = ws;
-    console.log(`New connection ${id}`);
+    logger.info(`WebSocket - New connection ${id}`);
 
     purchaseAPI.init(dbPool, wss, ws);
     ws.on('close', () => {
-      console.log(`Connection closed ${id}`);
+      logger.info(`WebSocket - Connection closed ${id}`);
       delete clients[id];
     });
 
@@ -39,7 +53,7 @@ process.on('uncaughtException', err => {
     getEmails(wss);
   }, 30000);
 
-  console.log(httpServer.address());
+  // logger.info(httpServer.address());
   // monitoringBot.say({
   //  user: 'a.yudin@center-inform.ru',
   //  text: 'hi!',

@@ -3,6 +3,7 @@ import * as ldap from 'ldapjs';
 import { ServerResponse } from 'http';
 import { Pool } from 'mariadb';
 import * as dbSelect from '../shared/db/db_select';
+import { logger } from './logger';
 
 export async function checkUserCredentials(reqBody: string, res: ServerResponse, dbPool: Pool): Promise<any> {
   let employeeIdByEmail: any;
@@ -37,7 +38,7 @@ export async function checkUserCredentials(reqBody: string, res: ServerResponse,
       conn.release(); // release to pool
     })
     .catch(err => {
-      console.log(`not connected due to error: ${err}`);
+      logger.error(`LDAP - ${err}`);
     });
 
   ldapClient.bind(email, password, (err: any) => {
@@ -81,11 +82,11 @@ export async function checkUserCredentials(reqBody: string, res: ServerResponse,
         //  console.error(`error: ${err.message}`);
         // });
         ldapSearchRes.on('end', (result: any) => {
-          console.log(`status: ${result.status}`);
+          logger.info(`LDAP - status: ${result.status}`);
         });
       });
 
-      console.log('binding success');
+      logger.info('LDAP - binding success');
     }
   });
 }
