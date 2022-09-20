@@ -8,8 +8,8 @@ import { IUserRequest } from '@model/user-request.model';
 import { Observable } from 'rxjs';
 import { ClrCommonStringsService } from '@clr/angular';
 import { russionLocale } from '@translation/russion';
-import { RequestNewComponent } from '../request-new/request-new.component';
-import { RequestCardComponent } from '../request-card/request-card.component';
+import { RequestNewComponent } from '@feature/user-request/request-new/request-new.component';
+import { RequestCardComponent } from '@feature/user-request/request-card/request-card.component';
 
 @Component({
   selector: 'fe-user-request-list',
@@ -76,5 +76,13 @@ export class RequestListComponent implements OnInit, OnDestroy {
         return 'new';
         break;
     }
+  }
+
+  public deleteRequestCard(cards: any) {
+    const cardArray: any[] = [];
+    cards.forEach((card: any) => {
+      cardArray.push(card.requestNumber);
+    });
+    this.wsService.send('deleteUserRequest', cardArray);
   }
 }

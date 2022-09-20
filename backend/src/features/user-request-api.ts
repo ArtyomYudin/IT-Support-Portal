@@ -486,6 +486,14 @@ export async function updateUserRequest(dbPool: Pool, value: any, ws: WebSocket,
   return response;
 }
 
+export async function deleteUserRequest(dbPool: Pool, value: any, wss: Server<WebSocket>): Promise<any> {
+  let conn: any;
+  let response;
+
+  console.log(value.toString());
+  // return response;
+}
+
 export function init(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {
   allUserRequest(dbPool, ws, wss);
 }

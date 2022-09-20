@@ -140,6 +140,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
     case 'updateUserRequest':
       userRequestAPI.updateUserRequest(dbPool, parseMsg.data, ws, wss);
       break;
+    case 'deleteUserRequest':
+      userRequestAPI.deleteUserRequest(dbPool, parseMsg.data, wss);
+      break;
     case 'getUserRequestLifeCycle':
       userRequestAPI.getUserRequestLifeCycle(dbPool, ws, parseMsg.data);
       break;

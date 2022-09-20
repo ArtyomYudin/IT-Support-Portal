@@ -84,7 +84,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
-  public onOpen(requestNumber: any): void {
+  public openRequestCard(requestNumber: any): void {
     console.log(requestNumber);
     this.wsService.send('getUserRequestByNumber', requestNumber);
     this.wsService.send('getUserRequestLifeCycle', requestNumber);
@@ -102,7 +102,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     // console.log(this.userRequest.requestNumber);
   }
 
-  public onClose(): void {
+  public closeRequestCard(): void {
     this.modalOpen = false;
     this.attachmentArray$.unsubscribe();
     this.userRequestCard.reset();
@@ -136,7 +136,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onSave() {
+  public saveRequestCard() {
     this.modalOpen = false;
     this.userRequestNewData.comment = this.userRequestCard.controls.comment.value;
     this.wsService.send('updateUserRequest', {

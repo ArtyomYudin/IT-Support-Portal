@@ -255,8 +255,10 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary btn-sm" (click)="onClose()">Отмена</button>
-        <button *ngIf="this.userRequest?.status.id !== 1" type="button" class="btn btn-primary btn-sm" (click)="onSave()">Сохранить</button>
+        <button type="button" class="btn btn-primary btn-sm" (click)="closeRequestCard()">Отмена</button>
+        <button *ngIf="this.userRequest?.status.id !== 1" type="button" class="btn btn-primary btn-sm" (click)="saveRequestCard()">
+            Сохранить
+        </button>
         <button *ngIf="this.userRequest?.status.id == 1" type="button" class="btn btn-primary btn-sm" (click)="takeRequestToWork()">
             Взять в работу
         </button>

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs/internal/Subject';
-import { debounceTime, distinctUntilChanged, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { Department } from '@model/department.model';
@@ -147,7 +147,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.listOfFiles = [];
   }
 
-  public onOpen(): void {
+  public openNewRequest(): void {
     this.modalOpen = true;
     this.wsService.send('getUserRequestNewNumber', null);
     this.wsService.send('getUserRequestStatus', null);
@@ -182,7 +182,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     console.log(this.fileList);
   }
 
-  public async onClose(): Promise<void> {
+  public async closeNewRequest(): Promise<void> {
     this.modalOpen = false;
     // console.log(this.requestInfo.controls.test.value);
     this.resetRequestPage();
@@ -211,7 +211,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.userRequestAllData.serviceId = service.id;
   }
 
-  public async onSave(): Promise<void> {
+  public async saveNewRequest(): Promise<void> {
     this.modalOpen = false;
     const deadline = this.userRequest.controls.deadline.value.split('.');
     this.userRequestAllData.deadline = `${deadline[2]}-${deadline[1]}-${deadline[0]}`;
