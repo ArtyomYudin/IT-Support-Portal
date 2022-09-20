@@ -314,7 +314,7 @@ export async function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, valu
     }
   } else {
     fs.readFile(`${value.filePath}/${value.fileName}`, (error, data) => {
-      console.log(`data:${value.FileType};base64,${data.toString('base64')}`);
+      // console.log(`data:${value.FileType};base64,${data.toString('base64')}`);
       ws.send(
         JSON.stringify({
           event: 'event_user_request_attachment_base64',

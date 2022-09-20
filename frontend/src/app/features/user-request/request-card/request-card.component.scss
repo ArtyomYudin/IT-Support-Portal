@@ -1,3 +1,5 @@
+@import '@angular/cdk/overlay-prebuilt.css';
+
 .user-request-card {
   max-height: 60vh; //calc(60vh - 7.5rem);
   //margin-top: 6px;
@@ -169,6 +171,7 @@
   text-transform: none;
   letter-spacing: 0rem;
   line-height: 0.9rem;
+  margin-top: 0.3rem !important;
 }
 .request-lifecycle-header {
   margin-top: 0rem;

@@ -5,7 +5,7 @@ export const userRequestList = `
                      user_request.change_date AS changeDate,
                      user_request.number AS requestNumber,
                      employee.display_name AS initiator,
-                     department.name AS department,
+                     employee.department AS department,
                      user_request.executor_id AS executorId,
                      executor.display_name AS executorName,
                      ur_service.name AS service,
@@ -18,15 +18,20 @@ export const userRequestList = `
                      ur_priority.name AS priorityName,
                      ur_priority.color AS priorityColor
               FROM user_request
-                     LEFT JOIN employee on(user_request.initiator_id = employee.id)
-                     LEFT JOIN department on(user_request.department_id = department.id)
+                     LEFT JOIN (
+                            select employee.id as id,
+                                   employee.display_name as display_name,
+                                   department.name as department
+                            FROM employee
+                            LEFT JOIN department on (employee.department_id = department.id)
+                     ) employee on(user_request.initiator_id = employee.id)
                      LEFT JOIN ur_service on(user_request.service_id = ur_service.id)
                      LEFT JOIN ur_status on(user_request.status_id = ur_status.id)
                      LEFT JOIN ur_priority on(user_request.priority_id = ur_priority.id)
                      LEFT JOIN (
-                            select id,
-                            display_name
-                     FROM employee
+                            select employee.id as id,
+                                   employee.display_name as display_name
+                            FROM employee
                      ) executor on executor.id = user_request.executor_id
               ORDER by user_request.creation_date desc`;
 
@@ -36,7 +41,7 @@ export const userRequestbyNumber = (requestNumber?: string) => `
                      user_request.change_date AS changeDate,
                      user_request.number AS requestNumber,
                      employee.display_name AS initiator,
-                     department.name AS department,
+                     employee.department AS department,
                      user_request.executor_id AS executorId,
                      executor.display_name AS executorName,
                      ur_service.name AS service,
@@ -49,15 +54,20 @@ export const userRequestbyNumber = (requestNumber?: string) => `
                      ur_priority.name AS priorityName,
                      ur_priority.color AS priorityColor
               FROM user_request
-                     LEFT JOIN employee on(user_request.initiator_id = employee.id)
-                     LEFT JOIN department on(user_request.department_id = department.id)
+                     LEFT JOIN (
+                            select employee.id as id,
+                                   employee.display_name as display_name,
+                                   department.name as department
+                            FROM employee
+                            LEFT JOIN department on (employee.department_id = department.id)
+                     ) employee on(user_request.initiator_id = employee.id)
                      LEFT JOIN ur_service on(user_request.service_id = ur_service.id)
                      LEFT JOIN ur_status on(user_request.status_id = ur_status.id)
                      LEFT JOIN ur_priority on(user_request.priority_id = ur_priority.id)
                      LEFT JOIN (
-                            select id,
-                            display_name
-                     FROM employee
+                            select employee.id as id,
+                                   employee.display_name as display_name
+                            FROM employee
                      ) executor on executor.id = user_request.executor_id
               WHERE user_request.number ='${requestNumber}'
               LIMIT 1`;

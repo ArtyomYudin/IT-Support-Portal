@@ -108,23 +108,14 @@
 
                                         <li *ngFor="let file of listOfFiles; let index = index">
                                             {{ file.fileName }}
-                                            <clr-signpost>
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-link btn-icon"
-                                                    aria-label="Icon Button Trigger"
-                                                    clrSignpostTrigger
-                                                    (click)="viewAttachment(file)"
-                                                >
+                                            <div class="btn-group btn-link btn-icon">
+                                                <button type="button" class="btn" (click)="viewAttachment(file)">
                                                     <clr-icon shape="eye"> </clr-icon>
                                                 </button>
-                                                <clr-signpost-content [clrPosition]="'top-right'" *clrIfOpen>
-                                                    <img
-                                                        src="{{ this.images }}"
-                                                        style="width: 300px; transform-origin: left; transform: scale(1)"
-                                                    />
-                                                </clr-signpost-content>
-                                            </clr-signpost>
+                                                <button type="button" class="btn" (click)="viewAttachment(file)">
+                                                    <clr-icon shape="download"> </clr-icon>
+                                                </button>
+                                            </div>
                                         </li>
                                     </ul>
                                 </div>
@@ -196,8 +187,10 @@
                                 </mat-autocomplete>
                             </clr-input-container>
 
+                            <div class="request-lifecycle-label">
+                                <label>Жизненный цикл заявки:</label>
+                            </div>
                             <div class="request-lifecycle-container file-List">
-                                <label class="request-lifecycle-label">Жизненный цыкл заявки:</label>
                                 <div *ngFor="let event of userRequestLifeCycle$ | async; let index = index">
                                     <p class="request-lifecycle-header">
                                         {{ event.eventDate | date: 'dd.MM.YYYY HH:mm' }} {{ event.employee | employeeName }}

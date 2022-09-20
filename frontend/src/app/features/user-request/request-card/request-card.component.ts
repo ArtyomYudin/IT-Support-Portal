@@ -8,6 +8,7 @@ import { Event } from '@service/websocket.service.event';
 import { Notify } from '@model/notify.model';
 import { IUserRequest } from '@model/user-request.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'fe-user-request-card',
