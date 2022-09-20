@@ -105,17 +105,11 @@
                                 <div class="file-List">
                                     <ul class="list-unstyled">
                                         <div *ngIf="listOfFiles.length == 0">вложений нет</div>
-
                                         <li *ngFor="let file of listOfFiles; let index = index">
                                             {{ file.fileName }}
-                                            <div class="btn-group btn-link btn-icon">
-                                                <button type="button" class="btn" (click)="viewAttachment(file)">
-                                                    <clr-icon shape="eye"> </clr-icon>
-                                                </button>
-                                                <button type="button" class="btn" (click)="viewAttachment(file)">
-                                                    <clr-icon shape="download"> </clr-icon>
-                                                </button>
-                                            </div>
+                                            <button type="button" class="btn btn-link btn-icon" (click)="viewAttachment(file)">
+                                                <clr-icon shape="eye"> </clr-icon>
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>

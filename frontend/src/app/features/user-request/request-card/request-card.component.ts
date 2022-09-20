@@ -8,7 +8,7 @@ import { Event } from '@service/websocket.service.event';
 import { Notify } from '@model/notify.model';
 import { IUserRequest } from '@model/user-request.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { OverlayModule } from '@angular/cdk/overlay';
+import { FilePreviewService } from '@service/file-preview/file.preview.service';
 
 @Component({
   selector: 'fe-user-request-card',
@@ -51,7 +51,12 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public token = JSON.parse(localStorage.getItem('IT-Support-Portal'));
 
-  constructor(private wsService: WebsocketService, private formBuilder: FormBuilder, private jwtHelper: JwtHelperService) {
+  constructor(
+    private wsService: WebsocketService,
+    private formBuilder: FormBuilder,
+    private jwtHelper: JwtHelperService,
+    private previewDialog: FilePreviewService,
+  ) {
     this.userRequest$ = this.wsService
       .on<IUserRequest>(Event.EV_USER_REQUEST_BY_NUMBER)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
@@ -64,9 +69,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.userRequestLifeCycle$ = this.wsService
       .on<any>(Event.EV_USER_REQUEST_LIFE_CYCLE)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
-    this.attachmentBase64$ = this.wsService
-      .on<any>(Event.EV_USER_REQUEST_ATTACHMENT_BASE64)
-      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.attachmentBase64$ = this.wsService.on<any>(Event.EV_USER_REQUEST_ATTACHMENT_BASE64).pipe(first(), takeUntil(this.ngUnsubscribe$));
   }
 
   ngOnInit(): void {
@@ -148,11 +151,12 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.wsService.send('getUserRequestAttachment', {
       requestNumber: this.userRequest.requestNumber,
       fileName: file.fileName,
+      fileType: file.fileType,
       filePath: file.filePath,
     });
     this.attachmentBase64$.subscribe((attach: any) => {
       this.images = attach;
+      this.previewDialog.open(this.images);
     });
-    console.log(file);
   }
 }

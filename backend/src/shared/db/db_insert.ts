@@ -28,7 +28,6 @@ export const insertUserRequest = (
   dateChange: string,
   requestNumber: string,
   initiatorId: number,
-  departmentId: number,
   executorId: number,
   serviceId: number,
   topic: string,
@@ -42,7 +41,6 @@ export const insertUserRequest = (
           change_date,
           number,
           initiator_id,
-          department_id,
           executor_id,
           service_id,
           topic,
@@ -51,7 +49,7 @@ export const insertUserRequest = (
           priority_id,
           deadline)
   VALUES (
-    '${dateCreation}','${dateChange}','${requestNumber}','${initiatorId}','${departmentId}',
+    '${dateCreation}','${dateChange}','${requestNumber}','${initiatorId}',
     '${executorId}','${serviceId}','${topic}','${description}','${statusId}','${priorityId}','${deadline}')`;
 
 export const insertUserRequestAttachment = (

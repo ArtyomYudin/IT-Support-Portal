@@ -318,7 +318,7 @@ export async function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, valu
       ws.send(
         JSON.stringify({
           event: 'event_user_request_attachment_base64',
-          data: `data:${value.FileType};base64,${data.toString('base64')}`,
+          data: `data:${value.fileType};base64,${data.toString('base64')}`,
         }),
       );
     });
@@ -337,7 +337,6 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
         value.changeDate ? changeDateFormat(value.changeDate) : changeDateFormat(new Date()),
         value.requestNumber,
         value.initiatorId,
-        value.departmentId,
         value.executorId,
         value.serviceId,
         value.topic,

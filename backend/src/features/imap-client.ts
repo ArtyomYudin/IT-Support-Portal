@@ -53,7 +53,6 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     changeDate: any;
     requestNumber: string;
     initiatorId: any;
-    departmentId: number;
     executorId: number;
     serviceId: number;
     topic: string;
@@ -67,7 +66,6 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     changeDate: new Date(),
     requestNumber: '',
     initiatorId: 0,
-    departmentId: 0,
     executorId: 0,
     serviceId: 1,
     topic: '',
@@ -95,7 +93,6 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     userRequestAllData.changeDate = mail.headers.get('date');
     userRequestAllData.requestNumber = await getUserRequestNewNumber();
     userRequestAllData.initiatorId = employee.id;
-    userRequestAllData.departmentId = employee.departmentId;
     userRequestAllData.executorId = executorIdList[Math.floor(Math.random() * executorIdList.length)];
     userRequestAllData.topic = mail.subject ? mail.subject : '';
     userRequestAllData.description = clearText || '';
