@@ -65,7 +65,7 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
     this.reconnectAttempts = 10; // number of connection attempts
 
     this.config = {
-      url: 'wss://ito.center-inform.ru:3443/',
+      url: 'wss://itsupport.center-inform.ru:3443/',
       closeObserver: {
         next: (event: CloseEvent) => {
           this.websocket$ = null;

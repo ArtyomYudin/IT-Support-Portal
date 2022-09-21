@@ -4,6 +4,7 @@ import fs, { existsSync } from 'fs';
 import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
 import * as dbUpdate from '../shared/db/db_update';
+import * as dbDelete from '../shared/db/db_delete';
 import { logger } from './logger';
 
 function ConvertTo2Digits(newNum: number) {
@@ -313,7 +314,7 @@ export async function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, valu
       if (conn) conn.release();
     }
   } else {
-    fs.readFile(`${value.filePath}/${value.fileName}`, (error, data) => {
+    fs.readFile(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.filePath}/${value.fileName}`, (error, data) => {
       // console.log(`data:${value.FileType};base64,${data.toString('base64')}`);
       ws.send(
         JSON.stringify({
@@ -347,12 +348,12 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
       ),
     );
     if (!existsSync(value.requestNumber) && value.attachments.length > 0) {
-      fs.mkdir(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.requestNumber}`, { recursive: true }, e => {
+      fs.mkdir(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}`, { recursive: true }, e => {
         if (!e) {
           value.attachments.forEach((attachment: any) => {
             // console.log(attachment.data);
             fs.writeFile(
-              `${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.requestNumber}/${attachment.name}`,
+              `${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}/${attachment.name}`,
               decodeBase64(attachment.data).data,
               error => {
                 if (error) {
@@ -364,7 +365,7 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
                       attachment.name,
                       attachment.size,
                       attachment.type,
-                      `${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.requestNumber}`,
+                      `user_request/${value.requestNumber}`,
                     ),
                   );
                   logger.info('saveNewUserRequest - write file');
@@ -399,6 +400,10 @@ export async function getUserRequestLifeCycle(dbPool: Pool, ws: WebSocket, value
         eventName = await conn.query(dbSelect.getUserRequestStatus(row.eventValue as number));
         eventName = eventName[0].name;
       }
+      if (row.eventType === 'delegate') {
+        eventName = await conn.query(dbSelect.getEmployeeById(row.eventValue as number));
+        eventName = eventName[0].displayName;
+      }
       return {
         employee: row.employee,
         eventDate: row.eventDate,
@@ -432,6 +437,9 @@ export async function updateUserRequest(dbPool: Pool, value: any, ws: WebSocket,
       logger.info(value.newData[key]);
       if (key === 'status') {
         await conn.query(dbUpdate.updateUserRequestStatus(value.newData[key], value.requestNumber));
+      }
+      if (key === 'delegate') {
+        await conn.query(dbUpdate.updateUserRequestExecutor(value.newData[key], value.requestNumber));
       }
       await conn.query(
         dbInsert.insertUserRequestLifeCycle(value.requestNumber, value.employeeId, changeDateFormat(new Date()), key, value.newData[key]),
@@ -488,10 +496,21 @@ export async function updateUserRequest(dbPool: Pool, value: any, ws: WebSocket,
 
 export async function deleteUserRequest(dbPool: Pool, value: any, wss: Server<WebSocket>): Promise<any> {
   let conn: any;
-  let response;
-
-  console.log(value.toString());
-  // return response;
+  try {
+    conn = await dbPool.getConnection();
+    await conn.query(dbDelete.deleteUserRequest(value.toString()));
+    value.forEach((card: any) => {
+      const attachPath = `${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${card}`;
+      if (existsSync(attachPath)) {
+        fs.rmSync(attachPath, { recursive: true, force: true });
+      }
+    });
+  } catch (error) {
+    logger.error(`deleteUserRequest - ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
+  allUserRequest(dbPool, null, wss);
 }
 
 export function init(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {

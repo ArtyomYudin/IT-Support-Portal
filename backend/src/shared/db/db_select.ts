@@ -149,7 +149,18 @@ export const getEmployeeByUPN = (email: string) => `
                                    INNER JOIN department on(employee.department_id = department.id)
                                    INNER JOIN position on(employee.position_id = position.id)
                             WHERE employee.user_principal_name = '${email}'
-                                   order by employee.display_name desc
+                            LIMIT 1`;
+
+export const getEmployeeById = (id: number) => `
+                            SELECT employee.id AS id,
+                                   employee.display_name AS displayName,
+                                   department.name AS departmentName,
+                                   department.id AS departmentId,
+                                   position.name AS positionName
+                            FROM employee
+                                   INNER JOIN department on(employee.department_id = department.id)
+                                   INNER JOIN position on(employee.position_id = position.id)
+                            WHERE employee.id = '${id}'
                             LIMIT 1`;
 
 export const getEmployeeByParentDepartment = (parentDepartmentId: number) => `

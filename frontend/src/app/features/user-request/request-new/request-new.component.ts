@@ -3,6 +3,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs/internal/Subject';
 import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { SubscriptionLike } from 'rxjs/internal/types';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { Department } from '@model/department.model';
@@ -30,6 +31,8 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public filteredInitiator: Employee | any;
 
+  public newNumber$: Observable<any>;
+
   public serviceListArray$: Observable<any>;
 
   public department$: Observable<any>;
@@ -43,6 +46,10 @@ export class RequestNewComponent implements OnInit, OnDestroy {
   public priorityListArray$: Observable<any>;
 
   public executorListArray$: Observable<any>;
+
+  public newNumberubscription: SubscriptionLike;
+
+  public executorListSubscription: SubscriptionLike;
 
   public userRequestAllData: {
     requestNumber?: string;
@@ -65,13 +72,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
       .on<RequestService>(Event.EV_USER_REQUEST_SERVICE)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
 
-    this.wsService
-      .on<any>(Event.EV_USER_REQUEST_NEW_NUMBER)
-      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$))
-      .subscribe(number => {
-        this.newNumber = number.newNumber.toString().padStart(6, 0);
-        this.userRequestAllData.requestNumber = this.newNumber;
-      });
+    this.newNumber$ = this.wsService.on<any>(Event.EV_USER_REQUEST_NEW_NUMBER).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
 
     this.statusListArray$ = this.wsService
       .on<RequestStatus>(Event.EV_USER_REQUEST_STATUS)
@@ -129,6 +130,15 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  public clearSubscription(subscription: SubscriptionLike) {
+    let subs = subscription;
+    if (subs) {
+      subs.unsubscribe();
+      subs = null;
+    }
+  }
+
   public readFiles(file: any) {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -155,6 +165,10 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.wsService.send('getUserRequestService', null);
     this.wsService.send('getEmployeeByParentDepartment', 49);
 
+    this.newNumberubscription = this.newNumber$.subscribe((number: any) => {
+      this.newNumber = number.newNumber.toString().padStart(6, 0);
+      this.userRequestAllData.requestNumber = this.newNumber;
+    });
     this.statusListArray$.subscribe(statuses => {
       this.userRequest.controls.status.setValue(statuses[0].name);
       this.userRequestAllData.statusId = statuses[0].id;
@@ -186,6 +200,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.modalOpen = false;
     // console.log(this.requestInfo.controls.test.value);
     this.resetRequestPage();
+    this.clearSubscription(this.newNumberubscription);
   }
 
   public onStatusSelected(status: any): void {

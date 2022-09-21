@@ -27,7 +27,6 @@
   "dependencies": {
     "@types/node-fetch": "^2.6.2",
     "@types/ws": "^8.2.2",
-    "botkit-legacy": "^0.7.15",
     "dotenv": "^16.0.0",
     "html-to-text": "^8.2.1",
     "imap": "^0.8.19",

@@ -7,8 +7,6 @@ import { wsParseMessage } from '../features/wss/wss-api';
 import * as purchaseAPI from '../features/purchase-api';
 import { getEmails } from '../features/imap-client';
 
-// import { monitoringBot } from '../features/jabber-bot';
-
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
     new winston.transports.Console({
@@ -52,10 +50,4 @@ process.on('uncaughtException', err => {
   setInterval(() => {
     getEmails(wss);
   }, 30000);
-
-  // logger.info(httpServer.address());
-  // monitoringBot.say({
-  //  user: 'a.yudin@center-inform.ru',
-  //  text: 'hi!',
-  // });
 })();

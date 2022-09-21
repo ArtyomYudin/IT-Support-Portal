@@ -9,6 +9,7 @@ import { Notify } from '@model/notify.model';
 import { IUserRequest } from '@model/user-request.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { FilePreviewService } from '@service/file-preview/file.preview.service';
+import { SubscriptionLike } from 'rxjs/internal/types';
 
 @Component({
   selector: 'fe-user-request-card',
@@ -20,15 +21,21 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public modalOpen: boolean;
 
-  public attachmentArray$: any;
+  public attachmentArray$: Observable<any>;
 
-  public attachmentBase64$: any;
+  public attachmentSubscription: SubscriptionLike;
+
+  public attachmentBase64$: Observable<any>;
+
+  public attachmentBase64Subscription: SubscriptionLike;
 
   // public userRequestCardModel: any;
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   public userRequest$: Observable<any>;
+
+  public userRequestSubscription: SubscriptionLike;
 
   public userRequestLifeCycle$: Observable<any>;
 
@@ -84,17 +91,26 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  public clearSubscription(subscription: SubscriptionLike) {
+    let subs = subscription;
+    if (subs) {
+      subs.unsubscribe();
+      subs = null;
+    }
+  }
+
   public openRequestCard(requestNumber: any): void {
-    console.log(requestNumber);
+    this.userRequestNewData = {};
     this.wsService.send('getUserRequestByNumber', requestNumber);
     this.wsService.send('getUserRequestLifeCycle', requestNumber);
     this.wsService.send('getEmployeeByParentDepartment', 49);
     this.wsService.send('getUserRequestAttachment', { requestNumber });
-    this.userRequest$.subscribe(request => {
+    this.userRequestSubscription = this.userRequest$.subscribe(request => {
       // eslint-disable-next-line prefer-destructuring
       this.userRequest = request;
     });
-    this.attachmentArray$.subscribe((attach: any) => {
+    this.attachmentSubscription = this.attachmentArray$.subscribe((attach: any) => {
       this.listOfFiles = attach;
     });
     this.modalOpen = true;
@@ -104,7 +120,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public closeRequestCard(): void {
     this.modalOpen = false;
-    this.attachmentArray$.unsubscribe();
+    this.clearSubscription(this.userRequestSubscription);
+    this.clearSubscription(this.attachmentSubscription);
+    this.clearSubscription(this.attachmentBase64Subscription);
     this.userRequestCard.reset();
   }
 
@@ -122,6 +140,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       });
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public changeStatusIcon(id: number) {
     switch (id) {
       case 2:
@@ -136,9 +155,21 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     }
   }
 
+  public saveButtonVisible() {
+    return !!(this.userRequestCard.controls.comment.value || this.userRequestNewData.delegate);
+  }
+
+  public onDegegateSelected(delegate: any): void {
+    this.userRequestNewData.delegate = delegate.id;
+  }
+
+  public onDelegateChanges() {}
+
   public saveRequestCard() {
     this.modalOpen = false;
-    this.userRequestNewData.comment = this.userRequestCard.controls.comment.value;
+    if (this.userRequestCard.controls.comment.value) {
+      this.userRequestNewData.comment = this.userRequestCard.controls.comment.value;
+    }
     this.wsService.send('updateUserRequest', {
       requestNumber: this.userRequest.requestNumber,
       employeeId: this.token.id,
@@ -154,7 +185,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       fileType: file.fileType,
       filePath: file.filePath,
     });
-    this.attachmentBase64$.subscribe((attach: any) => {
+    this.attachmentBase64Subscription = this.attachmentBase64$.subscribe((attach: any) => {
       this.images = attach;
       this.previewDialog.open(this.images);
     });

@@ -15,10 +15,10 @@ export const logger = createLogger({
     printf(info => `[${info.timestamp}] ${info.level}: ${info.message}`),
   ),
   defaultMeta: { service: 'itsupport-backend' },
-  // transports: [
-  //   new transports.File({ filename: 'error.log', level: 'error' }),
-  //   new transports.File({ filename: 'combined.log' }),
-  //   // new transports.File(options.file_info),
-  // ],
+  transports: [
+    new transports.File({ filename: '/var/log/itsupport/error.log', level: 'error' }),
+    new transports.File({ filename: '/var/log/itsupport/combined.log' }),
+    // new transports.File(options.file_info),
+  ],
   exitOnError: false,
 });

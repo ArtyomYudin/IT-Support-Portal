@@ -5,7 +5,7 @@
             <clr-dg-action-bar>
                 <div class="btn-group btn-link btn-sm">
                     <button class="btn" (click)="modalNew.openNewRequest()"><clr-icon shape="file"></clr-icon>Создать обращения</button>
-                    <button class="btn" (click)="modalCard.openRequestCard(selected[0])" [disabled]="selected.length != 1">
+                    <button class="btn" (click)="modalCard.openRequestCard(selected[0].requestNumber)" [disabled]="selected.length != 1">
                         <clr-icon shape="pencil"></clr-icon>Редактировать
                     </button>
                     <button class="btn" (click)="deleteRequestCard(selected)" [disabled]="selected.length == 0">

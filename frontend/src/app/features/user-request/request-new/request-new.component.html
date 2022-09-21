@@ -145,7 +145,7 @@
             </clr-input-container>
             <clr-input-container>
                 <label>Исполнитель:</label>
-                <input formControlName="executor" type="text" clrInput [matAutocomplete]="executorList" />
+                <input formControlName="executor" type="text" clrInput [matAutocomplete]="executorList" onkeydown="return false" />
                 <mat-autocomplete #executorList="matAutocomplete">
                     <ng-container>
                         <mat-option
@@ -160,7 +160,7 @@
             </clr-input-container>
             <clr-input-container>
                 <label>Услуга:</label>
-                <input type="text" formControlName="service" clrInput [matAutocomplete]="serviceList" />
+                <input type="text" formControlName="service" clrInput [matAutocomplete]="serviceList" onkeydown="return false" />
                 <mat-autocomplete #serviceList="matAutocomplete">
                     <ng-container>
                         <mat-option

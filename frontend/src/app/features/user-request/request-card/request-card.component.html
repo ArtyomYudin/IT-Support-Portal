@@ -167,11 +167,17 @@
 
                             <clr-input-container class="request-delegate-container">
                                 <label>Делегировать:</label>
-                                <input formControlName="delegate" type="text" clrInput [matAutocomplete]="delegateList" />
+                                <input
+                                    formControlName="delegate"
+                                    type="text"
+                                    clrInput
+                                    [matAutocomplete]="delegateList"
+                                    (ngModelChange)="onDelegateChanges()"
+                                />
                                 <mat-autocomplete #delegateList="matAutocomplete">
                                     <ng-container>
                                         <mat-option
-                                            (onSelectionChange)="(null)"
+                                            (onSelectionChange)="onDegegateSelected(delegate)"
                                             *ngFor="let delegate of delegateListArray$ | async"
                                             [value]="delegate.name"
                                         >
@@ -189,8 +195,11 @@
                                     <p class="request-lifecycle-header">
                                         {{ event.eventDate | date: 'dd.MM.YYYY HH:mm' }} {{ event.employee | employeeName }}
                                     </p>
-                                    <p class="request-lifecycle-event" *ngIf="event.eventType !== 'comment'">
+                                    <p class="request-lifecycle-event" *ngIf="event.eventType == 'status'">
                                         изменен стаут заявки <clr-icon shape="arrow right"></clr-icon> {{ event.eventValue }}
+                                    </p>
+                                    <p class="request-lifecycle-event" *ngIf="event.eventType == 'delegate'">
+                                        изменен исполнитель заявки <clr-icon shape="arrow right"></clr-icon> {{ event.eventValue }}
                                     </p>
                                     <p class="request-lifecycle-event" *ngIf="event.eventType === 'comment'">{{ event.eventValue }}</p>
                                 </div>
@@ -256,7 +265,13 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-sm" (click)="closeRequestCard()">Отмена</button>
-        <button *ngIf="this.userRequest?.status.id !== 1" type="button" class="btn btn-primary btn-sm" (click)="saveRequestCard()">
+        <button
+            *ngIf="this.userRequest?.status.id !== 1"
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="saveRequestCard()"
+            [disabled]="!saveButtonVisible()"
+        >
             Сохранить
         </button>
         <button *ngIf="this.userRequest?.status.id == 1" type="button" class="btn btn-primary btn-sm" (click)="takeRequestToWork()">

@@ -1,0 +1,19 @@
+{
+  "apps": [
+    {
+      "name": "IT-Support-Portal Backend",
+      "cwd": "/storage/development/it-support-portal/backend",
+      "script": "./index.js",
+      "exec_mode": "fork",
+      "pid_file": "/var/run/itsupportportal.pid",
+      "env": {
+        "watch": false,
+        "NODE_ENV": "development"
+      },
+      "env_production": {
+        "NODE_ENV": "production",
+        "watch": false
+      }
+    }
+  ]
+}
