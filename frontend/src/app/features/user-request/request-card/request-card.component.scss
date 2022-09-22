@@ -161,7 +161,8 @@ ul {
 
 .request-lifecycle-container {
   height: 30vh;
-  overflow-y: scroll;
+  overflow-y: auto;
+  width: 100%;
 }
 .request-lifecycle-label {
   padding: 0;
