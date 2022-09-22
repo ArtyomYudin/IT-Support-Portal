@@ -124,6 +124,7 @@
                                     rows="3"
                                     contenteditable="true"
                                     value=""
+                                    [readonly]="isRequestCardReadOnly()"
                                 ></textarea>
                             </clr-textarea-container>
                         </div>
@@ -141,7 +142,7 @@
                                     <label class="clr-control-label">Статус:</label>
                                     <clr-icon
                                         class="status-icon"
-                                        [attr.shape]="changeStatusIcon(this.userRequest?.status.id)"
+                                        [attr.shape]="this.userRequest?.status.id | requestStatusIcon"
                                         [style.fill]="this.userRequest?.status.id == 3 ? 'hsl(93, 85%, 32%)' : '#0072a3'"
                                     >
                                     </clr-icon>
@@ -173,6 +174,7 @@
                                     clrInput
                                     [matAutocomplete]="delegateList"
                                     (ngModelChange)="onDelegateChanges()"
+                                    [readonly]="isRequestCardReadOnly()"
                                 />
                                 <mat-autocomplete #delegateList="matAutocomplete">
                                     <ng-container>
@@ -264,13 +266,13 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary btn-sm" (click)="closeRequestCard()">Отмена</button>
+        <button type="button" class="btn btn-outline btn-sm" (click)="closeRequestCard()">Отмена</button>
         <button
             *ngIf="this.userRequest?.status.id !== 1"
             type="button"
             class="btn btn-primary btn-sm"
             (click)="saveRequestCard()"
-            [disabled]="!saveButtonVisible()"
+            [disabled]="!isSaveButtonVisible()"
         >
             Сохранить
         </button>

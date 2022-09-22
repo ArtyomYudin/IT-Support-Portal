@@ -20,13 +20,14 @@ function changeDateFormat(newDate: Date) {
 }
 
 function decodeBase64(dataString: any) {
-  const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  const matches = dataString.match(/^data:([A-Za-z-+\\/]+);base64,(.+)$/);
   const response: any = {};
   if (matches?.length !== 3) {
     return new Error('Invalid input string');
   }
   // eslint-disable-next-line prefer-destructuring
   response.type = matches[1];
+  logger.info(response.type);
   response.data = Buffer.from(matches[2], 'base64');
 
   return response;
@@ -187,7 +188,7 @@ export async function getUserRequestNewNumber(dbPool: Pool, ws: WebSocket): Prom
     conn = await dbPool.getConnection();
     const rows = await conn.query(dbSelect.getUserRequestNewNumber);
     const newNumber = rows[0];
-    logger.info(newNumber);
+    // logger.info(newNumber);
     ws.send(
       JSON.stringify({
         event: 'event_user_request_new_number',
@@ -210,7 +211,6 @@ export async function getUserRequestService(dbPool: Pool, ws: WebSocket, value?:
     rows.forEach((row: any, i: number) => {
       userRequestServiceArray[i] = { id: row.id, name: row.name };
     });
-    logger.info(userRequestServiceArray);
     ws.send(
       JSON.stringify({
         event: 'event_user_request_service',
@@ -380,7 +380,7 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
       });
     }
     allUserRequest(dbPool, null, wss);
-    logger.info('Request create!');
+    logger.info('New User Request create!');
   } catch (error) {
     logger.error(`saveNewUserRequest - ${error}`);
   } finally {
@@ -433,8 +433,6 @@ export async function updateUserRequest(dbPool: Pool, value: any, ws: WebSocket,
   try {
     conn = await dbPool.getConnection();
     Object.keys(value.newData).forEach(async key => {
-      logger.info(key);
-      logger.info(value.newData[key]);
       if (key === 'status') {
         await conn.query(dbUpdate.updateUserRequestStatus(value.newData[key], value.requestNumber));
       }

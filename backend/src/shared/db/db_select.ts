@@ -114,7 +114,7 @@ export const getUserRequestLifeCycle = (requestNumber: string) => `
                             WHERE ur_life_cycle.request_number  ='${requestNumber}'
                             order by ur_life_cycle.event_date`;
 
-export const getDepartment = (departmentId?: number) => `
+export const getDepartment = (departmentId?: any) => `
                             SELECT department.id AS id,
                                    department.name AS name,
                                    dep.id as parentDepartmentId,
@@ -125,7 +125,7 @@ export const getDepartment = (departmentId?: number) => `
                                    name
                             FROM department
                             ) dep on dep.id = department.parent_id
-                            ${departmentId ? ` WHERE department.id  =${departmentId}` : ''}
+                            ${!departmentId.isNaN ? ` WHERE department.id  =${departmentId}` : ''}
                             order by department.name`;
 
 export const getUserRequestNewNumber = `SELECT user_request_new_number() AS newNumber`;

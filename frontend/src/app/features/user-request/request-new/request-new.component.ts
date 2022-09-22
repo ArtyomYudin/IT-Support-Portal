@@ -130,8 +130,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  public clearSubscription(subscription: SubscriptionLike) {
+  static clearSubscription(subscription: SubscriptionLike) {
     let subs = subscription;
     if (subs) {
       subs.unsubscribe();
@@ -139,7 +138,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     }
   }
 
-  public readFiles(file: any) {
+  static readFiles(file: any) {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.onload = () => {
@@ -200,7 +199,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.modalOpen = false;
     // console.log(this.requestInfo.controls.test.value);
     this.resetRequestPage();
-    this.clearSubscription(this.newNumberubscription);
+    RequestNewComponent.clearSubscription(this.newNumberubscription);
   }
 
   public onStatusSelected(status: any): void {
@@ -213,7 +212,11 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public onInitiatorSelected(initiator: any): void {
     this.wsService.send('getDepartment', initiator.departmentId);
-    this.department$.subscribe(dep => this.userRequest.controls.initiatorDepartment.setValue(dep[0].name));
+    console.log(initiator.departmentId);
+    this.department$.subscribe(dep => {
+      console.log(dep);
+      this.userRequest.controls.initiatorDepartment.setValue(dep[0].name);
+    });
     this.userRequestAllData.initiatorId = initiator.id;
     this.userRequestAllData.departmentId = initiator.departmentId;
   }
@@ -234,7 +237,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.userRequestAllData.description = this.userRequest.controls.description.value;
     this.userRequestAllData.attachments = await Promise.all(
       this.fileList.map(file => {
-        return this.readFiles(file);
+        return RequestNewComponent.readFiles(file);
       }),
     );
     this.wsService.send('saveNewUserRequest', this.userRequestAllData);

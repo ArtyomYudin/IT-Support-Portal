@@ -33,30 +33,30 @@
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'skud']">Статистика СКУД</a>
             <!-- <a class="nav-link active" href="#"></a> -->
         </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'vpn']" *ngIf="isAdmin()">Статистика VPN</a>
+        <li class="nav-item" *ngIf="isAdmin()">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'vpn']">Статистика VPN</a>
             <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'dhcp']" *ngIf="isAdmin()">Статистика DHCP</a>
+        <li class="nav-item" *ngIf="isAdmin()">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'dhcp']">Статистика DHCP</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'avaya']" *ngIf="isAdmin()">Статистика Avaya</a>
+        <li class="nav-item" *ngIf="isAdmin()">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'avaya']">Статистика Avaya</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'monitoring']" *ngIf="isAdmin()">Мониторинг оборудования</a>
+        <li class="nav-item" *ngIf="isAdmin()">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'monitoring']">Мониторинг оборудования</a>
             <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'purchase']" *ngIf="isAdmin()">Закупки</a>
+        <li class="nav-item" *ngIf="false">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'purchase']">Закупки</a>
             <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'user-request']" *ngIf="isAdmin()">Обращения пользователей</a>
+        <li class="nav-item" *ngIf="isAdmin()">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'user-request']">Обращения пользователей</a>
             <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'setting']" *ngIf="isAdmin()">Настройки системы</a>
+        <li class="nav-item" *ngIf="isAdmin()">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'setting']">Настройки системы</a>
         </li>
         <!--
         <li class="nav-item">

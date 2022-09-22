@@ -64,20 +64,6 @@ export class RequestListComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
-  public changeStatusIcon(id: number) {
-    switch (id) {
-      case 2:
-        return 'clock';
-        break;
-      case 3:
-        return 'success-standard';
-        break;
-      default:
-        return 'new';
-        break;
-    }
-  }
-
   public deleteRequestCard(cards: any) {
     const cardArray: any[] = [];
     cards.forEach((card: any) => {

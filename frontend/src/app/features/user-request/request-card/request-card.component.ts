@@ -49,6 +49,8 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public images: string;
 
+  public showAutocomplete = true;
+
   public userRequestNewData: {
     delegate?: number;
     serviceId?: number;
@@ -57,6 +59,16 @@ export class RequestCardComponent implements OnInit, OnDestroy {
   } = {};
 
   public token = JSON.parse(localStorage.getItem('IT-Support-Portal'));
+
+  static clearSubscription(subscription: SubscriptionLike) {
+    let subs = subscription;
+    if (subs) {
+      subs.unsubscribe();
+      subs = null;
+    }
+  }
+
+  // @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   constructor(
     private wsService: WebsocketService,
@@ -91,15 +103,6 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  public clearSubscription(subscription: SubscriptionLike) {
-    let subs = subscription;
-    if (subs) {
-      subs.unsubscribe();
-      subs = null;
-    }
-  }
-
   public openRequestCard(requestNumber: any): void {
     this.userRequestNewData = {};
     this.wsService.send('getUserRequestByNumber', requestNumber);
@@ -107,7 +110,6 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.wsService.send('getEmployeeByParentDepartment', 49);
     this.wsService.send('getUserRequestAttachment', { requestNumber });
     this.userRequestSubscription = this.userRequest$.subscribe(request => {
-      // eslint-disable-next-line prefer-destructuring
       this.userRequest = request;
     });
     this.attachmentSubscription = this.attachmentArray$.subscribe((attach: any) => {
@@ -120,9 +122,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public closeRequestCard(): void {
     this.modalOpen = false;
-    this.clearSubscription(this.userRequestSubscription);
-    this.clearSubscription(this.attachmentSubscription);
-    this.clearSubscription(this.attachmentBase64Subscription);
+    RequestCardComponent.clearSubscription(this.userRequestSubscription);
+    RequestCardComponent.clearSubscription(this.attachmentSubscription);
+    RequestCardComponent.clearSubscription(this.attachmentBase64Subscription);
     this.userRequestCard.reset();
   }
 
@@ -140,33 +142,31 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       });
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  public changeStatusIcon(id: number) {
-    switch (id) {
-      case 2:
-        return 'clock';
-        break;
-      case 3:
-        return 'success-standard';
-        break;
-      default:
-        return 'new';
-        break;
-    }
+  public isSaveButtonVisible() {
+    return !!(this.userRequestCard.controls.comment.value || this.userRequestNewData.delegate);
   }
 
-  public saveButtonVisible() {
-    return !!(this.userRequestCard.controls.comment.value || this.userRequestNewData.delegate);
+  public isRequestCardReadOnly() {
+    return this.userRequest?.status.id === 1;
   }
 
   public onDegegateSelected(delegate: any): void {
     this.userRequestNewData.delegate = delegate.id;
   }
 
-  public onDelegateChanges() {}
+  public onDelegateChanges() {
+    this.userRequestCard.controls.delegate.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(value => {
+      if (!value) {
+        // this.autocomplete.closePanel();
+        if (this.userRequestNewData.delegate) {
+          delete this.userRequestNewData.delegate;
+        }
+      }
+    });
+  }
 
   public saveRequestCard() {
-    this.modalOpen = false;
+    // this.modalOpen = false;
     if (this.userRequestCard.controls.comment.value) {
       this.userRequestNewData.comment = this.userRequestCard.controls.comment.value;
     }

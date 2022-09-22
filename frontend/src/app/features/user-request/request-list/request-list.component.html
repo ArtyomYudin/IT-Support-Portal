@@ -64,7 +64,7 @@
                 <clr-dg-cell class="status-column">
                     <clr-icon
                         class="status-icon"
-                        [attr.shape]="changeStatusIcon(userRequest.status.id)"
+                        [attr.shape]="userRequest.status.id | requestStatusIcon"
                         [style.fill]="userRequest.status.id == 3 ? 'hsl(93, 85%, 32%)' : '#0072a3'"
                     >
                     </clr-icon>

@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@service/auth.guard.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/purchase', pathMatch: 'full' },
+  { path: '', redirectTo: '/user-request', pathMatch: 'full' },
   {
     path: 'purchase',
     loadChildren: () => import('../features/purchase/purchase.module').then(m => m.PurchaseModule),
