@@ -1,0 +1,14 @@
+HTTPS_PORT=3443
+HTTPS_HOST=itsupport.center-inform.ru
+DB_HOST=localhost
+DB_USER=itsupport
+DB_PASSWORD=i8bKPpxHLEWz
+LDAP_URL=ldap://rosamund.center-inform.ru:389
+AD_SUFFIX='dc=center-inform, dc=ru'
+JWT_SECRET=_a@razO-TZ_}}r8ugJ@SLg*aI/ZCV_I
+IMAP_HOST=outlook.center-inform.ru
+IMAP_PORT=993
+IMAP_TLS=true
+IMAP_USER=itsupport@center-inform.ru
+IMAP_PASSWORD=CixR55bjF341
+USER_REQUEST_ATTACHMENTS_PATH=/storage/development/it-support-portal/attachments
