@@ -313,7 +313,7 @@ export async function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, valu
     } finally {
       if (conn) conn.release();
     }
-  } else {
+  } else if (existsSync(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}`)) {
     fs.readFile(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.filePath}/${value.fileName}`, (error, data) => {
       // console.log(`data:${value.FileType};base64,${data.toString('base64')}`);
       ws.send(
@@ -347,7 +347,7 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
         value.deadline,
       ),
     );
-    if (!existsSync(value.requestNumber) && value.attachments.length > 0) {
+    if (!existsSync(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}`) && value.attachments.length > 0) {
       fs.mkdir(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}`, { recursive: true }, e => {
         if (!e) {
           value.attachments.forEach((attachment: any) => {

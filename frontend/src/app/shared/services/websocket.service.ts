@@ -12,6 +12,7 @@ import { share, filter, map, takeWhile, distinctUntilChanged } from 'rxjs/operat
 // import { takeWhile } from 'rxjs/internal/operators/takeWhile';
 
 import { WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
+import { environment } from 'src/environments/environment';
 
 export interface IWebsocketService {
   status: Observable<boolean>;
@@ -27,7 +28,7 @@ export interface IWebSocketConfig {
 }
 */
 
-export interface IWsMessage<T> {
+export interface IwsMessage<T> {
   event: string;
   data: T;
 }
@@ -38,7 +39,7 @@ export interface IWsMessage<T> {
 export class WebsocketService implements IWebsocketService, OnDestroy {
   public status: Observable<boolean>;
 
-  private config: WebSocketSubjectConfig<IWsMessage<any>>;
+  private config: WebSocketSubjectConfig<IwsMessage<any>>;
 
   private websocketSub: SubscriptionLike;
 
@@ -46,11 +47,11 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
 
   private reconnection$: Observable<number>;
 
-  private websocket$: WebSocketSubject<IWsMessage<any>>;
+  private websocket$: WebSocketSubject<IwsMessage<any>>;
 
   private connection$: Observer<boolean>;
 
-  private wsMessages$: Subject<IWsMessage<any>>;
+  private wsMessages$: Subject<IwsMessage<any>>;
 
   private reconnectInterval: number;
 
@@ -59,13 +60,13 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
   private isConnected: boolean;
 
   constructor() {
-    this.wsMessages$ = new Subject<IWsMessage<any>>();
+    this.wsMessages$ = new Subject<IwsMessage<any>>();
 
     this.reconnectInterval = 5000; // pause between connections
     this.reconnectAttempts = 10; // number of connection attempts
 
     this.config = {
-      url: 'wss://itsupport.center-inform.ru:3443/',
+      url: `wss://${environment.apiHost}:${environment.apiPort}`,
       closeObserver: {
         next: (event: CloseEvent) => {
           this.websocket$ = null;
@@ -110,8 +111,8 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
   public on<T>(event: string): Observable<T> {
     if (event) {
       return this.wsMessages$.pipe(
-        filter((message: IWsMessage<T>) => message.event === event),
-        map((message: IWsMessage<T>) => message.data),
+        filter((message: IwsMessage<T>) => message.event === event),
+        map((message: IwsMessage<T>) => message.data),
       );
     }
     return null;
@@ -135,15 +136,16 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
   private connect(): void {
     this.websocket$ = new WebSocketSubject(this.config);
 
-    this.websocket$.subscribe(
-      message => this.wsMessages$.next(message),
-      (error: Event) => {
+    this.websocket$.subscribe({
+      next: message => this.wsMessages$.next(message),
+      error: () => {
         if (!this.websocket$) {
           // run reconnect if errors
           this.reconnect();
         }
       },
-    );
+      complete: null,
+    });
   }
 
   /*
@@ -152,10 +154,10 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
   private reconnect(): void {
     this.reconnection$ = interval(this.reconnectInterval).pipe(takeWhile((v, index) => index < this.reconnectAttempts && !this.websocket$));
 
-    this.reconnection$.subscribe(
-      () => this.connect(),
-      null,
-      () => {
+    this.reconnection$.subscribe({
+      next: () => this.connect(),
+      error: null,
+      complete: () => {
         // Subject complete if reconnect attemts ending
         this.reconnection$ = null;
 
@@ -164,6 +166,6 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
           this.connection$.complete();
         }
       },
-    );
+    });
   }
 }

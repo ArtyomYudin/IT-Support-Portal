@@ -230,7 +230,6 @@ export class RequestNewComponent implements OnInit, OnDestroy {
   }
 
   public async saveNewRequest(): Promise<void> {
-    this.modalOpen = false;
     const deadline = this.userRequest.controls.deadline.value.split('.');
     this.userRequestAllData.deadline = `${deadline[2]}-${deadline[1]}-${deadline[0]}`;
     this.userRequestAllData.topic = this.userRequest.controls.topic.value;
@@ -242,6 +241,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     );
     this.wsService.send('saveNewUserRequest', this.userRequestAllData);
     console.log(this.userRequestAllData);
+    this.modalOpen = false;
     this.resetRequestPage();
   }
 }

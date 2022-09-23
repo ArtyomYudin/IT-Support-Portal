@@ -5,7 +5,22 @@
 import { createLogger, format, transports } from 'winston';
 
 const { combine, timestamp, printf } = format;
-
+let transport = null;
+if (process.env.NODE_ENV !== 'production') {
+  transport = new transports.Console({
+    format: format.combine(
+      format.colorize({
+        all: true,
+      }),
+    ),
+  });
+} else {
+  transport = [
+    new transports.File({ filename: '/var/log/itsupport/error.log', level: 'error' }),
+    new transports.File({ filename: '/var/log/itsupport/combined.log' }),
+    // new transports.File(options.file_info),
+  ];
+}
 export const logger = createLogger({
   // format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), myFormat),
   level: process.env.LOG_LEVEL || 'info',
@@ -15,10 +30,7 @@ export const logger = createLogger({
     printf(info => `[${info.timestamp}] ${info.level}: ${info.message}`),
   ),
   defaultMeta: { service: 'itsupport-backend' },
-  transports: [
-    new transports.File({ filename: '/var/log/itsupport/error.log', level: 'error' }),
-    new transports.File({ filename: '/var/log/itsupport/combined.log' }),
-    // new transports.File(options.file_info),
-  ],
+
+  transports: transport,
   exitOnError: false,
 });

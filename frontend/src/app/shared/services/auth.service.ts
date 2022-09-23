@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-
 import { AuthUser } from '@model/auth-user.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -30,20 +30,22 @@ export class AuthenticationService {
       }),
     };
 
-    return this.http.post<AuthUser>('https://itsupport.center-inform.ru:3443/api/auth', { email, password }, httpOptions).pipe(
-      map(authUser => {
-        if (authUser && authUser.token) {
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('IT-Support-Portal', JSON.stringify(authUser));
-          this.currentUserSubject$.next(authUser);
-        }
-        return authUser;
-      }),
-      catchError(err => {
-        console.log('Handling error locally and rethrowing it...', err);
-        return throwError(err);
-      }),
-    );
+    return this.http
+      .post<AuthUser>(`https://${environment.apiHost}:${environment.apiPort}/api/auth`, { email, password }, httpOptions)
+      .pipe(
+        map(authUser => {
+          if (authUser && authUser.token) {
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            localStorage.setItem('IT-Support-Portal', JSON.stringify(authUser));
+            this.currentUserSubject$.next(authUser);
+          }
+          return authUser;
+        }),
+        catchError(err => {
+          console.log('Handling error locally and rethrowing it...', err);
+          return throwError(err);
+        }),
+      );
   }
 
   public logout(): void {

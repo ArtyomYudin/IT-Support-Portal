@@ -1,12 +1,14 @@
 <!--[ngStyle]="{ display: userRequest.length != 1 ? 'none' : '' }"-->
-<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false" [clrModalSize]="'xl'">
+<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="true" [clrModalSize]="'xl'">
     <h3 class="modal-title">
-        <div class="clr-row clr-justify-content-start request-title-container">
+        Обращение пользователея № {{ this.userRequest?.requestNumber }} от {{ this.userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
+        <!-- <div class="clr-row clr-justify-content-start request-title-container">
             <div class="request-title">
                 Обращение пользователея № {{ this.userRequest?.requestNumber }} от
                 {{ this.userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
             </div>
-            <!--
+        -->
+        <!--
             <clr-input-container class="request-title-status">
                 <label>Статус:</label>
                 <input clrInput type="text" value="{{ this.userRequest?.status.name }}" [readonly]="true" />
@@ -42,7 +44,7 @@
                 <label class="clr-control-label data-list-label">Срок:</label>
                 <input class="clr-input" type="text" value="{{ userRequest?.deadline }}" [readonly]="true" />
             </div>
-        --></div>
+        </div> -->
     </h3>
     <div class="modal-body">
         <form [formGroup]="userRequestCard" clrForm [clrLayout]="'vertical'" autocomplete="off">
