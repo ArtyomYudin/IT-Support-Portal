@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
@@ -58,6 +58,8 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     comment?: string;
   } = {};
 
+  public previewDialogStatus: boolean = null;
+
   public token = JSON.parse(localStorage.getItem('IT-Support-Portal'));
 
   static clearSubscription(subscription: SubscriptionLike) {
@@ -96,11 +98,24 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       comment: [''],
       delegate: [''],
     });
+    this.previewDialog.overlayStatus.subscribe(status => (this.previewDialogStatus = status));
   }
 
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
+  }
+
+  @HostListener('keyup.escape', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    console.log(this.previewDialogStatus);
+    if (this.previewDialogStatus !== null) {
+      if (this.previewDialogStatus === !true) {
+        event.stopPropagation();
+      }
+      // Now we mark that we've handled the change from the change handler, by setting the pending variable to null.
+      this.previewDialogStatus = null;
+    }
   }
 
   public openRequestCard(requestNumber: any): void {
