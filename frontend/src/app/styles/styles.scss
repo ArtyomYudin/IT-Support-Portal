@@ -10,11 +10,11 @@ body {
   // height: 100%;
 }
 */
-.main-container .content-container .content-area {
-  //padding: 0rem 1rem 1rem 1rem;
-  //padding: 0;
-  padding-bottom: 0;
-}
+///.main-container .content-container .content-area {
+///  //padding: 0rem 1rem 1rem 1rem;
+///  //padding: 0;
+///  padding-bottom: 0;
+///}
 
 /*
 .app-loading {
@@ -45,33 +45,40 @@ body {
   z-index: 9000;
 }
 
-.tab-content {
-  width: 100%;
-}
+///.tab-content {
+///  width: 100%;
+///}
 
 .clr-control-container {
   width: 100%;
 }
 
-.tabs-vertical .nav {
-  margin-right: 0rem;
-}
+///.tabs-vertical .nav {
+///  margin-right: 0rem;
+///}
 
-.tabs-vertical .nav .nav-link.active {
-  background-color: #fafafa;
-  color: #0072a3;
-  font-weight: 500;
-}
+///.tabs-vertical .nav .nav-link.active {
+///  background-color: #fafafa;
+///  color: #0072a3;
+///  font-weight: 500;
+///}
 
-.tabs-vertical .nav .nav-link:hover {
-  color: #0072a3;
-  //box-shadow: inset 0.15rem 0 #fafafa;
-}
-.tabs-vertical .nav .nav-link:not(.active):hover {
-  background-color: #fafafa;
-}
+///.tabs-vertical .nav .nav-link:hover {
+///  color: #0072a3;
+///  //box-shadow: inset 0.15rem 0 #fafafa;
+///}
+///.tabs-vertical .nav .nav-link:not(.active):hover {
+///  background-color: #fafafa;
+///}
 
-.tabs-vertical .nav-link:focus {
+///.tabs-vertical .nav-link:focus {
+///  outline: none;
+///  // box-shadow: none;
+///}
+
+.clr-vertical-nav .nav-trigger:focus,
+.clr-vertical-nav .nav-group-trigger:focus,
+.clr-vertical-nav .nav-link:focus {
   outline: none;
   // box-shadow: none;
 }
@@ -85,17 +92,17 @@ body {
   transform: none;
 }
 */
-button.datagrid-column-title:focus {
-  outline: none;
-  // box-shadow: none;
-}
+///button.datagrid-column-title:focus {
+///  outline: none;
+///  // box-shadow: none;
+///}
 
-.datagrid-table .datagrid-column .datagrid-filter-toggle {
-  outline: none;
-}
-button.datagrid-column-title {
-  text-decoration: none !important;
-}
+///.datagrid-table .datagrid-column .datagrid-filter-toggle {
+///  outline: none;
+///}
+///button.datagrid-column-title {
+///  text-decoration: none !important;
+///}
 
 .datagrid-table .datagrid-cell:focus,
 .datagrid-table .datagrid-column:focus {
@@ -114,17 +121,17 @@ button.datagrid-column-title {
   //font-size: 0.55rem;
 }
 */
-.clr-radio-wrapper input[type='radio']:focus + label:before {
-  outline: none !important;
-}
+///.clr-radio-wrapper input[type='radio']:focus + label:before {
+///  outline: none !important;
+///}
 
-.clr-select-wrapper select:hover {
-  background: unset !important;
-  border-color: #0072a3;
-}
-.clr-input-group .clr-input-group-icon-action {
-  outline: none;
-}
+///.clr-select-wrapper select:hover {
+///  background: unset !important;
+///  border-color: #0072a3;
+///}
+///.clr-input-group .clr-input-group-icon-action {
+///  outline: none;
+///}
 
 .mat-option {
   font-family: 'Metropolis', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;

@@ -1,3 +1,4 @@
+<!--
 <clr-header class="header header-6" *ngIf="currentUser">
     <div class="branding">
         <a class="nav-link">
@@ -8,7 +9,6 @@
 
     <div class="header-actions">
         <div class="settings" style="align-items: center">
-            <!--<clr-icon shape="calendar"></clr-icon>-->
             <span class="title">&nbsp;&nbsp;{{ clock | async | date: 'dd MMMM, HH:mm' }} </span>
         </div>
         <clr-dropdown>
@@ -17,10 +17,7 @@
                 {{ currentUser.userDisplayName }}
                 <clr-icon shape="angle" style="transform: rotate(180deg)"></clr-icon>
             </button>
-
             <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-                <!--<button (click)="aboutPage.open()" clrDropdownItem>О программе</button>-->
-                <!--<a class="nav-link" [routerLink]="['/', 'skud']" clrDropdownItem>Настройки</a>-->
                 <button (click)="onLogout()" clrDropdownItem>Выход</button>
             </clr-dropdown-menu>
         </clr-dropdown>
@@ -31,11 +28,9 @@
     <ul class="nav">
         <li class="nav-item">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'skud']">Статистика СКУД</a>
-            <!-- <a class="nav-link active" href="#"></a> -->
         </li>
         <li class="nav-item" *ngIf="isAdmin()">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'vpn']">Статистика VPN</a>
-            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
         <li class="nav-item" *ngIf="isAdmin()">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'dhcp']">Статистика DHCP</a>
@@ -45,25 +40,49 @@
         </li>
         <li class="nav-item" *ngIf="isAdmin()">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'monitoring']">Мониторинг оборудования</a>
-            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
         <li class="nav-item" *ngIf="false">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'purchase']">Закупки</a>
-            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
         <li class="nav-item" *ngIf="isAdmin()">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'user-request']">Обращения пользователей</a>
-            <!-- <a class="nav-link" href="#">Мониторинг оборудования</a> -->
         </li>
         <li class="nav-item" *ngIf="isAdmin()">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'setting']">Настройки системы</a>
         </li>
-        <!--
-        <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/', 'request']">Приобретение ОС, ТМЦ</a>
-        </li>
-        -->
     </ul>
 </nav>
-
-<!--<app-about #aboutPage></app-about>-->
+-->
+<clr-header class="header-5">
+    <div class="branding">
+        <a href="#" class="nav-link">
+            <clr-icon class="clr-icon clr-clarity-logo" shape="help-info"></clr-icon>
+            <!--<span class="clr-icon clr-clarity-logo"></span>-->
+            <span class="title">Портал ИТО</span>
+        </a>
+    </div>
+    <div class="header-nav" [clr-nav-level]="1">
+        <a href="#" [routerLink]="['/home']" routerLinkActive="active" class="nav-link nav-text">Главная</a>
+    </div>
+    <div class="header-actions">
+        <a href="" class="nav-link nav-icon">
+            <span class="badge">12</span>
+            <clr-icon shape="bell"></clr-icon>
+        </a>
+        <clr-dropdown>
+            <button class="nav-icon" clrDropdownTrigger>
+                <clr-icon shape="user"></clr-icon>
+                <clr-icon shape="caret down"></clr-icon>
+            </button>
+            <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                <clr-toggle-container>
+                    <clr-toggle-wrapper class="theme-toggle">
+                        <input type="checkbox" clrToggle (click)="(null)" />
+                        <label>Темная тема</label>
+                    </clr-toggle-wrapper>
+                </clr-toggle-container>
+                <button (click)="onLogout()" clrDropdownItem>Выход</button>
+            </clr-dropdown-menu>
+        </clr-dropdown>
+    </div>
+</clr-header>

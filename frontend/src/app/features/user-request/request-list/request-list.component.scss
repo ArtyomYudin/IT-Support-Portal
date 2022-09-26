@@ -1,5 +1,5 @@
-.datagrid-action-bar {
-  margin-top: 0.3rem;
+clr-icon {
+  margin-right: 0.1rem;
 }
 
 ::ng-deep .datagrid {
@@ -7,24 +7,25 @@
 }
 
 .datagrid-action-bar {
+  //margin-top: 0.3rem;
   margin-top: 0rem;
-}
-
-clr-icon {
-  margin-right: 0.1rem;
 }
 
 .btn-group .btn:focus {
   outline: none;
 }
 
-.limit-height clr-datagrid {
+//.limit-height clr-datagrid {
+//  //height: calc(100vh - 144px);
+//  height: 40vh;
+//}
+
+.limit,
+.limit-height-full,
+.user-request-list-datagrid {
   //height: calc(100vh - 144px);
-  height: 40vh;
-}
-.limit-height-full clr-datagrid {
-  //height: calc(100vh - 144px);
-  height: calc(100vh - 7.2rem);
+  // height: calc(100vh - 7.2rem);
+  height: 100% !important;
 }
 
 .priority-column,
@@ -56,9 +57,6 @@ clr-icon {
   border-radius: 4px;
 }
 
-.limit {
-  height: calc(100vh - 7.2rem);
-}
 .priority-icon {
   margin-left: -0.3rem;
 }

@@ -1,5 +1,41 @@
 <div class="content-container">
+    <clr-vertical-nav [clrVerticalNavCollapsible]="true" [clr-nav-level]="2">
+        <clr-vertical-nav-group routerLinkActive="active">
+            <clr-icon shape="bolt" clrVerticalNavIcon></clr-icon>
+            Обращения пользователей
+            <clr-vertical-nav-group-children>
+                <a clrVerticalNavLink> Spider-Man </a>
+                <a clrVerticalNavLink> Black Widow </a>
+                <a clrVerticalNavLink> Deadpool </a>
+            </clr-vertical-nav-group-children>
+        </clr-vertical-nav-group>
+        <a clrVerticalNavLink routerLink="./normal" routerLinkActive="active">
+            <clr-icon clrVerticalNavIcon shape="employee-group"></clr-icon>
+            Скуд
+        </a>
+        <a clrVerticalNavLink routerLink="./normal" routerLinkActive="active">
+            <clr-icon clrVerticalNavIcon shape="phone-handset"></clr-icon>
+            Телефония
+        </a>
+        <a clrVerticalNavLink routerLink="./normal" routerLinkActive="active">
+            <clr-icon clrVerticalNavIcon shape="computer"></clr-icon>
+            DHCP
+        </a>
+        <a clrVerticalNavLink routerLink="./normal" routerLinkActive="active">
+            <clr-icon clrVerticalNavIcon shape="connect"></clr-icon>
+            VPN
+        </a>
+        <a clrVerticalNavLink routerLink="./normal" routerLinkActive="active">
+            <clr-icon clrVerticalNavIcon shape="dashboard"></clr-icon>
+            Мониторинг оборудования
+        </a>
+    </clr-vertical-nav>
+
+    <!-- Content Area -->
     <div class="content-area">
+        <!-- Router -->
         <router-outlet></router-outlet>
     </div>
+
+    <!-- Content Area -->
 </div>

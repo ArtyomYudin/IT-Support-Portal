@@ -4,7 +4,7 @@
         <clr-datagrid [(clrDgSelected)]="selected" class="datagrid-compact user-request-list-datagrid" [clrDgLoading]="loading">
             <clr-dg-action-bar>
                 <div class="btn-group btn-link btn-sm">
-                    <button class="btn" (click)="modalNew.openNewRequest()"><clr-icon shape="file"></clr-icon>Создать обращения</button>
+                    <button class="btn" (click)="modalNew.openNewRequest()"><clr-icon shape="file"></clr-icon>Создать обращение</button>
                     <button class="btn" (click)="modalCard.openRequestCard(selected[0].requestNumber)" [disabled]="selected.length != 1">
                         <clr-icon shape="pencil"></clr-icon>Редактировать
                     </button>

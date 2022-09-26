@@ -4,7 +4,13 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@service/auth.guard.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/user-request', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  {
+    path: 'home',
+    loadChildren: () => import('../features/home/home.module').then(m => m.HomeModule),
+    canActivate: [AuthGuard],
+    data: { key: 'cached_home' },
+  },
   {
     path: 'purchase',
     loadChildren: () => import('../features/purchase/purchase.module').then(m => m.PurchaseModule),
