@@ -53,7 +53,7 @@
     </ul>
 </nav>
 -->
-<clr-header class="header-5">
+<clr-header class="header-5" *ngIf="currentUser">
     <div class="branding">
         <a href="#" class="nav-link">
             <clr-icon class="clr-icon clr-clarity-logo" shape="help-info"></clr-icon>
@@ -75,6 +75,9 @@
                 <clr-icon shape="caret down"></clr-icon>
             </button>
             <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                <label class="dropdown-header" aria-hidden="true">
+                    <img class="personPhoto" [src]="currentUser.userPhoto | thumbnailPhoto" /> {{ currentUser.userDisplayName }}
+                </label>
                 <clr-toggle-container>
                     <clr-toggle-wrapper class="theme-toggle">
                         <input type="checkbox" clrToggle (click)="(null)" />

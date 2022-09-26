@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { AuthUser } from '@model/auth-user.model';
 
 @Component({
   selector: 'fe-main',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
+  @Input() currentUser: AuthUser;
+
   constructor() {}
 
   ngOnInit() {}

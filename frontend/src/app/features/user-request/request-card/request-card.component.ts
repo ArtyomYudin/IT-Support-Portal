@@ -126,11 +126,11 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     this.wsService.send('getUserRequestAttachment', { requestNumber });
     this.userRequestSubscription = this.userRequest$.subscribe(request => {
       this.userRequest = request;
+      this.modalOpen = true;
     });
     this.attachmentSubscription = this.attachmentArray$.subscribe((attach: any) => {
       this.listOfFiles = attach;
     });
-    this.modalOpen = true;
     // this.userRequest = card;
     // console.log(this.userRequest.requestNumber);
   }

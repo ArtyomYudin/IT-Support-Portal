@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, takeUntil } from 'rxjs/operators';
-import { Subject, interval } from 'rxjs';
+// import { map, takeUntil } from 'rxjs/operators';
+// import { Subject } from 'rxjs';
 
 import { AuthenticationService } from '@service/auth.service';
 import { AuthUser } from '@model/auth-user.model';
@@ -12,16 +12,17 @@ import { AuthUser } from '@model/auth-user.model';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  public currentUser: AuthUser;
+  @Input() currentUser: AuthUser;
+  // public currentUser: AuthUser;
 
-  public clock = interval(1000).pipe(map(() => new Date()));
+  // public clock = interval(1000).pipe(map(() => new Date()));
 
-  private ngUnsubscribe$: Subject<any> = new Subject();
+  // private ngUnsubscribe$: Subject<any> = new Subject();
 
   constructor(private router: Router, private authenticationService: AuthenticationService) {
-    this.authenticationService.currentUser$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(x => {
-      this.currentUser = x;
-    });
+    // this.authenticationService.currentUser$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(x => {
+    //   this.currentUser = x;
+    // });
     // this.sessionCheckService.isActivateStatus
     //     .pipe(takeUntil(this.ngUnsubscribe))
     //     .subscribe(
@@ -34,8 +35,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   public ngOnDestroy(): void {
-    this.ngUnsubscribe$.next(null);
-    this.ngUnsubscribe$.complete();
+    // this.ngUnsubscribe$.next(null);
+    // this.ngUnsubscribe$.complete();
   }
 
   public onLogout(): void {
