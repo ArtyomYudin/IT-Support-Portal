@@ -7,6 +7,7 @@
                     <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
                 </div>
                 <h3 class="card-header__head">Камера главного входа</h3>
+                <canvas class="contextCanvas" id="video-canvas"></canvas>
             </div>
         </div>
     </div>
@@ -45,35 +46,51 @@
 
 <!-- Cекция заявок -->
 <div class="clr-row request-section">
-    <div class="clr-col-lg-6 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+    <div class="clr-col-lg-3 clr-col-md-3 clr-col-sm-12 clr-col-xs-12">
         <div class="card clickable" routerLink="/user-request">
             <div class="card-header">
                 <div class="card-icon card-icon__blue">
-                    <clr-icon shape="dashboard" style="width: 24px; height: 24px"></clr-icon>
+                    <clr-icon shape="form" style="width: 24px; height: 24px"></clr-icon>
                 </div>
                 <h3 class="card-header__head">Обращения пользователей</h3>
             </div>
             <div class="card-block">
-                <div class="card-text">
-                    <ul class="list-group">
-                        <li class="list-group-item">Новые обращения: 6</li>
-                        <li class="list-group-item">Обращения в работе: 13</li>
-                        <li class="list-group-item">Выполненые обращения: 36</li>
-                    </ul>
+                <div class="card-info">
+                    <p class="card-info__head">Новые заявки</p>
+                    <p class="card-info__data">24</p>
+                </div>
+                <div class="card-info">
+                    <p class="card-info__head">Заявки в работе</p>
+                    <p class="card-info__data">24</p>
+                </div>
+                <div class="card-info">
+                    <p class="card-info__head">Выполненые заявки</p>
+                    <p class="card-info__data">24</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="clr-col-lg-6 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+    <div class="clr-col-lg-3 clr-col-md-3 clr-col-sm-12 clr-col-xs-12">
         <div class="card clickable" routerLink="">
             <div class="card-header">
                 <div class="card-icon card-icon__red">
-                    <clr-icon shape="pop-out" style="width: 24px; height: 24px"></clr-icon>
+                    <clr-icon shape="shopping-bag" style="width: 24px; height: 24px"></clr-icon>
                 </div>
                 <h3 class="card-header__head">Заявки на приобретения</h3>
-                <p class="card-header__data">Новые заявки: 12</p>
-                <p class="card-header__data">Заявки в работе: 24</p>
-                <p class="card-header__data">Выполненые заявки: 48</p>
+            </div>
+            <div class="card-block">
+                <div class="card-info">
+                    <p class="card-info__head">Новые заявки</p>
+                    <p class="card-info__data">24</p>
+                </div>
+                <div class="card-info">
+                    <p class="card-info__head">Заявки в работе</p>
+                    <p class="card-info__data">24</p>
+                </div>
+                <div class="card-info">
+                    <p class="card-info__head">Выполненые заявки</p>
+                    <p class="card-info__data">24</p>
+                </div>
             </div>
         </div>
     </div>
@@ -89,11 +106,20 @@
                     <clr-icon shape="router" style="width: 24px; height: 24px"></clr-icon>
                 </div>
                 <p class="card-header__head">Маршрутизаторы</p>
-                <h3 class="card-header__data">2012469756</h3>
             </div>
-            <div class="card-footer">
-                <p class="card-footer__head"><clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result</p>
-                <h3 class="card-footer__data">1280</h3>
+            <div class="card-block">
+                <div class="card-info">
+                    <p class="card-info__head">Новые заявки</p>
+                    <p class="card-info__data">24</p>
+                </div>
+                <div class="card-info">
+                    <p class="card-info__head">Заявки в работе</p>
+                    <p class="card-info__data">24</p>
+                </div>
+                <div class="card-info">
+                    <p class="card-info__head">Выполненые заявки</p>
+                    <p class="card-info__data">24</p>
+                </div>
             </div>
         </div>
     </div>

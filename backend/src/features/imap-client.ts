@@ -2,7 +2,6 @@ import Imap from 'imap';
 import { ParsedMail, simpleParser } from 'mailparser';
 import { Server, WebSocket } from 'ws';
 import { convert } from 'html-to-text';
-import { sendEmailNotification } from './email-sender';
 import { dbPool } from '../shared/db/db_pool';
 import * as dbSelect from '../shared/db/db_select';
 import * as userRequestAPI from './user-request-api';

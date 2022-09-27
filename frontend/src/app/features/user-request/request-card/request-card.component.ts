@@ -10,6 +10,8 @@ import { IUserRequest } from '@model/user-request.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { FilePreviewService } from '@service/file-preview/file.preview.service';
 import { SubscriptionLike } from 'rxjs/internal/types';
+import { saveAs } from 'file-saver';
+import { Buffer } from 'buffer';
 
 @Component({
   selector: 'fe-user-request-card',
@@ -108,7 +110,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   @HostListener('keyup.escape', ['$event'])
   onEscapeKey(event: KeyboardEvent) {
-    console.log(this.previewDialogStatus);
+    // console.log(this.previewDialogStatus);
     if (this.previewDialogStatus !== null) {
       if (this.previewDialogStatus === !true) {
         event.stopPropagation();
@@ -157,12 +159,26 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       });
   }
 
+  public finishRequest() {
+    this.wsService.send('updateUserRequest', {
+      requestNumber: this.userRequest.requestNumber,
+      employeeId: this.token.id,
+      newData: { status: 3 },
+    });
+    this.wsService
+      .on<Notify>(Event.EV_NOTIFY)
+      .pipe(first(), takeUntil(this.ngUnsubscribe$))
+      .subscribe(status => {
+        this.requestStatus = status;
+      });
+  }
+
   public isSaveButtonVisible() {
     return !!(this.userRequestCard.controls.comment.value || this.userRequestNewData.delegate);
   }
 
   public isRequestCardReadOnly() {
-    return this.userRequest?.status.id === 1;
+    return this.userRequest?.status.id === 1 || this.userRequest?.status.id === 3;
   }
 
   public onDegegateSelected(delegate: any): void {
@@ -201,7 +217,12 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       filePath: file.filePath,
     });
     this.attachmentBase64Subscription = this.attachmentBase64$.subscribe((attach: any) => {
-      this.images = attach;
+      console.log(attach);
+      if (!file.fileType.includes('image/')) {
+        const blob = new Blob([Buffer.from(attach, 'base64')], { type: file.fileType });
+        saveAs(blob, file.fileName);
+      }
+      this.images = `data:${file.fileType};base64,${attach}`;
       this.previewDialog.open(this.images);
     });
   }

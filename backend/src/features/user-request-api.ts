@@ -5,6 +5,7 @@ import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
 import * as dbUpdate from '../shared/db/db_update';
 import * as dbDelete from '../shared/db/db_delete';
+import { sendEmailNotification } from './smtp-client';
 import { logger } from './logger';
 
 function ConvertTo2Digits(newNum: number) {
@@ -319,7 +320,8 @@ export async function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, valu
       ws.send(
         JSON.stringify({
           event: 'event_user_request_attachment_base64',
-          data: `data:${value.fileType};base64,${data.toString('base64')}`,
+          // data: `data:${value.fileType};base64,${data.toString('base64')}`,
+          data: data.toString('base64'),
         }),
       );
     });
@@ -381,6 +383,48 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
     }
     allUserRequest(dbPool, null, wss);
     logger.info('New User Request create!');
+    sendEmailNotification({
+      subject: 'Тест',
+      textAsHTML: `
+              <html>
+                <body style="word-wrap: break-word; -webkit-nbsp-mode: space" dir="auto">
+                    <table cellspacing="0" cellpadding="0" style="border-collapse: collapse">
+                        <tbody>
+                            <tr>
+                                <td
+                                    valign="top"
+                                    style="
+                                        width: 120px;
+                                        height: 14px;
+                                        border-style: solid;
+                                        border-width: 1px 1px 1px 1px;
+                                        border-color: #808080 #808080 #808080 #808080;
+                                        padding: 4px 4px 4px 4px;
+                                    "
+                                >
+                                    <div style="margin: 0px">Тема</div>
+                                </td>
+                                <td
+                                    valign="top"
+                                    style="
+                                        width: 330px;
+                                        height: 14px;
+                                        border-style: solid;
+                                        border-width: 1px 1px 1px 1px;
+                                        border-color: #808080 #808080 #808080 #808080;
+                                        padding: 4px 4px 4px 4px;
+                                    "
+                                >
+                                    <div style="margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; min-height: 14px"><br />
+                                    ${value.topic}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </body>
+              </html>`,
+    });
   } catch (error) {
     logger.error(`saveNewUserRequest - ${error}`);
   } finally {
@@ -412,8 +456,6 @@ export async function getUserRequestLifeCycle(dbPool: Pool, ws: WebSocket, value
       };
     });
 
-    // console.log(await Promise.all(requestLifeCycle));
-
     ws.send(
       JSON.stringify({
         event: 'event_user_request_life_cycle',
@@ -439,9 +481,11 @@ export async function updateUserRequest(dbPool: Pool, value: any, ws: WebSocket,
       if (key === 'delegate') {
         await conn.query(dbUpdate.updateUserRequestExecutor(value.newData[key], value.requestNumber));
       }
-      await conn.query(
-        dbInsert.insertUserRequestLifeCycle(value.requestNumber, value.employeeId, changeDateFormat(new Date()), key, value.newData[key]),
-      );
+      await conn
+        .query(
+          dbInsert.insertUserRequestLifeCycle(value.requestNumber, value.employeeId, changeDateFormat(new Date()), key, value.newData[key]),
+        )
+        .then(getUserRequestLifeCycle(dbPool, ws, value.requestNumber));
     });
 
     /*
@@ -471,7 +515,7 @@ export async function updateUserRequest(dbPool: Pool, value: any, ws: WebSocket,
     */
     allUserRequest(dbPool, null, wss);
     getUserRequestByNumber(dbPool, ws, value.requestNumber);
-    getUserRequestLifeCycle(dbPool, ws, value.requestNumber);
+    // getUserRequestLifeCycle(dbPool, ws, value.requestNumber);
     ws.send(
       JSON.stringify({
         event: 'event_notify',

@@ -27,6 +27,8 @@ export class RequestListComponent implements OnInit, OnDestroy {
 
   public snackBarEvent$: Observable<any>;
 
+  public isConfirmDeleteVisible = false;
+
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   @ViewChild(RequestNewComponent) modalNew: RequestNewComponent;
@@ -64,11 +66,16 @@ export class RequestListComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
   }
 
-  public deleteRequestCard(cards: any) {
+  public deleteRequestCard(cards: any, confirm?: boolean | false) {
     const cardArray: any[] = [];
-    cards.forEach((card: any) => {
-      cardArray.push(card.requestNumber);
-    });
-    this.wsService.send('deleteUserRequest', cardArray);
+    if (confirm) {
+      this.isConfirmDeleteVisible = false;
+      cards.forEach((card: any) => {
+        cardArray.push(card.requestNumber);
+      });
+      this.wsService.send('deleteUserRequest', cardArray);
+    } else {
+      this.isConfirmDeleteVisible = true;
+    }
   }
 }

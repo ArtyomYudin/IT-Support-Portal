@@ -281,7 +281,7 @@
         <button *ngIf="this.userRequest?.status.id == 1" type="button" class="btn btn-primary btn-sm" (click)="takeRequestToWork()">
             Взять в работу
         </button>
-        <button *ngIf="this.userRequest?.status.id == 2" type="button" class="btn btn-primary btn-sm" (click)="(null)">
+        <button *ngIf="this.userRequest?.status.id == 2" type="button" class="btn btn-primary btn-sm" (click)="finishRequest()">
             Закрыть заявку
         </button>
     </div>
