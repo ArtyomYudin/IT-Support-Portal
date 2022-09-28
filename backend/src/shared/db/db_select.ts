@@ -14,6 +14,7 @@ export const userRequestList = `
                      user_request.deadline AS deadline,
                      user_request.status_id AS statusId,
                      ur_status.name AS statusName,
+                     ur_status.icon AS statusIcon,
                      user_request.priority_id AS priorityId,	
                      ur_priority.name AS priorityName,
                      ur_priority.color AS priorityColor
@@ -50,6 +51,7 @@ export const userRequestbyNumber = (requestNumber?: string) => `
                      user_request.deadline AS deadline,
                      user_request.status_id AS statusId,
                      ur_status.name AS statusName,
+                     ur_status.icon AS statusIcon,
                      user_request.priority_id AS priorityId,	
                      ur_priority.name AS priorityName,
                      ur_priority.color AS priorityColor

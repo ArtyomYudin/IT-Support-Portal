@@ -85,7 +85,13 @@
 
                             <clr-input-container class="request-topic-container">
                                 <label>Тема:</label>
-                                <input type="text" clrInput value="{{ this.userRequest?.topic }}" [readonly]="true" />
+                                <input
+                                    class="request-topic-input"
+                                    type="text"
+                                    clrInput
+                                    value="{{ this.userRequest?.topic }}"
+                                    [readonly]="true"
+                                />
                             </clr-input-container>
 
                             <clr-textarea-container class="request-description-container">
@@ -108,9 +114,8 @@
                                     <ul class="list-unstyled">
                                         <div *ngIf="listOfFiles.length == 0">вложений нет</div>
                                         <li *ngFor="let file of listOfFiles; let index = index">
-                                            {{ file.fileName }}
-                                            <button type="button" class="btn btn-link btn-icon" (click)="viewAttachment(file)">
-                                                <clr-icon shape="eye"> </clr-icon>
+                                            <button type="button" class="btn btn-link image-preview-btn" (click)="viewAttachment(file)">
+                                                {{ file.fileName }}
                                             </button>
                                         </li>
                                     </ul>
@@ -144,8 +149,14 @@
                                     <label class="clr-control-label">Статус:</label>
                                     <clr-icon
                                         class="status-icon"
-                                        [attr.shape]="this.userRequest?.status.id | requestStatusIcon"
-                                        [style.fill]="this.userRequest?.status.id == 3 ? 'hsl(93, 85%, 32%)' : '#0072a3'"
+                                        [attr.shape]="this.userRequest?.status.icon"
+                                        [style.fill]="
+                                            this.userRequest?.status.id == 1
+                                                ? 'hsl(48, 95%, 48%)'
+                                                : this.userRequest?.status.id == 2
+                                                ? 'hsl(198, 80%, 46%)'
+                                                : 'hsl(93, 85%, 32%)'
+                                        "
                                     >
                                     </clr-icon>
                                 </div>

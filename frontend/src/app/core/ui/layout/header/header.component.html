@@ -65,10 +65,15 @@
         <a href="#" [routerLink]="['/home']" routerLinkActive="active" class="nav-link nav-text">Главная</a>
     </div>
     <div class="header-actions">
-        <a href="" class="nav-link nav-icon">
-            <span class="badge">12</span>
-            <clr-icon shape="bell"></clr-icon>
-        </a>
+        <div class="notify-signpost">
+            <clr-signpost>
+                <button class="btn btn-link btn-icon" clrSignpostTrigger>
+                    <span class="badge">12</span>
+                    <clr-icon shape="bell"> </clr-icon>
+                </button>
+                <clr-signpost-content [clrPosition]="'bottom-left'" *clrIfOpen> Lorem ipsum... </clr-signpost-content>
+            </clr-signpost>
+        </div>
         <clr-dropdown>
             <button class="nav-icon" clrDropdownTrigger>
                 <clr-icon shape="user"></clr-icon>

@@ -19,7 +19,7 @@ export class UserRequest {
 
   public description: string;
 
-  public status: { id: number; name: string };
+  public status: { id: number; name: string; icon: string };
 
   public priority: { id: number; name: string; color: string };
 

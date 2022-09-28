@@ -118,7 +118,7 @@ export async function allUserRequest(dbPool: Pool, ws: WebSocket | null, wss?: S
         service: row.service,
         topic: row.topic,
         description: row.description,
-        status: { id: row.statusId, name: row.statusName },
+        status: { id: row.statusId, name: row.statusName, icon: row.statusIcon },
         priority: { id: row.priority_id, name: row.priorityName, color: row.priorityColor },
         deadline: row.deadline,
       };
@@ -165,7 +165,7 @@ export async function getUserRequestByNumber(dbPool: Pool, ws: WebSocket, value:
         service: row.service,
         topic: row.topic,
         description: row.description,
-        status: { id: row.statusId, name: row.statusName },
+        status: { id: row.statusId, name: row.statusName, icon: row.statusIcon },
         priority: { id: row.priority_id, name: row.priorityName, color: row.priorityColor },
         deadline: row.deadline,
       };

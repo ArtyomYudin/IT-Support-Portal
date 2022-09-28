@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DynamicScriptLoaderService } from '@service/dynamic.script.loader.service';
 
 declare let streamCam: any;
+declare let streamCamRoom1: any;
+declare let streamCamRoom2: any;
 
 @Component({
   selector: 'fe-home',
@@ -21,6 +23,8 @@ export class HomeComponent implements OnInit {
       .then(() => {
         // Script Loaded Successfully
         streamCam();
+        streamCamRoom1();
+        streamCamRoom2();
       })
       .catch(error => console.log(error));
   }

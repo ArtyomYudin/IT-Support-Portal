@@ -127,8 +127,15 @@
   line-height: 0.9rem;
 }
 .file-List {
-  font-size: 0.55rem;
   width: fit-content;
+  font-size: 0.55rem;
+  & .image-preview-btn {
+    line-height: 1.2rem;
+    font-size: 0.55rem;
+    padding: 0;
+    text-transform: none;
+    letter-spacing: 0rem;
+  }
 }
 
 ul {
@@ -136,6 +143,11 @@ ul {
   -webkit-columns: 2;
   -moz-columns: 2;
 }
+.request-topic-input {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .request-topic-container,
 .request-initiator-container,
 .request-executor-container,

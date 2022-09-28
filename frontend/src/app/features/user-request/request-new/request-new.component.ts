@@ -95,10 +95,10 @@ export class RequestNewComponent implements OnInit, OnDestroy {
       status: ['', Validators.required],
       priority: ['', Validators.required],
       initiator: ['', Validators.required],
-      initiatorDepartment: [{ value: '', disabled: true }, Validators.required],
+      initiatorDepartment: [{ value: '', disabled: false }, Validators.required],
       executor: ['', Validators.required],
       service: ['', Validators.required],
-      topic: ['', Validators.required],
+      topic: ['', [Validators.required, Validators.maxLength(250)]],
       description: ['', Validators.required],
     });
 
@@ -106,7 +106,12 @@ export class RequestNewComponent implements OnInit, OnDestroy {
       .pipe(
         distinctUntilChanged(),
         debounceTime(500),
-        tap(() => {
+        tap(value => {
+          if (!value) {
+            // delete this.userRequestAllData.initiatorId;
+            // delete this.userRequestAllData.departmentId;
+            this.userRequest.controls.initiatorDepartment.setValue('');
+          }
           this.filteredInitiator = null;
         }),
         filter(value => value.length >= 3),

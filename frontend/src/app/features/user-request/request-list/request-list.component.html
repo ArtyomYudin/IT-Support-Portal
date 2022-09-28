@@ -64,8 +64,14 @@
                 <clr-dg-cell class="status-column">
                     <clr-icon
                         class="status-icon"
-                        [attr.shape]="userRequest.status.id | requestStatusIcon"
-                        [style.fill]="userRequest.status.id == 3 ? 'hsl(93, 85%, 32%)' : '#0072a3'"
+                        [attr.shape]="userRequest.status.icon"
+                        [style.fill]="
+                            userRequest.status.id == 1
+                                ? 'hsl(48, 95%, 48%)'
+                                : userRequest.status.id == 2
+                                ? 'hsl(198, 80%, 46%)'
+                                : 'hsl(93, 85%, 32%)'
+                        "
                     >
                     </clr-icon>
                 </clr-dg-cell>
@@ -106,7 +112,7 @@
 <clr-modal [(clrModalOpen)]="isConfirmDeleteVisible">
     <h3 class="modal-title">Подтверждение удаления</h3>
     <div class="modal-body">
-        <p>Вы уверены что хотите удалить {{ selected.length }} документов?</p>
+        <p>Вы уверены что хотите удалить обращение?</p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline btn-sm" (click)="isConfirmDeleteVisible = false">Отмена</button>

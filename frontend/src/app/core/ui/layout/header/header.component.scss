@@ -77,3 +77,27 @@ header.header-6 {
 .theme-toggle {
   padding-left: 0.6rem !important;
 }
+
+.notify-signpost {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  //padding: 0.9rem 1.2rem;
+  color: #fafafa;
+  height: 3rem;
+  width: 3rem;
+
+  & .signpost {
+    margin-top: 0.6rem;
+  }
+  & .badge {
+    opacity: 0.65;
+    margin-right: -0.6rem;
+    margin-top: -0.3rem;
+  }
+  & clr-icon {
+    opacity: 0.65;
+    width: 24px;
+    height: 24px;
+  }
+}
