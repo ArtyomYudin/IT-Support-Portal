@@ -87,7 +87,8 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     const clearText = mailText
       ?.split(/\r?\n/)
       .filter((line: any) => line.trim() !== '')
-      .join('\n');
+      .join('\n')
+      .replace(/'/g, "\\'");
     userRequestAllData.creationDate = mail.headers.get('date');
     userRequestAllData.changeDate = mail.headers.get('date');
     userRequestAllData.requestNumber = await getUserRequestNewNumber();

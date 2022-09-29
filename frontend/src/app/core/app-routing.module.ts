@@ -12,16 +12,34 @@ const routes: Routes = [
     data: { key: 'cached_home' },
   },
   {
+    path: 'user-request',
+    loadChildren: () => import('../features/user-request/user-request.module').then(m => m.UserRequestModule),
+    canActivate: [AuthGuard],
+    data: { key: 'cached_user_request' },
+  },
+  {
     path: 'purchase',
     loadChildren: () => import('../features/purchase/purchase.module').then(m => m.PurchaseModule),
     canActivate: [AuthGuard],
     data: { key: 'cached_purchase' },
   },
   {
-    path: 'user-request',
-    loadChildren: () => import('../features/user-request/user-request.module').then(m => m.UserRequestModule),
+    path: 'pacs',
+    loadChildren: () => import('../features/pacs/pacs.module').then(m => m.PacsModule),
     canActivate: [AuthGuard],
-    data: { key: 'cached_user_request' },
+    data: { key: 'cached_pacs' },
+  },
+  {
+    path: 'avaya',
+    loadChildren: () => import('../features/avaya/avaya.module').then(m => m.AvayaModule),
+    canActivate: [AuthGuard],
+    data: { key: 'cached_avaya' },
+  },
+  {
+    path: 'dhcp',
+    loadChildren: () => import('../features/dhcp/dhcp.module').then(m => m.DhcpModule),
+    canActivate: [AuthGuard],
+    data: { key: 'cached_dhcp' },
   },
   {
     path: 'setting',
