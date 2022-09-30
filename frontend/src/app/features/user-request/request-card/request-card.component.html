@@ -1,6 +1,6 @@
 <!--[ngStyle]="{ display: userRequest.length != 1 ? 'none' : '' }"-->
 <clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="true" [clrModalSize]="'xl'">
-    <h3 class="modal-title">
+    <h5 class="modal-title">
         Обращение пользователея № {{ this.userRequest?.requestNumber }} от {{ this.userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
         <!-- <div class="clr-row clr-justify-content-start request-title-container">
             <div class="request-title">
@@ -45,7 +45,7 @@
                 <input class="clr-input" type="text" value="{{ userRequest?.deadline }}" [readonly]="true" />
             </div>
         </div> -->
-    </h3>
+    </h5>
     <div class="modal-body">
         <form [formGroup]="userRequestCard" clrForm [clrLayout]="'vertical'" autocomplete="off">
             <!--

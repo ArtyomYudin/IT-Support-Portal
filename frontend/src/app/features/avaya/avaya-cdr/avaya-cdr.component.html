@@ -1,0 +1,71 @@
+<div class="limit">
+    <div class="limit-height-full">
+        <clr-datagrid class="datagrid-compact avaya-cdr-datagrid" [clrDgLoading]="">
+            <clr-dg-action-bar>
+                <fe-avaya-cdr-filter></fe-avaya-cdr-filter>
+            </clr-dg-action-bar>
+            <clr-dg-column class="priority-column">
+                <ng-container *clrDgHideableColumn="{ hidden: false }">Время начала</ng-container>
+            </clr-dg-column>
+            <clr-dg-column class="date-column" [clrDgSortBy]="'creationDate'">
+                <ng-container *clrDgHideableColumn="{ hidden: false }">Продолжительность</ng-container>
+            </clr-dg-column>
+            <clr-dg-column class="number-column" [clrDgSortBy]="'requestNumber'">Вызывающий абонент</clr-dg-column>
+            <clr-dg-column>
+                <ng-container *clrDgHideableColumn="{ hidden: false }">ФИО</ng-container>
+            </clr-dg-column>
+            <clr-dg-column>
+                <ng-container *clrDgHideableColumn="{ hidden: false }">Вызываемый абонент</ng-container>
+            </clr-dg-column>
+            <clr-dg-column>
+                <ng-container *clrDgHideableColumn="{ hidden: false }">ФИО</ng-container>
+            </clr-dg-column>
+            <clr-dg-column class="status-column">
+                <ng-container *clrDgHideableColumn="{ hidden: false }">Тип вызова</ng-container>
+            </clr-dg-column>
+
+            <clr-dg-placeholder>Нет записей о звонках !</clr-dg-placeholder>
+
+            <!--
+            <clr-dg-row
+                *clrDgItems="let userRequest of (this.userRequestArray$ | async)?.results"
+                [clrDgItem]="userRequest"
+                [(clrDgSelected)]="userRequest.selected"
+                (dblclick)="(null)"
+            >
+                <clr-dg-cell class="priority-column">
+                    <clr-icon class="priority-icon is-solid" [style.fill]="userRequest.priority.color" shape="flag"></clr-icon>
+                </clr-dg-cell>
+                <clr-dg-cell class="date-column">{{ userRequest.creationDate | date: 'dd.MM.YYYY, HH:mm' }}</clr-dg-cell>
+
+                <clr-dg-cell class="number-column">{{ userRequest.requestNumber }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.initiator | employeeName }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.service }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.topic }}</clr-dg-cell>
+                <clr-dg-cell class="status-column">
+                    <clr-icon
+                        class="status-icon"
+                        [attr.shape]="userRequest.status.icon"
+                        [style.fill]="
+                            userRequest.status.id == 1
+                                ? 'hsl(48, 95%, 48%)'
+                                : userRequest.status.id == 2
+                                ? 'hsl(198, 80%, 46%)'
+                                : 'hsl(93, 85%, 32%)'
+                        "
+                    >
+                    </clr-icon>
+                </clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.executor.name | employeeName }}</clr-dg-cell>
+                <clr-dg-cell>{{ userRequest.deadline | date: 'dd.MM.YYYY' }}</clr-dg-cell>
+            </clr-dg-row>
+        -->
+            <clr-dg-column-toggle>
+                <clr-dg-column-toggle-title>Column Toggle Title</clr-dg-column-toggle-title>
+                <clr-dg-column-toggle-button>Select All Button</clr-dg-column-toggle-button>
+            </clr-dg-column-toggle>
+
+            <!-- <clr-dg-footer> {{ (this.userRequestArray$ | async)?.total }} заявок </clr-dg-footer>-->
+        </clr-datagrid>
+    </div>
+</div>
