@@ -76,12 +76,13 @@
         </div>
         <clr-dropdown>
             <button class="nav-icon" clrDropdownTrigger>
-                <clr-icon shape="user"></clr-icon>
+                <!--<clr-icon shape="user"></clr-icon>-->
+                <img class="person-photo" [src]="currentUser.userPhoto | thumbnailPhoto" />
                 <clr-icon shape="caret down"></clr-icon>
             </button>
             <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
                 <label class="dropdown-header" aria-hidden="true">
-                    <img class="personPhoto" [src]="currentUser.userPhoto | thumbnailPhoto" /> {{ currentUser.userDisplayName }}
+                    <img class="person-photo" [src]="currentUser.userPhoto | thumbnailPhoto" /> {{ currentUser.userDisplayName }}
                 </label>
                 <clr-toggle-container>
                     <clr-toggle-wrapper class="theme-toggle">

@@ -39,6 +39,34 @@ body {
   }
 }
 */
+
+@media (max-width: 768px) {
+  .clr-vertical-nav {
+    // background-color: #fafafa;
+    margin-top: 0rem !important;
+  }
+  .header .branding {
+    margin-left: 0rem;
+  }
+}
+@media (min-width: 769px) {
+  .clr-vertical-nav {
+    // margin-top: -3rem !important;
+  }
+  .header {
+    background-color: #fafafa !important;
+    & .branding {
+      margin-left: 12rem;
+    }
+    & .nav-text {
+      color: #656565 !important;
+    }
+    & .title {
+      color: #656565 !important;
+    }
+  }
+}
+
 .cdk-overlay-container,
 .cdk-global-overlay-wrapper,
 .cdk-overlay-connected-position-bounding-box {

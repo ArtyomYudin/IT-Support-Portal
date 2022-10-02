@@ -1,7 +1,9 @@
 .content-container {
-  min-height: calc(100vh - 3rem);
+  //min-height: calc(100vh - 3rem);
+  min-height: 100vh;
 }
 
 .clr-vertical-nav {
-  background-color: #fafafa;
+  //background-color: #fafafa;
+  // margin-top: -3rem;
 }

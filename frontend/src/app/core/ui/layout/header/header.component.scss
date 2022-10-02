@@ -26,7 +26,8 @@ header.header-6 {
 }
 */
 
-.personPhoto {
+/*
+.person-photo {
   width: 36px;
   height: 36px;
   margin: 0 auto;
@@ -36,7 +37,7 @@ header.header-6 {
   background-color: white;
   margin-right: 0.2rem;
 }
-
+*/
 .dropdown-toggle,
 .dropdown-item:focus {
   outline: none;
@@ -44,9 +45,20 @@ header.header-6 {
 }
 
 .dropdown {
+  width: 4.5rem;
+  & .person-photo {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 50%;
+    text-align: center;
+    background-color: white;
+    margin-right: 1.1rem;
+  }
   & .dropdown-toggle {
     & clr-icon[shape^='caret'] {
-      margin-right: -0.5rem !important;
+      margin-right: -1.5rem !important;
     }
   }
 }
