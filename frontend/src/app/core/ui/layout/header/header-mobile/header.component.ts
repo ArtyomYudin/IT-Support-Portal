@@ -7,11 +7,11 @@ import { AuthenticationService } from '@service/auth.service';
 import { AuthUser } from '@model/auth-user.model';
 
 @Component({
-  selector: 'fe-header',
+  selector: 'fe-header-mobile',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderMobileComponent implements OnInit, OnDestroy {
   @Input() currentUser: AuthUser;
   // public currentUser: AuthUser;
 

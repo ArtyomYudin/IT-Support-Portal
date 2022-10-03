@@ -42,28 +42,29 @@ body {
 
 @media (max-width: 768px) {
   .clr-vertical-nav {
-    // background-color: #fafafa;
-    margin-top: 0rem !important;
+    // margin-top: 0rem !important;
   }
-  .header .branding {
-    margin-left: 0rem;
+  .header-desktop {
+    display: none;
   }
 }
 @media (min-width: 769px) {
   .clr-vertical-nav {
     // margin-top: -3rem !important;
+    position: fixed;
+    height: 100%;
+    z-index: 1000;
   }
-  .header {
-    background-color: #fafafa !important;
-    & .branding {
-      margin-left: 12rem;
-    }
-    & .nav-text {
-      color: #656565 !important;
-    }
-    & .title {
-      color: #656565 !important;
-    }
+  .clr-vertical-nav .nav-trigger + .nav-content {
+    border-top-width: 0rem !important;
+  }
+  .content-area {
+    margin-left: 2rem;
+    padding-top: 0rem !important;
+  }
+
+  .header-mobile {
+    display: none;
   }
 }
 
@@ -185,4 +186,11 @@ button.datagrid-column-title {
 .dark-backdrop {
   background: #000;
   opacity: 0.85 !important;
+}
+
+.module-title {
+  font-size: 0.8rem;
+  color: #565656;
+  padding-top: 0rem;
+  padding-bottom: 0.5rem;
 }

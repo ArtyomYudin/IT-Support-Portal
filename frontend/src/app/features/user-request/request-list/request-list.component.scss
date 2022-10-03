@@ -24,8 +24,8 @@ clr-icon {
 .limit-height-full,
 .user-request-list-datagrid {
   //height: calc(100vh - 144px);
-  // height: calc(100vh - 7.2rem);
-  height: 100% !important;
+  height: calc(100vh - 5.9rem);
+  //height: 100% !important;
 }
 
 .priority-column,

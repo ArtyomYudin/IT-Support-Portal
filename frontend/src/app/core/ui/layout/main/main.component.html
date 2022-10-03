@@ -1,6 +1,10 @@
 <div class="content-container">
-    <clr-vertical-nav [clrVerticalNavCollapsible]="true" [clr-nav-level]="2" *ngIf="currentUser">
-        <a clrVerticalNavLink routerLink="./user-request" routerLinkActive="active">
+    <clr-vertical-nav [clrVerticalNavCollapsible]="true" [clrVerticalNavCollapsed]="true" [clr-nav-level]="2" *ngIf="currentUser">
+        <a clrVerticalNavLink routerLink="/home" routerLinkActive="active">
+            <clr-icon clrVerticalNavIcon shape="home"></clr-icon>
+            На главную
+        </a>
+        <a clrVerticalNavLink routerLink="/user-request" routerLinkActive="active">
             <clr-icon clrVerticalNavIcon shape="form"></clr-icon>
             Обращения пользователей
         </a>
@@ -8,23 +12,23 @@
             <clr-icon clrVerticalNavIcon shape="shopping-bag"></clr-icon>
             Заявки на приобретение
         </a>
-        <a clrVerticalNavLink routerLink="./pacs" routerLinkActive="active">
+        <a clrVerticalNavLink routerLink="/pacs" routerLinkActive="active">
             <clr-icon clrVerticalNavIcon shape="id-badge"></clr-icon>
             Скуд
         </a>
-        <a clrVerticalNavLink routerLink="./avaya" routerLinkActive="active">
+        <a clrVerticalNavLink routerLink="/avaya" routerLinkActive="active">
             <clr-icon clrVerticalNavIcon shape="phone-handset"></clr-icon>
             Телефония
         </a>
-        <a clrVerticalNavLink routerLink="./dhcp" routerLinkActive="active">
+        <a clrVerticalNavLink routerLink="/dhcp" routerLinkActive="active">
             <clr-icon clrVerticalNavIcon shape="computer"></clr-icon>
             DHCP
         </a>
-        <a clrVerticalNavLink routerLink="./normal" routerLinkActive="active">
+        <a clrVerticalNavLink routerLink="/normal" routerLinkActive="active">
             <clr-icon clrVerticalNavIcon shape="connect"></clr-icon>
             VPN
         </a>
-        <a clrVerticalNavLink routerLink="./normal" routerLinkActive="active">
+        <a clrVerticalNavLink routerLink="/normal" routerLinkActive="active">
             <clr-icon clrVerticalNavIcon shape="dashboard"></clr-icon>
             Мониторинг оборудования
         </a>
@@ -32,6 +36,7 @@
 
     <!-- Content Area -->
     <div class="content-area">
+        <fe-header-desktop [currentUser]="this.currentUser"></fe-header-desktop>
         <!-- Router -->
         <router-outlet></router-outlet>
     </div>
