@@ -1,8 +1,11 @@
+<div class="module-title">
+    <span>Статистика телефонных звонков</span>
+</div>
 <div class="limit">
     <div class="limit-height-full">
         <clr-datagrid class="datagrid-compact avaya-cdr-datagrid" [clrDgLoading]="">
             <clr-dg-action-bar>
-                <fe-avaya-cdr-filter></fe-avaya-cdr-filter>
+                <!-- <fe-avaya-cdr-filter></fe-avaya-cdr-filter> -->
             </clr-dg-action-bar>
             <clr-dg-column class="priority-column">
                 <ng-container *clrDgHideableColumn="{ hidden: false }">Время начала</ng-container>

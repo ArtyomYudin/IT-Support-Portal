@@ -1,137 +1,223 @@
 <div class="module-title">
     <span>Главная</span>
 </div>
-<!-- Сукция с камерами -->
-<div class="clr-row camera-section">
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon card-icon__blue">
-                    <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h5 class="card-header__head">Главный вход</h5>
-            </div>
-            <div class="card-block">
-                <div class="canvas-container">
-                    <canvas class="context-canvas" id="main-camera"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon card-icon__blue">
-                    <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h4 class="card-header__head">Запасной вход</h4>
-            </div>
-        </div>
-    </div>
--->
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon card-icon__blue">
-                    <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h4 class="card-header__head">Серверная 1</h4>
-            </div>
-            <div class="card-block">
-                <div class="canvas-container">
-                    <canvas class="context-canvas" id="server-room-1"></canvas>
+<div class="clr-row main-section">
+    <div class="clr-col-lg-7 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+        <!-- Cекция заявок -->
+        <div class="clr-row request-section">
+            <div class="clr-col-lg-6 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card clickable" routerLink="/user-request">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__blue">
+                            <clr-icon shape="form" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Обращения пользователей</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="card-info">
+                            <p class="card-info__head">Новые заявки</p>
+                            <p class="card-info__data">24</p>
+                        </div>
+                        <div class="card-info">
+                            <p class="card-info__head">Заявки в работе</p>
+                            <p class="card-info__data">24</p>
+                        </div>
+                        <div class="card-info">
+                            <p class="card-info__head">Выполненые заявки</p>
+                            <p class="card-info__data">24</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon card-icon__blue">
-                    <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h4 class="card-header__head">Серверная 2</h4>
-            </div>
-            <div class="card-block">
-                <div class="canvas-container">
-                    <canvas class="context-canvas" id="server-room-2"></canvas>
+            <div class="clr-col-lg-6 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card clickable" routerLink="">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__red">
+                            <clr-icon shape="shopping-bag" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Заявки на приобретения</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="card-info">
+                            <p class="card-info__head">Новые заявки</p>
+                            <p class="card-info__data">24</p>
+                        </div>
+                        <div class="card-info">
+                            <p class="card-info__head">Заявки в работе</p>
+                            <p class="card-info__data">24</p>
+                        </div>
+                        <div class="card-info">
+                            <p class="card-info__head">Выполненые заявки</p>
+                            <p class="card-info__data">24</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- Секция заявок Конец -->
     </div>
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon card-icon__blue">
-                    <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h4 class="card-header__head">Интернет</h4>
-            </div>
-            <div class="card-block">
-                <div class="canvas-container">
-                    <canvas #chart></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Секция с камерами Конец -->
 
-<!-- Cекция заявок -->
-<div class="clr-row request-section">
-    <div class="clr-col-lg-3 clr-col-md-3 clr-col-sm-12 clr-col-xs-12">
-        <div class="card clickable" routerLink="/user-request">
-            <div class="card-header">
-                <div class="card-icon card-icon__blue">
-                    <clr-icon shape="form" style="width: 24px; height: 24px"></clr-icon>
+    <div class="clr-col-lg-2 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+        <!-- Сукция с камерами -->
+        <div class="clr-row camera-section">
+            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__blue">
+                            <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Главный вход</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="canvas-container">
+                            <canvas class="context-canvas" id="main-camera"></canvas>
+                        </div>
+                    </div>
                 </div>
-                <h5 class="card-header__head">Обращения пользователей</h5>
             </div>
-            <div class="card-block">
-                <div class="card-info">
-                    <p class="card-info__head">Новые заявки</p>
-                    <p class="card-info__data">24</p>
+            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__blue">
+                            <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Серверная 1</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="canvas-container">
+                            <canvas class="context-canvas" id="server-room-1"></canvas>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-info">
-                    <p class="card-info__head">Заявки в работе</p>
-                    <p class="card-info__data">24</p>
-                </div>
-                <div class="card-info">
-                    <p class="card-info__head">Выполненые заявки</p>
-                    <p class="card-info__data">24</p>
+            </div>
+            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__blue">
+                            <clr-icon shape="video-camera" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Серверная 2</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="canvas-container">
+                            <canvas class="context-canvas" id="server-room-2"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- Секция с камерами Конец -->
     </div>
-    <div class="clr-col-lg-3 clr-col-md-3 clr-col-sm-12 clr-col-xs-12">
-        <div class="card clickable" routerLink="">
-            <div class="card-header">
-                <div class="card-icon card-icon__red">
-                    <clr-icon shape="shopping-bag" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h4 class="card-header__head">Заявки на приобретения</h4>
-            </div>
-            <div class="card-block">
-                <div class="card-info">
-                    <p class="card-info__head">Новые заявки</p>
-                    <p class="card-info__data">24</p>
-                </div>
-                <div class="card-info">
-                    <p class="card-info__head">Заявки в работе</p>
-                    <p class="card-info__data">24</p>
-                </div>
-                <div class="card-info">
-                    <p class="card-info__head">Выполненые заявки</p>
-                    <p class="card-info__data">24</p>
+
+    <div class="clr-col-lg-3 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+        <div class="clr-row charts-section">
+            <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__blue">
+                            <clr-icon shape="network-globe" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Интернет</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="canvas-container">
+                            <canvas #chart></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__red">
+                            <clr-icon shape="error-standard" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Сбои оборудования</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="canvas-container">
+                            <canvas #chart2></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card clickable" routerLink="">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__green">
+                            <clr-icon shape="router" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">VPN</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="card-info">
+                            <p class="card-info__head">Сервер 1</p>
+                            <p class="card-info__data">24</p>
+                        </div>
+                        <div class="card-info">
+                            <p class="card-info__head">Сервер 2</p>
+                            <p class="card-info__data">24</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card clickable" routerLink="">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__red">
+                            <clr-icon shape="switch" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">DHCP</h5>
+                    </div>
+                    <div class="card-footer">
+                        <p class="card-footer__head">
+                            <clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result
+                        </p>
+                        <h3 class="card-footer__data">1280</h3>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card clickable" routerLink="/setting">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__green">
+                            <clr-icon shape="battery" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">ИБП</h5>
+                    </div>
+                    <div class="card-footer">
+                        <p class="card-footer__head">
+                            <clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result
+                        </p>
+                        <h3 class="card-footer__data">1280</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
+                <div class="card clickable" routerLink="/setting">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__green">
+                            <clr-icon shape="host" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Сервера</h5>
+                    </div>
+                    <div class="card-footer">
+                        <p class="card-footer__head">
+                            <clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result
+                        </p>
+                        <h3 class="card-footer__data">1280</h3>
+                    </div>
+                </div>
+            </div>-->
         </div>
     </div>
 </div>
-<!-- Секция заявок Конец -->
 
 <!-- Cекция миниторинга и статистики -->
+<!--
 <div class="clr-row monitoring-section">
     <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
         <div class="card clickable" routerLink="">
@@ -139,7 +225,7 @@
                 <div class="card-icon card-icon__green">
                     <clr-icon shape="router" style="width: 24px; height: 24px"></clr-icon>
                 </div>
-                <p class="card-header__head">Маршрутизаторы</p>
+                <h5 class="card-header__head">Маршрутизаторы</h5>
             </div>
             <div class="card-block">
                 <div class="card-info">
@@ -148,10 +234,6 @@
                 </div>
                 <div class="card-info">
                     <p class="card-info__head">Заявки в работе</p>
-                    <p class="card-info__data">24</p>
-                </div>
-                <div class="card-info">
-                    <p class="card-info__head">Выполненые заявки</p>
                     <p class="card-info__data">24</p>
                 </div>
             </div>
@@ -163,7 +245,7 @@
                 <div class="card-icon card-icon__red">
                     <clr-icon shape="switch" style="width: 24px; height: 24px"></clr-icon>
                 </div>
-                <p class="card-header__head">Коммутаторы</p>
+                <h5 class="card-header__head">Коммутаторы</h5>
                 <h3 class="card-header__data">2012469756</h3>
             </div>
             <div class="card-footer">
@@ -178,7 +260,7 @@
                 <div class="card-icon card-icon__green">
                     <clr-icon shape="battery" style="width: 24px; height: 24px"></clr-icon>
                 </div>
-                <p class="card-header__head">ИБП</p>
+                <h5 class="card-header__head">ИБП</h5>
                 <h3 class="card-header__data">2012469756</h3>
             </div>
             <div class="card-footer">
@@ -193,7 +275,7 @@
                 <div class="card-icon card-icon__green">
                     <clr-icon shape="host" style="width: 24px; height: 24px"></clr-icon>
                 </div>
-                <p class="card-header__head">Сервера</p>
+                <h5 class="card-header__head">Сервера</h5>
                 <h3 class="card-header__data">2012469756</h3>
             </div>
             <div class="card-footer">
@@ -203,4 +285,5 @@
         </div>
     </div>
 </div>
+-->
 <!-- Секция миниторинга и статистики Конец -->

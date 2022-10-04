@@ -51,15 +51,15 @@ body {
 @media (min-width: 769px) {
   .clr-vertical-nav {
     // margin-top: -3rem !important;
-    position: fixed;
-    height: 100%;
-    z-index: 1000;
+    //position: fixed;
+    //height: 100%;
+    // z-index: 1000;
   }
   .clr-vertical-nav .nav-trigger + .nav-content {
     border-top-width: 0rem !important;
   }
   .content-area {
-    margin-left: 2rem;
+    //margin-left: 2rem;
     padding-top: 0rem !important;
   }
 
