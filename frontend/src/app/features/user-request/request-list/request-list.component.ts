@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { IUserRequest } from '@model/user-request.model';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { ClrCommonStringsService } from '@clr/angular';
 import { russionLocale } from '@translation/russion';
 import { RequestNewComponent } from '@feature/user-request/request-new/request-new.component';

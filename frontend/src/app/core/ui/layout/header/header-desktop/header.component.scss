@@ -19,12 +19,6 @@
       font-size: 1rem;
     }
   }
-
-  & .badge {
-    background: #565656;
-    color: #fafafa;
-  }
-
   & .settings {
     color: #565656;
     margin-right: 0.5rem;
@@ -126,6 +120,7 @@
       opacity: 0.65;
       margin-right: -0.6rem;
       margin-top: -0.3rem;
+      background-color: #0072a3;
     }
     & clr-icon {
       opacity: 0.65;

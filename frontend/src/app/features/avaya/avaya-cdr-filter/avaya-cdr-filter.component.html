@@ -1,6 +1,5 @@
 <form class="avaya-filter" clrForm [clrLayout]="'horizontal'" autocomplete="off">
-    <div class="clr-row clr-justify-content-end">
-        <!--
+    <!--
     <div class="clr-row clr-justify-content-start">
         <div class="clr-col-lg-2 clr-col-md-2 clr-col-sm-6 clr-col-xs-6">
             <clr-date-container>
@@ -58,9 +57,10 @@
         </div>
        </div>
 -->
-        <div class="clr-col-4 avaya-filter-period">
-            <clr-input-container>
-                <label class="avaya-filter-period-label">Делегировать:</label>
+    <div class="clr-row clr-justify-content-start">
+        <div class="clr-col">
+            <clr-input-container class="avaya-filter-period">
+                <label class="avaya-filter-period-label">За последний:</label>
                 <input
                     class="avaya-filter-period-input"
                     formControlName="delegate"
@@ -72,10 +72,25 @@
                 />
                 <mat-autocomplete #viewPeriod="matAutocomplete">
                     <ng-container>
-                        <mat-option (onSelectionChange)="(null)"> </mat-option>
+                        <mat-option *ngFor="let option of this.options" [value]="option" (onSelectionChange)="(null)">
+                            {{ option }}
+                        </mat-option>
                     </ng-container>
                 </mat-autocomplete>
             </clr-input-container>
+        </div>
+        <div class="clr-col-3">
+            <div class="filter-button btn-group btn-link btn-icon">
+                <button class="btn" title="Фильтровать" (click)="(null)">
+                    <clr-icon shape="search"></clr-icon>
+                </button>
+                <button class="btn" (click)="(null)">
+                    <clr-icon shape="export" title="Экспортировать в Excel"></clr-icon>
+                </button>
+                <button class="btn" (click)="(null)">
+                    <clr-icon shape="times" title="Отменить поиск"></clr-icon>
+                </button>
+            </div>
         </div>
     </div>
 </form>

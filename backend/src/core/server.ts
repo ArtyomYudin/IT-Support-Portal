@@ -4,7 +4,7 @@ import { initHTTPSServer } from '../features/https-server';
 import { dbPool } from '../shared/db/db_pool';
 import { websocketServer } from '../features/wss/wss-server';
 import { wsParseMessage } from '../features/wss/wss-api';
-import * as purchaseAPI from '../features/purchase-api';
+import * as userRequestAPI from '../features/user-request-api';
 import { getEmails } from '../features/imap-client';
 
 // Отлов событий uncaughtException и закрытие процесса. Далее pm2 перезапускает службу
@@ -24,7 +24,7 @@ process.on('uncaughtException', err => {
     clients[id] = ws;
     logger.info(`WebSocket - New connection ${id}`);
 
-    purchaseAPI.init(dbPool, wss, ws);
+    // userRequestAPI.init(dbPool, ws);
     ws.on('close', () => {
       logger.info(`WebSocket - Connection closed ${id}`);
       delete clients[id];

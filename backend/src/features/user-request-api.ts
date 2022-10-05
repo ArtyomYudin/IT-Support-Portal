@@ -1,6 +1,7 @@
 import { Pool } from 'mariadb';
 import { Server, WebSocket } from 'ws';
 import fs, { existsSync } from 'fs';
+import { ConstraintViolationError } from 'ldapjs';
 import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
 import * as dbUpdate from '../shared/db/db_update';
@@ -555,6 +556,6 @@ export async function deleteUserRequest(dbPool: Pool, value: any, wss: Server<We
   allUserRequest(dbPool, null, wss);
 }
 
-export function init(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {
-  allUserRequest(dbPool, ws, wss);
+export function init(dbPool: Pool, ws: WebSocket) {
+  allUserRequest(dbPool, ws);
 }

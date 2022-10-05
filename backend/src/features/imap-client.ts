@@ -165,7 +165,7 @@ export const getEmails = (wss: Server<WebSocket>) => {
     });
 
     imap.once('end', () => {
-      logger.info('IMAP - Connection ended');
+      // logger.info('IMAP - Connection ended');
     });
 
     imap.connect();

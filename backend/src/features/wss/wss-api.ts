@@ -3,6 +3,7 @@ import { Server, WebSocket } from 'ws';
 
 import * as purchaseAPI from '../purchase-api';
 import * as userRequestAPI from '../user-request-api';
+import * as avayaAPI from '../avaya-api';
 
 export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocket>, msg: any): void {
   /*
@@ -145,6 +146,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
       break;
     case 'getUserRequestLifeCycle':
       userRequestAPI.getUserRequestLifeCycle(dbPool, ws, parseMsg.data);
+      break;
+    case 'getAvayaCDR':
+      avayaAPI.getAvayaCDR(dbPool, ws, parseMsg.data);
       break;
     default:
       break;
