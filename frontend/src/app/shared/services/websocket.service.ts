@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 // import { Observable } from 'rxjs/internal/Observable';
-import { Observable, Subject, interval } from 'rxjs';
+import { Observable, Subject, interval, ReplaySubject } from 'rxjs';
 import { SubscriptionLike, Observer } from 'rxjs/internal/types';
 // import { Subject } from 'rxjs/internal/Subject';
 // import { share } from 'rxjs/internal/operators/share';
@@ -84,7 +84,15 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
     // connection status
     this.status = new Observable<boolean>(observer => {
       this.connection$ = observer;
-    }).pipe(share(), distinctUntilChanged());
+    }).pipe(
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnError: false,
+        resetOnComplete: false,
+        resetOnRefCountZero: false,
+      }),
+      distinctUntilChanged(),
+    );
 
     // run reconnect if not connection
     this.statusSub = this.status.subscribe(isConnected => {

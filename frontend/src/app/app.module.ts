@@ -9,6 +9,8 @@ import localeRu from '@angular/common/locales/ru';
 import { AppRoutingModule } from '@core/app-routing.module';
 import { UiModule } from '@core/ui/ui.module';
 import { AppComponent } from '@app/app.component';
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomReuseStrategy } from '@core/custom-reuse-strategy';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -36,7 +38,10 @@ export function jwtTokenGetter(): string {
     AppRoutingModule,
     UiModule,
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'ru' }],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'ru' },
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

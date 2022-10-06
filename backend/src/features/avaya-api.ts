@@ -12,29 +12,24 @@ export async function getAvayaCDR(dbPool: Pool, ws: WebSocket, value: string) {
     rows.forEach((row: any, i: number) => {
       allUserRequestArray[i] = {
         id: row.id,
-        creationDate: row.creationDate,
-        changeDate: row.changeDate,
-        requestNumber: row.requestNumber,
-        initiator: row.initiator,
-        department: row.department,
-        executor: { id: row.executorId, name: row.executorName },
-        service: row.service,
-        topic: row.topic,
-        description: row.description,
-        status: { id: row.statusId, name: row.statusName, icon: row.statusIcon },
-        priority: { id: row.priority_id, name: row.priorityName, color: row.priorityColor },
-        deadline: row.deadline,
+        callStart: row.callStart,
+        callDuration: row.callDuration,
+        callingNumber: row.callingNumber,
+        calledNumber: row.calledNumber,
+        callingName: row.callingName,
+        calledName: row.calledName,
+        callCode: row.callCode,
       };
     });
 
     ws.send(
       JSON.stringify({
-        event: 'event_user_request_all',
+        event: 'event_avaya_cdr',
         data: { results: allUserRequestArray, total: allUserRequestArray.length },
       }),
     );
   } catch (error) {
-    logger.error(`avayaCDR - ${error}`);
+    logger.error(`getAvayaCDR - ${error}`);
   } finally {
     if (conn) conn.release();
   }

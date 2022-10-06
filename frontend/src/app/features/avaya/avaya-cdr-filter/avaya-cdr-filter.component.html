@@ -80,17 +80,17 @@
             </clr-input-container>
         </div>
         <div class="clr-col-3">
-            <div class="filter-button btn-group btn-link btn-icon">
-                <button class="btn" title="Фильтровать" (click)="(null)">
+            <clr-button-group class="filter-button btn-group btn-link btn-icon">
+                <clr-button class="btn" title="Фильтровать">
                     <clr-icon shape="search"></clr-icon>
-                </button>
-                <button class="btn" (click)="(null)">
+                </clr-button>
+                <clr-button class="btn">
                     <clr-icon shape="export" title="Экспортировать в Excel"></clr-icon>
-                </button>
-                <button class="btn" (click)="(null)">
+                </clr-button>
+                <clr-button class="btn">
                     <clr-icon shape="times" title="Отменить поиск"></clr-icon>
-                </button>
-            </div>
+                </clr-button>
+            </clr-button-group>
         </div>
     </div>
 </form>

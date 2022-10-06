@@ -47,7 +47,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public executorListArray$: Observable<any>;
 
-  public newNumberubscription: SubscriptionLike;
+  public newNumberSubscription: SubscriptionLike;
 
   public executorListSubscription: SubscriptionLike;
 
@@ -169,7 +169,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.wsService.send('getUserRequestService', null);
     this.wsService.send('getEmployeeByParentDepartment', 49);
 
-    this.newNumberubscription = this.newNumber$.subscribe((number: any) => {
+    this.newNumberSubscription = this.newNumber$.subscribe((number: any) => {
       this.newNumber = number.newNumber.toString().padStart(6, 0);
       this.userRequestAllData.requestNumber = this.newNumber;
     });
@@ -204,7 +204,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.modalOpen = false;
     // console.log(this.requestInfo.controls.test.value);
     this.resetRequestPage();
-    RequestNewComponent.clearSubscription(this.newNumberubscription);
+    RequestNewComponent.clearSubscription(this.newNumberSubscription);
   }
 
   public onStatusSelected(status: any): void {

@@ -37,6 +37,7 @@ export class RequestListComponent implements OnInit, OnDestroy {
 
   constructor(private wsService: WebsocketService, private commonStrings: ClrCommonStringsService, private notifyBar: MatSnackBar) {
     commonStrings.localize(russionLocale);
+
     this.userRequestArray$ = this.wsService.on<IUserRequest>(Event.EV_USER_REQUEST_ALL).pipe(
       distinctUntilChanged(),
       takeUntil(this.ngUnsubscribe$),
@@ -44,10 +45,18 @@ export class RequestListComponent implements OnInit, OnDestroy {
         this.loading = false;
       }),
     );
+
     this.wsService
       .on<any>(Event.EV_NOTIFY)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$))
       .subscribe(e => this.openNotifyBar(e));
+
+    this.wsService.status.subscribe(status => {
+      console.log(`webSocket status: ${status}`);
+      if (status) {
+        this.wsService.send('getAllUserRequest', null);
+      }
+    });
   }
 
   private openNotifyBar(e: any) {
@@ -58,7 +67,8 @@ export class RequestListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.wsService.send('getAllUserRequest', null);
+    const st = '00102';
+    console.log(Number(st.substring(0, 1)) * 3600 + Number(st.substring(1, 3)) * 60 + Number(st.substring(3)));
   }
 
   ngOnDestroy(): void {
