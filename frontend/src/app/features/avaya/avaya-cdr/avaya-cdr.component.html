@@ -8,45 +8,44 @@
         </div>
     </div>
 </div>
-<div class="limit">
-    <div class="limit-height-full">
-        <clr-datagrid class="datagrid-compact avaya-cdr-datagrid" [clrDgLoading]="loading">
-            <clr-dg-column class="date-column">
-                <ng-container *clrDgHideableColumn="{ hidden: false }">Время начала</ng-container>
-            </clr-dg-column>
-            <clr-dg-column>
-                <ng-container *clrDgHideableColumn="{ hidden: false }">Продолжительность</ng-container>
-            </clr-dg-column>
-            <clr-dg-column class="number-column">Вызывающий абонент</clr-dg-column>
-            <clr-dg-column>
-                <ng-container *clrDgHideableColumn="{ hidden: false }">ФИО</ng-container>
-            </clr-dg-column>
-            <clr-dg-column>
-                <ng-container *clrDgHideableColumn="{ hidden: false }">Вызываемый абонент</ng-container>
-            </clr-dg-column>
-            <clr-dg-column>
-                <ng-container *clrDgHideableColumn="{ hidden: false }">ФИО</ng-container>
-            </clr-dg-column>
-            <clr-dg-column>
-                <ng-container *clrDgHideableColumn="{ hidden: false }">Тип вызова</ng-container>
-            </clr-dg-column>
 
-            <clr-dg-placeholder>Нет записей о звонках !</clr-dg-placeholder>
+<div class="limit-height">
+    <clr-datagrid class="datagrid-compact avaya-cdr-datagrid" [clrDgLoading]="loading">
+        <clr-dg-column class="date-column">
+            <ng-container *clrDgHideableColumn="{ hidden: false }">Время начала</ng-container>
+        </clr-dg-column>
+        <clr-dg-column>
+            <ng-container *clrDgHideableColumn="{ hidden: false }">Продолжительность</ng-container>
+        </clr-dg-column>
+        <clr-dg-column class="number-column">Вызывающий абонент</clr-dg-column>
+        <clr-dg-column>
+            <ng-container *clrDgHideableColumn="{ hidden: false }">ФИО</ng-container>
+        </clr-dg-column>
+        <clr-dg-column>
+            <ng-container *clrDgHideableColumn="{ hidden: false }">Вызываемый абонент</ng-container>
+        </clr-dg-column>
+        <clr-dg-column>
+            <ng-container *clrDgHideableColumn="{ hidden: false }">ФИО</ng-container>
+        </clr-dg-column>
+        <clr-dg-column>
+            <ng-container *clrDgHideableColumn="{ hidden: false }">Тип вызова</ng-container>
+        </clr-dg-column>
 
-            <clr-dg-row *clrDgItems="let cdr of (eventAvayaCDRArray$ | async)?.results" [clrDgItem]="cdr">
-                <clr-dg-cell>{{ cdr.callDateTime }}</clr-dg-cell>
-                <clr-dg-cell>{{ cdr.callDuration }}</clr-dg-cell>
-                <clr-dg-cell>{{ cdr.callingNumber }}</clr-dg-cell>
-                <clr-dg-cell>{{ cdr.callingName }}</clr-dg-cell>
-                <clr-dg-cell><cds-icon shape="arrow" direction="right"></cds-icon>{{ cdr.calledNumber }}</clr-dg-cell>
-                <clr-dg-cell>{{ cdr.calledName }}</clr-dg-cell>
-                <clr-dg-cell>{{ cdr.callCode }}</clr-dg-cell>
-            </clr-dg-row>
+        <clr-dg-placeholder>Нет записей о звонках !</clr-dg-placeholder>
 
-            <clr-dg-column-toggle>
-                <clr-dg-column-toggle-title>Column Toggle Title</clr-dg-column-toggle-title>
-                <clr-dg-column-toggle-button>Select All Button</clr-dg-column-toggle-button>
-            </clr-dg-column-toggle>
-        </clr-datagrid>
-    </div>
+        <clr-dg-row *clrDgItems="let cdr of (eventAvayaCDRArray$ | async)?.results" [clrDgItem]="cdr">
+            <clr-dg-cell>{{ cdr.callDateTime }}</clr-dg-cell>
+            <clr-dg-cell>{{ cdr.callDuration }}</clr-dg-cell>
+            <clr-dg-cell>{{ cdr.callingNumber }}</clr-dg-cell>
+            <clr-dg-cell>{{ cdr.callingName }}</clr-dg-cell>
+            <clr-dg-cell><cds-icon shape="arrow" direction="right"></cds-icon>{{ cdr.calledNumber }}</clr-dg-cell>
+            <clr-dg-cell>{{ cdr.calledName }}</clr-dg-cell>
+            <clr-dg-cell>{{ cdr.callCode }}</clr-dg-cell>
+        </clr-dg-row>
+
+        <clr-dg-column-toggle>
+            <clr-dg-column-toggle-title>Column Toggle Title</clr-dg-column-toggle-title>
+            <clr-dg-column-toggle-button>Select All Button</clr-dg-column-toggle-button>
+        </clr-dg-column-toggle>
+    </clr-datagrid>
 </div>

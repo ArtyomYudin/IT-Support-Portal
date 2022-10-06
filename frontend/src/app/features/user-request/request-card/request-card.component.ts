@@ -221,9 +221,10 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       if (!file.fileType.includes('image/')) {
         const blob = new Blob([Buffer.from(attach, 'base64')], { type: file.fileType });
         saveAs(blob, file.fileName);
+      } else {
+        this.images = `data:${file.fileType};base64,${attach}`;
+        this.previewDialog.open(this.images);
       }
-      this.images = `data:${file.fileType};base64,${attach}`;
-      this.previewDialog.open(this.images);
     });
   }
 }

@@ -20,9 +20,7 @@ clr-icon {
 //  height: 40vh;
 //}
 
-.limit,
-.limit-height-full,
-.user-request-list-datagrid {
+.limit-height clr-datagrid {
   //height: calc(100vh - 144px);
   height: calc(100vh - 5.9rem);
   //height: 100% !important;
@@ -69,6 +67,6 @@ clr-icon {
   height: calc(100% - 1.5rem) !important;
 }
 
-::ng-deep .user-request-list-datagrid .datagrid-table-wrapper {
-  overflow-x: hidden;
+::ng-deep .user-request-list-datagrid .datagrid {
+  overflow-x: hidden !important;
 }

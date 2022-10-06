@@ -1,7 +1,6 @@
 import { Pool } from 'mariadb';
 import { Server, WebSocket } from 'ws';
 import fs, { existsSync } from 'fs';
-import { ConstraintViolationError } from 'ldapjs';
 import * as dbSelect from '../shared/db/db_select';
 import * as dbInsert from '../shared/db/db_insert';
 import * as dbUpdate from '../shared/db/db_update';
@@ -22,6 +21,7 @@ function changeDateFormat(newDate: Date) {
 }
 
 function decodeBase64(dataString: any) {
+  /*
   const matches = dataString.match(/^data:([A-Za-z-+\\/]+);base64,(.+)$/);
   const response: any = {};
   if (matches?.length !== 3) {
@@ -31,7 +31,14 @@ function decodeBase64(dataString: any) {
   response.type = matches[1];
   logger.info(response.type);
   response.data = Buffer.from(matches[2], 'base64');
+*/
+  const response: any = {};
+  const base64ContentArray = dataString.split(',');
+  // eslint-disable-next-line prefer-destructuring
+  response.type = base64ContentArray[0].match(/[^:\s*]\w+\/[\w-+\d.]+(?=[;| ])/)[0];
+  const base64Data = base64ContentArray[1];
 
+  response.data = Buffer.from(base64Data, 'base64');
   return response;
 }
 
@@ -354,7 +361,6 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
       fs.mkdir(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}`, { recursive: true }, e => {
         if (!e) {
           value.attachments.forEach((attachment: any) => {
-            // console.log(attachment.data);
             fs.writeFile(
               `${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}/${attachment.name}`,
               decodeBase64(attachment.data).data,
