@@ -1,4 +1,4 @@
-<form class="avaya-filter" clrForm [clrLayout]="'horizontal'" autocomplete="off">
+<form [formGroup]="avayaFilter" clrForm class="avaya-filter" [clrLayout]="'horizontal'" autocomplete="off">
     <!--
     <div class="clr-row clr-justify-content-start">
         <div class="clr-col-lg-2 clr-col-md-2 clr-col-sm-6 clr-col-xs-6">
@@ -59,11 +59,11 @@
 -->
     <div class="clr-row clr-justify-content-start">
         <div class="clr-col">
-            <clr-input-container class="avaya-filter-period">
-                <label class="avaya-filter-period-label">За последний:</label>
+            <clr-input-container class="avaya-filter-view-period">
+                <label class="avaya-filter-view-period-label">За последний:</label>
                 <input
-                    class="avaya-filter-period-input"
-                    formControlName="delegate"
+                    class="avaya-filter-view-period-input"
+                    formControlName="avayaViewPeriod"
                     type="text"
                     clrInput
                     [matAutocomplete]="viewPeriod"
@@ -72,8 +72,8 @@
                 />
                 <mat-autocomplete #viewPeriod="matAutocomplete">
                     <ng-container>
-                        <mat-option *ngFor="let option of this.options" [value]="option" (onSelectionChange)="(null)">
-                            {{ option }}
+                        <mat-option *ngFor="let option of this.options" [value]="option.name" (onSelectionChange)="(null)">
+                            {{ option.name }}
                         </mat-option>
                     </ng-container>
                 </mat-autocomplete>

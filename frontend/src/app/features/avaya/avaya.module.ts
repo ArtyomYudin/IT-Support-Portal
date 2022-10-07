@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
 import { RouterModule, Routes } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AvayaComponent } from './avaya.component';
 import { AvayaCDRComponent } from './avaya-cdr/avaya-cdr.component';
@@ -12,7 +13,7 @@ const routes: Routes = [{ path: '', component: AvayaComponent }];
 
 @NgModule({
   declarations: [AvayaComponent, AvayaCDRComponent, AvayaCDRFilterComponent],
-  imports: [CommonModule, ClarityModule, MatAutocompleteModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, ClarityModule, ReactiveFormsModule, MatAutocompleteModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 export class AvayaModule {}

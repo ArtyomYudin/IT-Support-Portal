@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'fe-avaya-cdr-filter',
@@ -6,9 +7,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./avaya-cdr-filter.component.scss'],
 })
 export class AvayaCDRFilterComponent implements OnInit {
-  public options: string[] = ['1 час', '6 часов', '1 день', '1 неделя', '2 недели', '30 дней', '90 дней', '180 дней'];
+  public options: any[] = [
+    { name: '1 час', value: 1 },
+    { name: '6 часов', value: 6 },
+    { name: '1 день', value: 24 },
+    { name: '1 неделя', value: 168 },
+    { name: '2 недели', value: 336 },
+    { name: '30 дней', value: 720 },
+    { name: '90 дней', value: 2160 },
+    { name: '180 дней', value: 4320 },
+  ];
 
-  constructor() {}
+  public avayaFilter: FormGroup;
 
-  ngOnInit(): void {}
+  constructor(private formBuilder: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.avayaFilter = this.formBuilder.group({
+      avayaViewPeriod: [{ name: '6 часов', value: 6 }],
+    });
+  }
 }
