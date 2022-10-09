@@ -23,7 +23,7 @@
             <ng-container *clrDgHideableColumn="{ hidden: false }">Дата обращения</ng-container>
         </clr-dg-column>
         <clr-dg-column class="number-column" [clrDgSortBy]="'requestNumber'">Номер</clr-dg-column>
-        <clr-dg-column>
+        <clr-dg-column [clrDgField]="'initiator'">
             <ng-container *clrDgHideableColumn="{ hidden: false }">Инициатор</ng-container>
         </clr-dg-column>
         <clr-dg-column>
@@ -118,6 +118,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline btn-sm" (click)="isConfirmDeleteVisible = false">Отмена</button>
-        <button type="button" class="btn btn-primary btn-sm" (click)="deleteRequestCard(selected, true)">Удалить</button>
+        <button type="button" class="btn btn-primary btn-warning btn-sm" (click)="deleteRequestCard(selected, true)">Удалить</button>
     </div>
 </clr-modal>

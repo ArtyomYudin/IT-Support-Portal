@@ -235,3 +235,28 @@ export const purchaseRequestList = `
                             LEFT OUTER JOIN employee_full_info on(purchase_request.author_id = employee_full_info.id)
                             LEFT OUTER JOIN employee on(purchase_request.responsible_person_id = employee.id)
                             ORDER by purchase_request.date desc`;
+
+export const avayaCDRList = (filter: number) => `
+              SELECT avaya_cdr.id AS id,
+                     avaya_cdr.date AS callStart,
+                     avaya_cdr.duration AS callDuration,
+                     avaya_cdr.calling_number AS callingNumber,
+                     calling.display_name AS callingName,
+                     avaya_cdr.called_number AS calledNumber,
+                     called.display_name AS calledName,
+                     avaya_cdr.call_code AS callCode
+              FROM avaya_cdr
+              LEFT OUTER JOIN (
+                     select 
+                            employee.call_number as call_number,
+                            employee.display_name as display_name
+                     FROM employee
+              ) calling on(calling.call_number = avaya_cdr.calling_number)
+              LEFT OUTER JOIN (
+                     select 
+                            employee.call_number as call_number,
+                            employee.display_name as display_name
+                     FROM employee
+              ) called on(called.call_number = avaya_cdr.called_number)
+              WHERE avaya_cdr.date >= NOW() - INTERVAL ${filter} HOUR
+              order by avaya_cdr.date DESC`;

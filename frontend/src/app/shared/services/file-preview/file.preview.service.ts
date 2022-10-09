@@ -4,7 +4,9 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { FilePreviewComponent } from '@feature/file-preview/file-preview.component';
 import { FILE_PREVIEW_DATA } from '@service/file-preview/file.preview.token';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class FilePreviewService {
   constructor(private overlay: Overlay) {}
 

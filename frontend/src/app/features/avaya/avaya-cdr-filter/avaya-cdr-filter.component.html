@@ -57,23 +57,22 @@
         </div>
        </div>
 -->
-    <div class="clr-row clr-justify-content-start">
-        <div class="clr-col">
-            <clr-input-container class="avaya-filter-view-period">
-                <label class="avaya-filter-view-period-label">За последний:</label>
+    <div class="clr-row clr-justify-content-end">
+        <div class="clr-col view-period">
+            <clr-input-container class="view-period-container">
+                <label class="view-period-container-label">За последний:</label>
                 <input
-                    class="avaya-filter-view-period-input"
+                    class="view-period-container-input"
                     formControlName="avayaViewPeriod"
                     type="text"
                     clrInput
                     [matAutocomplete]="viewPeriod"
-                    (ngModelChange)="(null)"
                     onkeydown="return false"
                 />
-                <mat-autocomplete #viewPeriod="matAutocomplete">
+                <mat-autocomplete #viewPeriod="matAutocomplete" [displayWith]="displayFn">
                     <ng-container>
-                        <mat-option *ngFor="let option of this.options" [value]="option.name" (onSelectionChange)="(null)">
-                            {{ option.name }}
+                        <mat-option *ngFor="let period of this.periods" [value]="period" (onSelectionChange)="onFilterPeriodChange($event)">
+                            {{ period.name }}
                         </mat-option>
                     </ng-container>
                 </mat-autocomplete>

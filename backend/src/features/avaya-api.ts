@@ -3,29 +3,32 @@ import { WebSocket } from 'ws';
 import { logger } from './logger';
 import * as dbSelect from '../shared/db/db_select';
 
-export async function getAvayaCDR(dbPool: Pool, ws: WebSocket, value: string) {
+export async function getAvayaCDR(dbPool: Pool, ws: WebSocket, filter: number) {
   let conn;
-  const allUserRequestArray: any[] = [];
+  // let filter;
+  const avayaCDRArray: any[] = [];
+  // if (value) {
+  //  filter = 'WHERE ';
+  // }
   try {
     conn = await dbPool.getConnection();
-    const rows = await conn.query(dbSelect.userRequestList);
+    const rows = await conn.query(dbSelect.avayaCDRList(filter));
     rows.forEach((row: any, i: number) => {
-      allUserRequestArray[i] = {
+      avayaCDRArray[i] = {
         id: row.id,
         callStart: row.callStart,
         callDuration: row.callDuration,
         callingNumber: row.callingNumber,
-        calledNumber: row.calledNumber,
         callingName: row.callingName,
+        calledNumber: row.calledNumber,
         calledName: row.calledName,
         callCode: row.callCode,
       };
     });
-
     ws.send(
       JSON.stringify({
         event: 'event_avaya_cdr',
-        data: { results: allUserRequestArray, total: allUserRequestArray.length },
+        data: { results: avayaCDRArray, total: avayaCDRArray.length },
       }),
     );
   } catch (error) {

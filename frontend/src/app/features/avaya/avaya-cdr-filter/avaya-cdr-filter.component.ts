@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { WebsocketService } from '@service/websocket.service';
+import { AvayaCDRService } from '@service/avaya.cdr.service';
 
 @Component({
   selector: 'fe-avaya-cdr-filter',
@@ -7,7 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./avaya-cdr-filter.component.scss'],
 })
 export class AvayaCDRFilterComponent implements OnInit {
-  public options: any[] = [
+  public periods: any[] = [
     { name: '1 час', value: 1 },
     { name: '6 часов', value: 6 },
     { name: '1 день', value: 24 },
@@ -20,11 +22,34 @@ export class AvayaCDRFilterComponent implements OnInit {
 
   public avayaFilter: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  public avayaFilterCriteria: any;
+
+  private loadStatus: boolean;
+
+  constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private avayaCDRService: AvayaCDRService) {}
 
   ngOnInit(): void {
+    // this.avayaCDRService.currentCDRLoadStatus.subscribe(loadStatus => (this.loadStatus = false));
     this.avayaFilter = this.formBuilder.group({
       avayaViewPeriod: [{ name: '6 часов', value: 6 }],
     });
+    this.avayaFilterCriteria = { period: 6 };
+    this.wsService.send('getAvayaCDR', 6);
+    this.avayaCDRService.sendStatus(true);
+  }
+
+  public onFilterPeriodChange(event: any) {
+    if (event.isUserInput) {
+      // console.log(event);
+      this.wsService.send('getAvayaCDR', event.source.value.value);
+      this.avayaCDRService.sendStatus(true);
+      // event.source.close();
+    }
+  }
+
+  public displayFn(period: any) {
+    if (period) {
+      return period.name;
+    }
   }
 }

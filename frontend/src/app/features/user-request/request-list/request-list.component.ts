@@ -52,7 +52,7 @@ export class RequestListComponent implements OnInit, OnDestroy {
       .subscribe(e => this.openNotifyBar(e));
 
     this.wsService.status.subscribe(status => {
-      console.log(`webSocket status: ${status}`);
+      // console.log(`webSocket status: ${status}`);
       if (status) {
         this.wsService.send('getAllUserRequest', null);
       }
@@ -66,10 +66,7 @@ export class RequestListComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-    const st = '00102';
-    console.log(Number(st.substring(0, 1)) * 3600 + Number(st.substring(1, 3)) * 60 + Number(st.substring(3)));
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);

@@ -1,17 +1,17 @@
 export class AvayaCDR {
-  public callDateTime: string;
+  public callStart: string;
 
   public callDuration: number;
 
   public callingNumber: string;
 
-  public calledNumber: string;
-
-  public callCode: string;
-
   public callingName: string;
 
+  public calledNumber: string;
+
   public calledName: string;
+
+  public callCode: string;
 }
 export interface IAvayaCDR {
   total: number;

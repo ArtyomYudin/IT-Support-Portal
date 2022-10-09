@@ -134,7 +134,8 @@ button.datagrid-column-title {
 }
 
 .datagrid-table .datagrid-cell:focus,
-.datagrid-table .datagrid-column:focus {
+.datagrid-table .datagrid-column:focus,
+.datagrid-table .datagrid-column .datagrid-filter-toggle:focus {
   outline: none;
   // box-shadow: none;
 }
