@@ -6,4 +6,6 @@ export const dbPool = mariadb.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   connectionLimit: 25,
+  acquireTimeout: 60000,
+  connectTimeout: 60000,
 });

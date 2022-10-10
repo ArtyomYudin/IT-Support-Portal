@@ -12,6 +12,11 @@ export async function getAvayaCDR(dbPool: Pool, ws: WebSocket, filter: number) {
   // }
   try {
     conn = await dbPool.getConnection();
+
+    // console.log('Total connections: ', dbPool.totalConnections());
+    // console.log('Active connections: ', dbPool.activeConnections());
+    // console.log('Idle connections: ', dbPool.idleConnections());
+
     const rows = await conn.query(dbSelect.avayaCDRList(filter));
     rows.forEach((row: any, i: number) => {
       avayaCDRArray[i] = {
