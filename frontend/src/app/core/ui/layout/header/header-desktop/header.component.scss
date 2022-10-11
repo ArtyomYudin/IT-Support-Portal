@@ -26,6 +26,16 @@
 
   & .header-actions {
     margin-right: -0.8rem;
+    &-logout {
+      & clr-icon {
+        height: 22px;
+        width: 22px;
+        margin-top: 0.5rem;
+        opacity: 0.65;
+        // position: unset;
+        // margin-right: 0.5rem;
+      }
+    }
   }
   /*
 .header .branding clr-icon {

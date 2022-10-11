@@ -19,8 +19,12 @@
         </div>
 
         <img class="person-photo" [src]="currentUser.userPhoto | thumbnailPhoto" />
+        <button class="btn btn-link btn-icon header-actions-logout" (click)="onLogout()">
+            <clr-icon shape="logout"> </clr-icon>
+        </button>
+        <!--
         <a href="#" [routerLink]="['/login']" class="nav-link nav-icon">
             <clr-icon shape="logout"> </clr-icon>
         </a>
-    </div>
+    --></div>
 </clr-header>

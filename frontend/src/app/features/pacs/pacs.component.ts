@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'fe-pacs',
   templateUrl: './pacs.component.html',
-  styleUrls: ['./pacs.component.scss']
+  styleUrls: ['./pacs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PacsComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

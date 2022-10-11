@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,6 +15,7 @@ import { RequestCardComponent } from '@feature/user-request/request-card/request
   selector: 'fe-user-request-list',
   templateUrl: './request-list.component.html',
   styleUrls: ['./request-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestListComponent implements OnInit, OnDestroy {
   public selected: any = [];

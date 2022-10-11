@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { Observable } from 'rxjs/internal/Observable';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { Event } from '@service/websocket.service.event';
   selector: 'fe-avaya-cdr',
   templateUrl: './avaya-cdr.component.html',
   styleUrls: ['./avaya-cdr.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvayaCDRComponent implements OnInit, OnDestroy {
   // public loading = true;

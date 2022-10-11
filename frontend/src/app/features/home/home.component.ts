@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { DynamicScriptLoaderService } from '@service/dynamic.script.loader.service';
 
@@ -12,6 +12,7 @@ Chart.register(...registerables);
   selector: 'fe-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
   @ViewChild('chart', { static: true }) public refChart: ElementRef;

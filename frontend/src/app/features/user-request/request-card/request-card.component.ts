@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
@@ -17,6 +17,7 @@ import { Buffer } from 'buffer';
   selector: 'fe-user-request-card',
   templateUrl: './request-card.component.html',
   styleUrls: ['./request-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestCardComponent implements OnInit, OnDestroy {
   public userRequest: any;
@@ -217,7 +218,6 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       filePath: file.filePath,
     });
     this.attachmentBase64Subscription = this.attachmentBase64$.subscribe((attach: any) => {
-      console.log(attach);
       if (!file.fileType.includes('image/')) {
         const blob = new Blob([Buffer.from(attach, 'base64')], { type: file.fileType });
         saveAs(blob, file.fileName);

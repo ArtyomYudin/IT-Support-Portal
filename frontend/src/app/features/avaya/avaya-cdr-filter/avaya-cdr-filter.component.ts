@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { WebsocketService } from '@service/websocket.service';
 import { AvayaCDRService } from '@service/avaya.cdr.service';
@@ -7,6 +7,7 @@ import { AvayaCDRService } from '@service/avaya.cdr.service';
   selector: 'fe-avaya-cdr-filter',
   templateUrl: './avaya-cdr-filter.component.html',
   styleUrls: ['./avaya-cdr-filter.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvayaCDRFilterComponent implements OnInit, OnDestroy {
   public periods: any[] = [

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, takeUntil } from 'rxjs/operators';
 // import { Subject } from 'rxjs';
@@ -11,6 +11,7 @@ import { interval } from 'rxjs/internal/observable/interval';
   selector: 'fe-header-desktop',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderDesktopComponent implements OnInit, OnDestroy {
   @Input() currentUser: AuthUser;
