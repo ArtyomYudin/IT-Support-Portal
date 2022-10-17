@@ -82,6 +82,16 @@
                             <input type="text" clrInput value="{{ userRequest?.initiator }}" [readonly]="true" />
                         </clr-input-container>
                         -->
+                            <clr-input-container class="request-service-container">
+                                <label>Услуга:</label>
+                                <input
+                                    class="request-service-input"
+                                    type="text"
+                                    clrInput
+                                    value="{{ this.userRequest?.service }}"
+                                    [readonly]="true"
+                                />
+                            </clr-input-container>
 
                             <clr-input-container class="request-topic-container">
                                 <label>Тема:</label>

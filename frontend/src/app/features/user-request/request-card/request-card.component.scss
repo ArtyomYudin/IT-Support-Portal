@@ -148,6 +148,7 @@ ul {
   text-overflow: ellipsis;
 }
 
+.request-service-container,
 .request-topic-container,
 .request-initiator-container,
 .request-executor-container,
@@ -155,6 +156,7 @@ ul {
   flex-direction: row;
 }
 
+::ng-deep .request-service-container .clr-control-container,
 ::ng-deep .request-topic-container .clr-control-container,
 ::ng-deep .request-initiator-container .clr-control-container,
 ::ng-deep .request-executor-container .clr-control-container,
