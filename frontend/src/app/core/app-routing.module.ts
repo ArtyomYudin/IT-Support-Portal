@@ -42,6 +42,12 @@ const routes: Routes = [
     data: { key: 'cached_dhcp' },
   },
   {
+    path: 'vpn',
+    loadChildren: () => import('../features/vpn/vpn.module').then(m => m.VpnModule),
+    canActivate: [AuthGuard],
+    data: { key: 'cached_vpn' },
+  },
+  {
     path: 'setting',
     loadChildren: () => import('../features/setting/setting.module').then(m => m.SettingModule),
     canActivate: [AuthGuard],

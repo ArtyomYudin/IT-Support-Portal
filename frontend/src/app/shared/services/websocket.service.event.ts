@@ -2,6 +2,7 @@ export enum Event {
   CONNECT = 'connect',
   DISCONNECT = 'disconnect',
 
+  EV_EMPLOYEE = 'event_employee',
   EV_DEPARTMENT = 'event_department',
 
   EV_FILTERED_EMPLOYEE = 'event_filtered_employee',
@@ -26,4 +27,7 @@ export enum Event {
 
   EV_AVAYA_CDR = 'event_avaya_cdr',
   EV_AVAYA_CDR_FILTERED = 'event_avaya_cdr_filtered',
+
+  EV_VPN_COMPLETED_SESSION = 'event_vpn_completed_session',
+  EV_VPN_ACTIVE_SESSION = 'event_vpn_active_session',
 }

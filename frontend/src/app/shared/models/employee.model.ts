@@ -11,3 +11,7 @@ export class Employee {
 
   public directionManagerName?: string;
 }
+export interface IEmployee {
+  total: number;
+  results: Employee[];
+}

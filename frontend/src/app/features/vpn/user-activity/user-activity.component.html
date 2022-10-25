@@ -1,0 +1,60 @@
+<div class="limit-height">
+    <clr-datagrid class="datagrid-compact vpn-user-activity-datagrid" [clrDgLoading]="loading">
+        <clr-dg-column>Пользователь</clr-dg-column>
+
+        <clr-dg-placeholder>Мы не смогли найти пользователей!</clr-dg-placeholder>
+
+        <clr-dg-row *clrDgItems="let user of (employeeListArray$ | async)?.results" [clrDgItem]="user">
+            <clr-dg-cell>
+                {{ user.displayName }}
+            </clr-dg-cell>
+        </clr-dg-row>
+
+        <ng-template clrIfDetail let-detail>
+            <clr-dg-detail>
+                <clr-dg-detail-header>
+                    <div class="photo">
+                        <img class="personPhoto" [src]="detail.photo" />
+                    </div>
+                    <div class="personName">
+                        {{ detail.displayName }}
+                    </div>
+                </clr-dg-detail-header>
+                <clr-dg-detail-body>
+                    <div>
+                        <span class="accountHeader">VPN аккаунт:</span>
+                        {{ detail.account }}
+                    </div>
+                    <div>
+                        <span class="statusHeader">Статус подключения:</span>
+                        <!--{{ this.ipAddress !== null ? 'Подключен к сети VPN с IP адреса ' + this.ipAddress : 'Не подключен к сети VPN' }}-->
+                    </div>
+                    <div class="history-limit-height">
+                        <clr-datagrid class="datagrid-compact">
+                            <clr-dg-column>Время подключения</clr-dg-column>
+                            <clr-dg-column>IP адрес</clr-dg-column>
+                            <clr-dg-column>Продолжительность подключения (чч:мм)</clr-dg-column>
+
+                            <clr-dg-placeholder>Мы не смогли найти предыдущие сеансы!</clr-dg-placeholder>
+
+                            <clr-dg-footer>
+                                <clr-dg-pagination #paginationUser [clrDgPageSize]="15">
+                                    <!--<clr-dg-page-size [clrPageSizeOptions]="[10, 20, 50, 100]">Сеансов на страницу</clr-dg-page-size>-->
+                                    {{ paginationUser.firstItem + 1 }} - {{ paginationUser.lastItem + 1 }} из
+                                    {{ paginationUser.totalItems }} Сеансов
+                                </clr-dg-pagination>
+                            </clr-dg-footer>
+                        </clr-datagrid>
+                    </div>
+                </clr-dg-detail-body>
+            </clr-dg-detail>
+        </ng-template>
+
+        <!--<clr-dg-footer> {{ (this.employeeListArray$ | async)?.total }} пользователей </clr-dg-footer>-->
+
+        <clr-dg-footer>
+            {{ (this.employeeListArray$ | async)?.total }} пользователей
+            <clr-dg-pagination #pagination [clrDgPageSize]="(this.employeeListArray$ | async)?.total"></clr-dg-pagination>
+        </clr-dg-footer>
+    </clr-datagrid>
+</div>

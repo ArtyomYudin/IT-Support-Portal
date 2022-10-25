@@ -1,0 +1,15 @@
+.limit-height clr-datagrid {
+  //height: calc(100vh - 144px);
+  height: calc(60vh - 5.9rem);
+  //height: 100% !important;
+}
+
+.history-limit-height clr-datagrid {
+  //height: calc(100vh - 144px);
+  height: auto;
+  //height: 100% !important;
+}
+
+::ng-deep .datagrid-detail-open > .datagrid-outer-wrapper > .datagrid-inner-wrapper div.datagrid-table-wrapper {
+  overflow: visible;
+}

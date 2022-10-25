@@ -4,6 +4,7 @@ import { Server, WebSocket } from 'ws';
 import * as purchaseAPI from '../purchase-api';
 import * as userRequestAPI from '../user-request-api';
 import * as avayaAPI from '../avaya-api';
+import * as vpnAPI from '../vpn-api';
 
 export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocket>, msg: any): void {
   /*
@@ -129,6 +130,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
     case 'getUserRequestAttachment':
       userRequestAPI.getUserRequestAttachment(dbPool, ws, parseMsg.data);
       break;
+    case 'getEmployee':
+      vpnAPI.getEmployee(dbPool, ws);
+      break;
     case 'getDepartment':
       userRequestAPI.getDepartment(dbPool, ws, parseMsg.data);
       break;
@@ -149,6 +153,12 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
       break;
     case 'getAvayaCDR':
       avayaAPI.getAvayaCDR(dbPool, ws, parseMsg.data);
+      break;
+    case 'getVpnCompletedSession':
+      vpnAPI.getVpnCompletedSession(dbPool, ws, parseMsg.data);
+      break;
+    case 'getVpnActiveSession':
+      vpnAPI.getVpnActiveSession(dbPool, ws);
       break;
     default:
       break;

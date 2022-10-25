@@ -132,6 +132,17 @@ export const getDepartment = (departmentId?: any) => `
 
 export const getUserRequestNewNumber = `SELECT user_request_new_number() AS newNumber`;
 
+export const getEmployee = `
+                            SELECT employee.id AS id,
+                                   employee.display_name AS displayName,
+                                   department.name AS departmentName,
+                                   department.id AS departmentId,
+                                   position.name AS positionName
+                            FROM employee
+                                   INNER JOIN department on(employee.department_id = department.id)
+                                   INNER JOIN position on(employee.position_id = position.id)
+                            order by employee.display_name`;
+
 export const getFilteredEmployee = (filterValue: string) => `
                             SELECT employee.id AS id,
                                    employee.display_name AS displayName,
@@ -260,3 +271,41 @@ export const avayaCDRList = (filter: number) => `
               ) called on(called.call_number = avaya_cdr.called_number)
               WHERE avaya_cdr.date >= NOW() - INTERVAL ${filter} HOUR
               order by avaya_cdr.date DESC`;
+
+export const vpnCompletedSession = (filter: number) => `
+              SELECT cisco_vpn_event.id AS id,
+                     cisco_vpn_event.date AS sessionEnd,
+                     cisco_vpn_event.host AS vpnNode,
+                     cisco_vpn_event.event AS eventMessage
+                     FROM cisco_vpn_event
+              WHERE (cisco_vpn_event.date >= NOW() - INTERVAL ${filter} HOUR) and LOCATE('%ASA-4-113019',cisco_vpn_event.event)
+              order by cisco_vpn_event.date DESC`;
+
+export const vpnActiveSession = `
+              SELECT DISTINCT
+                     connect.date AS sessionStart,
+                     connect.host AS vpnNode,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -5), ' ',1) AS user,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) AS mappedIP,
+                     policy.policy as policyName,
+                     policy.ip as clientIP
+              FROM cisco_vpn_event connect
+                     LEFT OUTER JOIN (
+                            SELECT
+                                   cisco_vpn_event.date as sessionStart,
+                                   SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', 4), ' ',-1) AS policy,
+                                   SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', 8), ' ',-1) AS ip
+                            FROM cisco_vpn_event
+                            WHERE LOCATE('%ASA-4-722051',cisco_vpn_event.event)
+                     ) policy on(policy.sessionStart = connect.date)
+                     LEFT OUTER JOIN (
+                            SELECT
+                                   cisco_vpn_event.date AS sessionEnd,
+                                   SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS ip
+                            FROM cisco_vpn_event
+                            WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event)
+                     ) disconnect on(
+                            disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
+                            disconnect.sessionEnd >= connect.date)
+              WHERE LOCATE('%ASA-7-746012',connect.event) and disconnect.sessionEnd is Null
+              order by connect.date DESC`;
