@@ -39,8 +39,7 @@ export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, filter
     conn = await dbPool.getConnection();
     const rows = await conn.query(dbSelect.vpnCompletedSession(filter));
     rows.forEach((row: any, i: number) => {
-      const eventMessageArray = row.eventMessage.split(',');
-      const durationArray = eventMessageArray[4].replace(/ Duration: /, '').split(':');
+      const durationArray = row.duration.split(':');
       completedSessionArray[i] = {
         id: row.id,
         sessionStart: new Date(
@@ -50,12 +49,14 @@ export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, filter
               Number(durationArray[2].replace(/s/, '')) * 1000),
         ).toLocaleString(),
         node: row.vpnNode,
-        user: eventMessageArray[1].replace(/ Username = /, ''),
-        userIP: eventMessageArray[2].replace(/ IP = /, ''),
-        // userMappedIP: eventMessageArray,
-        duration: eventMessageArray[4].replace(/ Duration: /, ''),
-        byteXmt: eventMessageArray[5].replace(/ Bytes xmt: /, ''),
-        byteRcv: eventMessageArray[6].replace(/ Bytes rcv: /, ''),
+        user: row.user,
+        displayName: row.displayName,
+        type: row.type,
+        duration: row.duration,
+        clientIP: row.ip,
+        byteXmt: row.byteXmt,
+        byteRcv: row.byteRcv,
+        disconnectReason: row.reason,
       };
     });
     // console.log(completedSessionArray);
@@ -83,7 +84,8 @@ export async function getVpnActiveSession(dbPool: Pool, ws: WebSocket) {
       activeSessionArray[i] = {
         sessionStart: row.sessionStart,
         node: row.vpnNode,
-        user: row.user.replace('LOCAL\\', ''),
+        user: row.user,
+        displayName: row.displayName,
         clientIP: row.clientIP ? row.clientIP.slice(1, -1) : row.clientIP,
         mappedIP: row.mappedIP,
         policyName: row.policyName ? row.policyName.slice(1, -1) : row.policyName,

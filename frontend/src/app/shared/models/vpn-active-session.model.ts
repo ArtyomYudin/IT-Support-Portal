@@ -5,6 +5,8 @@ export class VpnActiveSession {
 
   public user: string;
 
+  public displayName: string;
+
   public clientIP: string;
 
   public mappedIP: string;

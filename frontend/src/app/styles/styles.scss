@@ -133,6 +133,8 @@ button.datagrid-column-title {
   text-decoration: none !important;
 }
 
+.datagrid-table .datagrid-detail-caret .datagrid-detail-caret-button:focus,
+.datagrid-table .datagrid-expandable-caret .datagrid-expandable-caret-button:focus,
 .datagrid-table .datagrid-cell:focus,
 .datagrid-table .datagrid-column:focus,
 .datagrid-table .datagrid-column .datagrid-filter-toggle:focus {

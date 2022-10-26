@@ -1,15 +1,46 @@
 .limit-height clr-datagrid {
   //height: calc(100vh - 144px);
-  height: calc(60vh - 5.9rem);
+  height: calc(100vh - 5.9rem);
   //height: 100% !important;
 }
 
 .history-limit-height clr-datagrid {
   //height: calc(100vh - 144px);
-  height: auto;
+  height: 66vh;
   //height: 100% !important;
 }
+//::ng-deep .datagrid {
+//  margin-top: 0.3rem;
+//}
 
 ::ng-deep .datagrid-detail-open > .datagrid-outer-wrapper > .datagrid-inner-wrapper div.datagrid-table-wrapper {
   overflow: visible;
+}
+
+.userName {
+  margin-top: -1rem;
+}
+
+.date-column {
+  max-width: 156px;
+}
+
+::ng-deep .vpn-history-switch {
+  .nav {
+    box-shadow: none !important;
+    margin-top: -0.55rem;
+    /*
+    .nav-link {
+      line-height: 1.15rem;
+      letter-spacing: 0.073em;
+      font-size: 0.55rem;
+      font-weight: 500;
+      height: 1.2rem;
+      padding: 0 0.6rem;
+      border-color: transparent;
+      background-color: transparent;
+      color: #0072a3;
+    }
+    */
+  }
 }

@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { WebsocketService } from '@service/websocket.service';
 import { Subject } from 'rxjs/internal/Subject';
-import { IEmployee } from '@model/employee.model';
-import { Event } from '@service/websocket.service.event';
 import { Observable } from 'rxjs/internal/Observable';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
+import { IEmployee } from '@model/employee.model';
+import { IVpnSession } from '@model/vpn-session.model';
+import { Event } from '@service/websocket.service.event';
 
 @Component({
   selector: 'fe-vpn-user-activity',
@@ -13,10 +14,13 @@ import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserActivityComponent implements OnInit, OnDestroy {
-  public loading = true;
+  public loadingEmployee = true;
+
+  public loadingSession = true;
 
   public employeeListArray$: Observable<IEmployee>;
-  // public eventVpnActiveSessionArray$: Observable<IVpnActiveSession>;
+
+  public sessionListArray$: Observable<IVpnSession>;
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
@@ -25,17 +29,27 @@ export class UserActivityComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       takeUntil(this.ngUnsubscribe$),
       tap(() => {
-        this.loading = false;
+        this.loadingEmployee = false;
+      }),
+    );
+    this.sessionListArray$ = this.wsService.on<IVpnSession>(Event.EV_VPN_COMPLETED_SESSION).pipe(
+      distinctUntilChanged(),
+      takeUntil(this.ngUnsubscribe$),
+      tap(() => {
+        this.loadingSession = false;
       }),
     );
   }
 
   ngOnInit(): void {
     this.wsService.send('getEmployee', null);
+    this.wsService.send('getVpnCompletedSession', 720);
   }
 
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
   }
+
+  public onDetailOpen(user: string): void {}
 }

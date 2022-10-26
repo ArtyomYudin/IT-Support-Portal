@@ -273,23 +273,45 @@ export const avayaCDRList = (filter: number) => `
               order by avaya_cdr.date DESC`;
 
 export const vpnCompletedSession = (filter: number) => `
-              SELECT cisco_vpn_event.id AS id,
-                     cisco_vpn_event.date AS sessionEnd,
-                     cisco_vpn_event.host AS vpnNode,
-                     cisco_vpn_event.event AS eventMessage
-                     FROM cisco_vpn_event
-              WHERE (cisco_vpn_event.date >= NOW() - INTERVAL ${filter} HOUR) and LOCATE('%ASA-4-113019',cisco_vpn_event.event)
-              order by cisco_vpn_event.date DESC`;
+       SELECT 
+              connect.date AS sessionEnd,
+              connect.host AS vpnNode,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 2), ' ',-1) AS user,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 3), ' ',-1) AS ip,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 4), ' ',-1) AS type,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 5), ' ',-1) AS duration,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 6), ' ',-1) AS byteXmt,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 7), ' ',-1) AS byteRcv,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 8), ' ',-1) AS reason,
+              employee.display_name AS displayName
+       FROM cisco_vpn_event connect
+       LEFT OUTER JOIN employee on(
+              employee.user_principal_name = (
+                     case when SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 2), ' ',-1) not LIKE '%@%' 
+                     then CONCAT(SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 2), ' ',-1),'@center-inform.ru')
+                     else SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 2), ' ',-1)
+                     end)
+              )
+       WHERE (connect.date >= NOW() - INTERVAL ${filter} HOUR) and LOCATE('%ASA-4-113019',connect.event)
+       order by connect.date DESC`;
 
 export const vpnActiveSession = `
               SELECT DISTINCT
                      connect.date AS sessionStart,
                      connect.host AS vpnNode,
-                     SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -5), ' ',1) AS user,
+                     SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2) AS user,
+                     employee.display_name AS displayName,
                      SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) AS mappedIP,
                      policy.policy as policyName,
                      policy.ip as clientIP
               FROM cisco_vpn_event connect
+                     LEFT OUTER JOIN employee on(
+                            employee.user_principal_name = (
+                                   case when SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2) not LIKE '%@%' 
+                                   then CONCAT(SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2),'@center-inform.ru')
+                                   else SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2)
+                                   end)
+                     )
                      LEFT OUTER JOIN (
                             SELECT
                                    cisco_vpn_event.date as sessionStart,
