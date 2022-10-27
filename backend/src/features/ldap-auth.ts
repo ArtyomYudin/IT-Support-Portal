@@ -89,10 +89,39 @@ export async function checkUserCredentials(reqBody: string, res: ServerResponse,
       logger.info('LDAP - binding success');
 
       ldapClient.search(
-        process.env.AD_SUFFIX as string,
-        { attributes: ['uid', 'dn', 'cn', 'mail'], scope: 'base' },
+        'OU=HQ,DC=center-inform,DC=ru',
+        {
+          filter: '(objectClass=user)',
+          attributes: [
+            'sAMAccountName',
+            'userPrincipalName',
+            'name',
+            'givenName',
+            'distinguishedName',
+            'displayName',
+            'cn',
+            'sn',
+            'mail',
+            'title',
+            'description',
+            'department',
+            'company',
+            'manager',
+            'telephoneNumber',
+            'mobile',
+            'co',
+            'c',
+            'l',
+            'st',
+            'postalCode',
+            'thumbnailPhoto',
+          ],
+          scope: 'sub',
+        },
         (ldapSearchErr: any, ldapSearchRes: any) => {
-          console.log(ldapSearchRes);
+          ldapSearchRes.on('searchEntry', (entry: any) => {
+            console.log(entry.object);
+          });
         },
       );
     }
