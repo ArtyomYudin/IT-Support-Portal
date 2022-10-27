@@ -64,10 +64,10 @@
                 <clr-datagrid class="datagrid-compact vpn-user-activity-datagrid" [clrDgLoading]="loadingSession">
                     <clr-dg-column class="date-column">Дата</clr-dg-column>
                     <clr-dg-column>Пользователь</clr-dg-column>
-                    <clr-dg-column>Продолжительность</clr-dg-column>
+                    <clr-dg-column>Длительность</clr-dg-column>
                     <clr-dg-column>Тип</clr-dg-column>
-                    <clr-dg-column>Передано байт</clr-dg-column>
-                    <clr-dg-column>Принято байт</clr-dg-column>
+                    <clr-dg-column class="byte-column">Передано</clr-dg-column>
+                    <clr-dg-column class="byte-column">Принято</clr-dg-column>
                     <clr-dg-column>Завершение</clr-dg-column>
 
                     <clr-dg-placeholder>Мы не смогли найти пользователей!</clr-dg-placeholder>
@@ -77,7 +77,7 @@
                             {{ session.sessionStart }}
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            {{ session.displayName | employeeName }}
+                            {{ session.displayName ? (session.displayName | employeeName) : session.user }}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             {{ session.duration }}
@@ -85,18 +85,23 @@
                         <clr-dg-cell>
                             {{ session.type }}
                         </clr-dg-cell>
-                        <clr-dg-cell>
-                            {{ session.byteRcv }}
+                        <clr-dg-cell class="byte-column">
+                            {{ session.byteRcv | byteConvert }}
                         </clr-dg-cell>
-                        <clr-dg-cell>
-                            {{ session.byteXmt }}
+                        <clr-dg-cell class="byte-column">
+                            {{ session.byteXmt | byteConvert }}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             {{ session.disconnectReason }}
                         </clr-dg-cell>
                     </clr-dg-row>
 
-                    <clr-dg-footer> {{ (this.sessionListArray$ | async)?.total }} сеансов</clr-dg-footer>
+                    <clr-dg-footer>
+                        {{ (this.sessionListArray$ | async)?.total }} сеансов
+                        <button type="button" class="btn btn-icon btn-sm btn-link btn-session-refresh" (click)="sessionRefresh()">
+                            <clr-icon shape="refresh"></clr-icon>
+                        </button>
+                    </clr-dg-footer>
                 </clr-datagrid>
             </div>
         </clr-tab-content>

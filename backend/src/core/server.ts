@@ -5,6 +5,7 @@ import { dbPool } from '../shared/db/db_pool';
 import { websocketServer } from '../features/wss/wss-server';
 import { wsParseMessage } from '../features/wss/wss-api';
 import { getEmails } from '../features/imap-client';
+import { initZabbixAPI } from '../features/zabbix-api';
 
 process.on('uncaughtException', err => {
   logger.error('Uncaught Exception, Restart service !!!');
@@ -14,7 +15,9 @@ process.on('uncaughtException', err => {
 
 (async () => {
   const httpServer = await initHTTPSServer(dbPool);
-  const wss = websocketServer(httpServer);
+  const wss = await websocketServer(httpServer);
+  initZabbixAPI(wss);
+
   const clients: any[] = [];
 
   wss.on('connection', ws => {

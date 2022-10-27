@@ -30,4 +30,6 @@ export enum Event {
 
   EV_VPN_COMPLETED_SESSION = 'event_vpn_completed_session',
   EV_VPN_ACTIVE_SESSION = 'event_vpn_active_session',
+
+  EV_PROVIDER_INFO = 'event_provider_info',
 }

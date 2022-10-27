@@ -1,6 +1,13 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { Subject } from 'rxjs/internal/Subject';
+import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
 import { Chart, registerables } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { DynamicScriptLoaderService } from '@service/dynamic.script.loader.service';
+import { WebsocketService } from '@service/websocket.service';
+import { Event } from '@service/websocket.service.event';
+import { SubscriptionLike } from 'rxjs';
 
 declare let streamCam: any;
 declare let streamCamRoom1: any;
@@ -19,16 +26,45 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('chart2', { static: true }) public refChart2: ElementRef;
 
-  public chart: any;
+  public providerListArray$: Observable<any>;
 
-  public chart2: any;
+  public providerInfoSubscription: SubscriptionLike;
 
-  constructor(private dynamicScriptLoader: DynamicScriptLoaderService) {}
+  private chart: any;
+
+  private chart2: any;
+
+  private inSpeedInfo: any = [];
+
+  private outSpeedInfo: any = [];
+
+  private ngUnsubscribe$: Subject<any> = new Subject();
+
+  constructor(private dynamicScriptLoader: DynamicScriptLoaderService, private wsService: WebsocketService) {
+    this.providerListArray$ = this.wsService.on<any>(Event.EV_PROVIDER_INFO).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+  }
 
   ngOnInit(): void {
     this.loadScripts();
-    this.createChart();
+    this.providerSpeedChart();
     this.createChart2();
+    this.providerInfoSubscription = this.providerListArray$.subscribe(value => {
+      console.log(value);
+      this.inSpeedInfo.length = 0;
+      this.outSpeedInfo.length = 0;
+      this.inSpeedInfo.push(value.inSpeedOrange, value.inSpeedTelros, value.inSpeedFilanco);
+      this.outSpeedInfo.push(value.outSpeedOrange, value.outSpeedTelros, value.outSpeedFilanco);
+      // this.chart.data.datasets[0].forEach((dataset: any) => {
+      //   dataset.data.push([1001]);
+      // });
+      this.chart.update('none');
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe$.next(null);
+    this.ngUnsubscribe$.complete();
+    this.providerInfoSubscription.unsubscribe();
   }
 
   private loadScripts() {
@@ -85,28 +121,28 @@ export class HomeComponent implements OnInit {
     },
   };
 
-  createChart() {
+  providerSpeedChart() {
     const chart = this.refChart.nativeElement;
     const ctx = chart.getContext('2d');
     this.chart = new Chart(ctx, {
       type: 'bar', // this denotes tha type of chart
-
       data: {
         // values on X-Axis
-        labels: ['Оранже', 'Телрос', 'Филанка'],
+        labels: ['Orange', 'Телрос', 'Филанка'],
         datasets: [
           {
-            label: 'Исходящий траффик',
-            data: ['29', '2', '12'],
-            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            label: 'Входящий траффик',
+            data: this.inSpeedInfo,
+            backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 0.2)'],
           },
           {
-            label: 'Входящий траффик',
-            data: ['54', '34', '56'],
-            backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 0.2)'],
+            label: 'Исходящий траффик',
+            data: this.outSpeedInfo,
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
           },
         ],
       },
+      plugins: [ChartDataLabels],
       options: {
         indexAxis: 'y',
         elements: {
@@ -117,6 +153,15 @@ export class HomeComponent implements OnInit {
         plugins: {
           legend: {
             display: false,
+          },
+          datalabels: {
+            anchor: 'end',
+            align: 'end',
+            clamp: true,
+            clip: false,
+            font: {
+              size: 11,
+            },
           },
         },
         scales: {

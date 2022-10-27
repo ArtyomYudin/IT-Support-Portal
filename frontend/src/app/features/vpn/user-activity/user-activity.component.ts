@@ -24,6 +24,8 @@ export class UserActivityComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
+  private reloadVpnSession: NodeJS.Timer;
+
   constructor(private wsService: WebsocketService) {
     this.employeeListArray$ = this.wsService.on<IEmployee>(Event.EV_EMPLOYEE).pipe(
       distinctUntilChanged(),
@@ -44,12 +46,24 @@ export class UserActivityComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.wsService.send('getEmployee', null);
     this.wsService.send('getVpnCompletedSession', 720);
+    /*
+    this.reloadVpnSession = setInterval(() => {
+      this.loadingSession = true;
+      this.wsService.send('getVpnCompletedSession', 720);
+    }, 120000);
+    */
   }
 
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
+    clearInterval(this.reloadVpnSession);
   }
 
   public onDetailOpen(user: string): void {}
+
+  public sessionRefresh() {
+    this.loadingSession = true;
+    this.wsService.send('getVpnCompletedSession', 720);
+  }
 }

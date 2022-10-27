@@ -273,7 +273,7 @@ export const avayaCDRList = (filter: number) => `
               order by avaya_cdr.date DESC`;
 
 export const vpnCompletedSession = (filter: number) => `
-       SELECT 
+       SELECT DISTINCT
               connect.date AS sessionEnd,
               connect.host AS vpnNode,
               SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 2), ' ',-1) AS user,

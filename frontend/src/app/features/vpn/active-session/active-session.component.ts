@@ -33,6 +33,7 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.reloadVpnActiveSession = setInterval(() => {
+      this.loading = true;
       this.wsService.send('getVpnActiveSession', null);
     }, 60000);
   }

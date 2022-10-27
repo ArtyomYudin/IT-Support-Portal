@@ -87,6 +87,14 @@ export async function checkUserCredentials(reqBody: string, res: ServerResponse,
       });
 
       logger.info('LDAP - binding success');
+
+      ldapClient.search(
+        process.env.AD_SUFFIX as string,
+        { attributes: ['uid', 'dn', 'cn', 'mail'], scope: 'base' },
+        (ldapSearchErr: any, ldapSearchRes: any) => {
+          console.log(ldapSearchRes);
+        },
+      );
     }
   });
 }
