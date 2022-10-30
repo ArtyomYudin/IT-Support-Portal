@@ -57,3 +57,41 @@
     */
   }
 }
+
+.person-photo {
+  width: 36px;
+  height: 36px;
+  //margin: 0 auto;
+  overflow: hidden;
+  border-radius: 50%;
+  text-align: center;
+  background-color: white;
+  //margin-right: 1.1rem;
+  margin-top: 0.3rem;
+  float: left;
+  border: 0.01rem solid #cccccc;
+}
+/*
+.photo {
+  width: 36px;
+  height: 36px;
+  margin-top: 0.3rem;
+  overflow: hidden;
+  border-radius: 50%;
+  text-align: center;
+  background-color: white;
+  float: left;
+  //margin-left: 0.7rem;
+}
+
+.person-photo {
+  width: auto;
+  height: 100%;
+  margin: 0 auto;
+  vertical-align: middle;
+}
+*/
+.personName {
+  margin-top: 0.45rem;
+  margin-left: 2.2rem;
+}

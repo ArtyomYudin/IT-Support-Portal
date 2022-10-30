@@ -11,7 +11,7 @@ export class UserRequest {
 
   public department: string;
 
-  public executor: { id: number; name: string };
+  public executor: { userPrincipalName: string; name: string };
 
   public service: string;
 

@@ -23,7 +23,7 @@ export class AuthenticationService {
   //   return this.currentUserSubject.value;
   // }
 
-  public login(email: string, password: string): any {
+  public login(userPrincipalName: string, password: string): any {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'text/plain',
@@ -31,7 +31,7 @@ export class AuthenticationService {
     };
 
     return this.http
-      .post<AuthUser>(`https://${environment.apiHost}:${environment.apiPort}/api/auth`, { email, password }, httpOptions)
+      .post<AuthUser>(`https://${environment.apiHost}:${environment.apiPort}/api/auth`, { userPrincipalName, password }, httpOptions)
       .pipe(
         map(authUser => {
           if (authUser && authUser.token) {

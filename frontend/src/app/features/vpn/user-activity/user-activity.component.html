@@ -18,9 +18,9 @@
                         <clr-dg-detail>
                             <clr-dg-detail-header>
                                 <div class="photo">
-                                    <img class="personPhoto" [src]="detail.photo" />
+                                    <img class="person-photo" [src]="detail.thumbnailPhoto | thumbnailPhoto" />
                                 </div>
-                                <div class="userName">
+                                <div class="personName">
                                     {{ detail.displayName }}
                                 </div>
                             </clr-dg-detail-header>

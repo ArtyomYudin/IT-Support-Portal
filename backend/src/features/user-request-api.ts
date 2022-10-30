@@ -49,7 +49,7 @@ export async function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: st
     conn = await dbPool.getConnection();
     const rows = await conn.query(dbSelect.getFilteredEmployee(value));
     rows.forEach((row: any, i: number) => {
-      filteredEmployeeArray[i] = { id: row.id, displayName: row.displayName, departmentId: row.departmentId };
+      filteredEmployeeArray[i] = { userPrincipalName: row.userPrincipalName, displayName: row.displayName, departmentId: row.departmentId };
     });
     ws.send(
       JSON.stringify({
@@ -93,7 +93,7 @@ export async function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket,
     conn = await dbPool.getConnection();
     const rows = await conn.query(dbSelect.getEmployeeByParentDepartment(value));
     rows.forEach((row: any, i: number) => {
-      employeeByParentDepartment[i] = { id: row.id, name: row.displayName };
+      employeeByParentDepartment[i] = { userPrincipalName: row.userPrincipalName, name: row.displayName };
     });
     ws.send(
       JSON.stringify({
@@ -347,8 +347,8 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
         value.creationDate ? changeDateFormat(value.creationDate) : changeDateFormat(new Date()),
         value.changeDate ? changeDateFormat(value.changeDate) : changeDateFormat(new Date()),
         value.requestNumber,
-        value.initiatorId,
-        value.executorId,
+        value.initiatorUpn,
+        value.executorUpn,
         value.serviceId,
         value.topic,
         value.description,
@@ -452,7 +452,7 @@ export async function getUserRequestLifeCycle(dbPool: Pool, ws: WebSocket, value
         eventName = eventName[0].name;
       }
       if (row.eventType === 'delegate') {
-        eventName = await conn.query(dbSelect.getEmployeeById(row.eventValue as number));
+        eventName = await conn.query(dbSelect.getEmployeeByUPN(row.eventValue as string));
         eventName = eventName[0].displayName;
       }
       return {
@@ -490,7 +490,13 @@ export async function updateUserRequest(dbPool: Pool, value: any, ws: WebSocket,
       }
       await conn
         .query(
-          dbInsert.insertUserRequestLifeCycle(value.requestNumber, value.employeeId, changeDateFormat(new Date()), key, value.newData[key]),
+          dbInsert.insertUserRequestLifeCycle(
+            value.requestNumber,
+            value.employeeUpn,
+            changeDateFormat(new Date()),
+            key,
+            value.newData[key],
+          ),
         )
         .then(getUserRequestLifeCycle(dbPool, ws, value.requestNumber));
     });

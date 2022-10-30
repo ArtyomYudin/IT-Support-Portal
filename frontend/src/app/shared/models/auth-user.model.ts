@@ -1,7 +1,5 @@
 export class AuthUser {
-  public id: number;
-
-  public email: string;
+  public userPrincipalName: string;
 
   public userDisplayName: string;
 

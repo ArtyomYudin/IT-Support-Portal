@@ -12,10 +12,11 @@ export async function getEmployee(dbPool: Pool, ws: WebSocket) {
     const rows = await conn.query(dbSelect.getEmployee);
     rows.forEach((row: any, i: number) => {
       employeeArray[i] = {
-        id: row.id,
+        userPrincipalName: row.userPrincipalName,
         displayName: row.displayName,
         departmentName: row.departmentName,
         positionName: row.positionName,
+        thumbnailPhoto: row.thumbnailPhoto ? Buffer.from(row.thumbnailPhoto).toString('base64') : null,
       };
     });
     ws.send(
@@ -41,7 +42,6 @@ export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, filter
     rows.forEach((row: any, i: number) => {
       const durationArray = row.duration.split(':');
       completedSessionArray[i] = {
-        id: row.id,
         sessionStart: new Date(
           row.sessionEnd.getTime() -
             (Number(durationArray[0].replace(/h/, '')) * 60 * 60 * 1000 +
@@ -59,7 +59,7 @@ export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, filter
         disconnectReason: row.reason,
       };
     });
-    // console.log(completedSessionArray);
+
     ws.send(
       JSON.stringify({
         event: 'event_vpn_completed_session',
@@ -91,7 +91,7 @@ export async function getVpnActiveSession(dbPool: Pool, ws: WebSocket) {
         policyName: row.policyName ? row.policyName.slice(1, -1) : row.policyName,
       };
     });
-    // console.log(activeSessionArray);
+
     ws.send(
       JSON.stringify({
         event: 'event_vpn_active_session',

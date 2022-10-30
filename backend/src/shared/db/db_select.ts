@@ -6,7 +6,7 @@ export const userRequestList = `
                      user_request.number AS requestNumber,
                      employee.display_name AS initiator,
                      employee.department AS department,
-                     user_request.executor_id AS executorId,
+                     user_request.executor_upn AS executorUpn,
                      executor.display_name AS executorName,
                      ur_service.name AS service,
                      user_request.topic AS topic,
@@ -20,20 +20,20 @@ export const userRequestList = `
                      ur_priority.color AS priorityColor
               FROM user_request
                      LEFT JOIN (
-                            select employee.id as id,
+                            select employee.user_principal_name as userPrincipalName,
                                    employee.display_name as display_name,
                                    department.name as department
                             FROM employee
                             LEFT JOIN department on (employee.department_id = department.id)
-                     ) employee on(user_request.initiator_id = employee.id)
+                     ) employee on(user_request.initiator_upn = employee.userPrincipalName)
                      LEFT JOIN ur_service on(user_request.service_id = ur_service.id)
                      LEFT JOIN ur_status on(user_request.status_id = ur_status.id)
                      LEFT JOIN ur_priority on(user_request.priority_id = ur_priority.id)
                      LEFT JOIN (
-                            select employee.id as id,
+                            select employee.user_principal_name as userPrincipalName,
                                    employee.display_name as display_name
                             FROM employee
-                     ) executor on executor.id = user_request.executor_id
+                     ) executor on executor.userPrincipalName = user_request.executor_upn
               ORDER by user_request.creation_date desc`;
 
 export const userRequestbyNumber = (requestNumber?: string) => `
@@ -43,7 +43,7 @@ export const userRequestbyNumber = (requestNumber?: string) => `
                      user_request.number AS requestNumber,
                      employee.display_name AS initiator,
                      employee.department AS department,
-                     user_request.executor_id AS executorId,
+                     user_request.executor_upn AS executorUpn,
                      executor.display_name AS executorName,
                      ur_service.name AS service,
                      user_request.topic AS topic,
@@ -57,20 +57,20 @@ export const userRequestbyNumber = (requestNumber?: string) => `
                      ur_priority.color AS priorityColor
               FROM user_request
                      LEFT JOIN (
-                            select employee.id as id,
+                            select employee.user_principal_name as userPrincipalName,
                                    employee.display_name as display_name,
                                    department.name as department
                             FROM employee
                             LEFT JOIN department on (employee.department_id = department.id)
-                     ) employee on(user_request.initiator_id = employee.id)
+                     ) employee on(user_request.initiator_upn = employee.userPrincipalName)
                      LEFT JOIN ur_service on(user_request.service_id = ur_service.id)
                      LEFT JOIN ur_status on(user_request.status_id = ur_status.id)
                      LEFT JOIN ur_priority on(user_request.priority_id = ur_priority.id)
                      LEFT JOIN (
-                            select employee.id as id,
+                            select employee.user_principal_name as userPrincipalName,
                                    employee.display_name as display_name
                             FROM employee
-                     ) executor on executor.id = user_request.executor_id
+                     ) executor on executor.userPrincipalName = user_request.executor_upn
               WHERE user_request.number ='${requestNumber}'
               LIMIT 1`;
 
@@ -112,7 +112,7 @@ export const getUserRequestLifeCycle = (requestNumber: string) => `
                                    ur_life_cycle.event_type AS eventType,
                                    ur_life_cycle.event_value AS eventValue
                             FROM ur_life_cycle
-                                   LEFT JOIN employee on(ur_life_cycle.employee_id = employee.id)
+                                   LEFT JOIN employee on(ur_life_cycle.user_principal_name = employee.user_principal_name)
                             WHERE ur_life_cycle.request_number  ='${requestNumber}'
                             order by ur_life_cycle.event_date`;
 
@@ -133,27 +133,28 @@ export const getDepartment = (departmentId?: any) => `
 export const getUserRequestNewNumber = `SELECT user_request_new_number() AS newNumber`;
 
 export const getEmployee = `
-                            SELECT employee.id AS id,
+                            SELECT employee.user_principal_name AS userPrincipalName,
                                    employee.display_name AS displayName,
                                    department.name AS departmentName,
                                    department.id AS departmentId,
-                                   position.name AS positionName
+                                   position.name AS positionName,
+                                   employee_photo.thumbnail_photo AS thumbnailPhoto
                             FROM employee
                                    INNER JOIN department on(employee.department_id = department.id)
                                    INNER JOIN position on(employee.position_id = position.id)
+                                   LEFT OUTER JOIN employee_photo on(employee_photo.user_principal_name = employee.user_principal_name)
                             order by employee.display_name`;
 
 export const getFilteredEmployee = (filterValue: string) => `
-                            SELECT employee.id AS id,
+                            SELECT employee.user_principal_name AS userPrincipalName,
                                    employee.display_name AS displayName,
-                                   employee.user_principal_name AS userPrincipalName,
                                    employee.department_id AS departmentId
                             FROM employee
                             WHERE employee.display_name LIKE  '${filterValue}%'
                                    order by employee.display_name desc`;
 
-export const getEmployeeByUPN = (email: string) => `
-                            SELECT employee.id AS id,
+export const getEmployeeByUPN = (userPrincipalName: string) => `
+                            SELECT employee.user_principal_name AS userPrincipalName,
                                    employee.display_name AS displayName,
                                    department.name AS departmentName,
                                    department.id AS departmentId,
@@ -161,8 +162,17 @@ export const getEmployeeByUPN = (email: string) => `
                             FROM employee
                                    INNER JOIN department on(employee.department_id = department.id)
                                    INNER JOIN position on(employee.position_id = position.id)
-                            WHERE employee.user_principal_name = '${email}'
+                            WHERE employee.user_principal_name = '${userPrincipalName}'
                             LIMIT 1`;
+
+export const getEmployeeByMail = (mail: string) => `
+                     SELECT employee_mail.user_principal_name AS userPrincipalName,
+		              employee_mail.mail AS mail,
+                            employee.display_name AS displayName
+                     FROM employee_mail
+                     INNER JOIN employee on(employee_mail.user_principal_name = employee.user_principal_name)
+                     WHERE employee_mail.mail = '${mail}'
+                     LIMIT 1`;
 
 export const getEmployeeById = (id: number) => `
                             SELECT employee.id AS id,
@@ -177,7 +187,7 @@ export const getEmployeeById = (id: number) => `
                             LIMIT 1`;
 
 export const getEmployeeByParentDepartment = (parentDepartmentId: number) => `
-                            SELECT employee.id AS id,
+                            SELECT employee.user_principal_name AS userPrincipalName,
                                    employee.display_name AS displayName
                             FROM employee
                                    INNER JOIN department on(employee.department_id = department.id)

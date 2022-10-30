@@ -19,7 +19,7 @@ const routes: Routes = [
   },
   {
     path: 'purchase',
-    loadChildren: () => import('../features/purchase/purchase.module').then(m => m.PurchaseModule),
+    // loadChildren: () => import('../features/purchase/purchase.module').then(m => m.PurchaseModule),
     canActivate: [AuthGuard],
     data: { key: 'cached_purchase' },
   },

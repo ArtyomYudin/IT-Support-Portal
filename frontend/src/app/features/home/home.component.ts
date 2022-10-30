@@ -49,7 +49,6 @@ export class HomeComponent implements OnInit {
     this.providerSpeedChart();
     this.createChart2();
     this.providerInfoSubscription = this.providerListArray$.subscribe(value => {
-      console.log(value);
       this.inSpeedInfo.length = 0;
       this.outSpeedInfo.length = 0;
       this.inSpeedInfo.push(value.inSpeedOrange, value.inSpeedTelros, value.inSpeedFilanco);

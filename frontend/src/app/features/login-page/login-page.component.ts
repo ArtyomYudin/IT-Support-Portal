@@ -34,7 +34,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      email: ['', Validators.required],
+      userPrincipalName: ['', Validators.required],
       password: ['', Validators.required],
     });
 
@@ -66,7 +66,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     this.authenticationService
-      .login(this.f.email.value, this.f.password.value)
+      .login(this.f.userPrincipalName.value, this.f.password.value)
       .pipe(first(), takeUntil(this.ngUnsubscribe$))
       .subscribe(
         () => {

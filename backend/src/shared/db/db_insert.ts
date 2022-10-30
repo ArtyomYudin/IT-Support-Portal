@@ -27,8 +27,8 @@ export const insertUserRequest = (
   dateCreation: string,
   dateChange: string,
   requestNumber: string,
-  initiatorId: number,
-  executorId: number,
+  initiatorUpn: number,
+  executorUpn: number,
   serviceId: number,
   topic: string,
   description: string,
@@ -40,8 +40,8 @@ export const insertUserRequest = (
           creation_date,
           change_date,
           number,
-          initiator_id,
-          executor_id,
+          initiator_upn,
+          executor_upn,
           service_id,
           topic,
           description,
@@ -49,8 +49,8 @@ export const insertUserRequest = (
           priority_id,
           deadline)
   VALUES (
-    '${dateCreation}','${dateChange}','${requestNumber}','${initiatorId}',
-    '${executorId}','${serviceId}','${topic}','${description}','${statusId}','${priorityId}','${deadline}')`;
+    '${dateCreation}','${dateChange}','${requestNumber}','${initiatorUpn}',
+    '${executorUpn}','${serviceId}','${topic}','${description}','${statusId}','${priorityId}','${deadline}')`;
 
 export const insertUserRequestAttachment = (
   requestNumber: string,
@@ -70,16 +70,16 @@ export const insertUserRequestAttachment = (
 
 export const insertUserRequestLifeCycle = (
   requestNumber: string,
-  employeeId: number,
+  employeeUpn: string,
   eventDate: string,
   eventType: string,
   eventValue: string,
 ) => `
     INSERT INTO ur_life_cycle (
             request_number,
-            employee_id,
+            user_principal_name,
             event_date,
             event_type,
             event_value)
     VALUES (
-    '${requestNumber}','${employeeId}','${eventDate}','${eventType}', '${eventValue}')`;
+    '${requestNumber}','${employeeUpn}','${eventDate}','${eventType}', '${eventValue}')`;

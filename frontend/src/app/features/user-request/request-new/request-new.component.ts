@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs/internal/Subject';
@@ -17,6 +17,7 @@ import { Observable } from 'rxjs';
   selector: 'fe-user-request-new',
   templateUrl: './request-new.component.html',
   styleUrls: ['./request-new.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RequestNewComponent implements OnInit, OnDestroy {
   public modalOpen: boolean;
@@ -53,9 +54,9 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public userRequestAllData: {
     requestNumber?: string;
-    initiatorId?: number;
+    initiatorUpn?: number;
     departmentId?: number;
-    executorId?: number;
+    executorUpn?: number;
     serviceId?: number;
     topic?: string;
     description?: string;
@@ -197,7 +198,6 @@ export class RequestNewComponent implements OnInit, OnDestroy {
   public onDeleteAttachFile(index: any): void {
     this.listOfFiles.splice(index, 1);
     this.fileList.splice(index, 1);
-    console.log(this.fileList);
   }
 
   public async closeNewRequest(): Promise<void> {
@@ -217,17 +217,15 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public onInitiatorSelected(initiator: any): void {
     this.wsService.send('getDepartment', initiator.departmentId);
-    console.log(initiator.departmentId);
     this.department$.subscribe(dep => {
-      console.log(dep);
       this.userRequest.controls.initiatorDepartment.setValue(dep[0].name);
     });
-    this.userRequestAllData.initiatorId = initiator.id;
+    this.userRequestAllData.initiatorUpn = initiator.userPrincipalName;
     this.userRequestAllData.departmentId = initiator.departmentId;
   }
 
   public onExecutorSelected(executor: any): void {
-    this.userRequestAllData.executorId = executor.id;
+    this.userRequestAllData.executorUpn = executor.userPrincipalName;
   }
 
   public onServiceSelected(service: any): void {
@@ -245,7 +243,6 @@ export class RequestNewComponent implements OnInit, OnDestroy {
       }),
     );
     this.wsService.send('saveNewUserRequest', this.userRequestAllData);
-    console.log(this.userRequestAllData);
     this.modalOpen = false;
     this.resetRequestPage();
   }

@@ -299,7 +299,6 @@ export class PurchaseRequestPageComponent implements OnInit, OnDestroy {
       purchaseTargetItems.item = itemValue.target;
       purchaseTargetItemsArray.push(purchaseTargetItems);
       i += 1;
-      console.log(purchaseTargetItems);
     });
 
     this.purchaseRequestAllData = {

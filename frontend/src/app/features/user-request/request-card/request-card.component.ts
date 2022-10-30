@@ -17,7 +17,7 @@ import { Buffer } from 'buffer';
   selector: 'fe-user-request-card',
   templateUrl: './request-card.component.html',
   styleUrls: ['./request-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestCardComponent implements OnInit, OnDestroy {
   public userRequest: any;
@@ -149,7 +149,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
   public takeRequestToWork() {
     this.wsService.send('updateUserRequest', {
       requestNumber: this.userRequest.requestNumber,
-      employeeId: this.token.id,
+      employeeUpn: this.token.id,
       newData: { status: 2 },
     });
     this.wsService
@@ -163,7 +163,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
   public finishRequest() {
     this.wsService.send('updateUserRequest', {
       requestNumber: this.userRequest.requestNumber,
-      employeeId: this.token.id,
+      employeeUpn: this.token.id,
       newData: { status: 3 },
     });
     this.wsService
@@ -183,7 +183,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
   }
 
   public onDegegateSelected(delegate: any): void {
-    this.userRequestNewData.delegate = delegate.id;
+    this.userRequestNewData.delegate = delegate.userPrincipalName;
   }
 
   public onDelegateChanges() {
@@ -204,7 +204,7 @@ export class RequestCardComponent implements OnInit, OnDestroy {
     }
     this.wsService.send('updateUserRequest', {
       requestNumber: this.userRequest.requestNumber,
-      employeeId: this.token.id,
+      employeeUpn: this.token.id,
       newData: this.userRequestNewData,
     });
     this.userRequestCard.reset();

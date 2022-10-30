@@ -15,7 +15,7 @@ const imapConfig = {
   tls: true,
 };
 
-const executorIdList = [86, 129];
+const executorUpnList = ['a.krasnyi@center-inform.ru', 'a.petrov@center-inform.ru'];
 async function getUserRequestNewNumber(): Promise<string> {
   let conn;
   let newNumber;
@@ -31,12 +31,12 @@ async function getUserRequestNewNumber(): Promise<string> {
   return newNumber.toString().padStart(6, 0);
 }
 
-async function getEmployeeByUPN(value: any): Promise<any> {
+async function getEmployeeByMail(value: any): Promise<any> {
   let conn;
   let employeeByUPN;
   try {
     conn = await dbPool.getConnection();
-    const rows = await conn.query(dbSelect.getEmployeeByUPN(value));
+    const rows = await conn.query(dbSelect.getEmployeeByMail(value));
     employeeByUPN = rows;
   } catch (error) {
     logger.error(`not connected due to error: ${error}`);
@@ -51,8 +51,8 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     creationDate: any;
     changeDate: any;
     requestNumber: string;
-    initiatorId: any;
-    executorId: number;
+    initiatorUpn: string;
+    executorUpn: string;
     serviceId: number;
     topic: string;
     description: string;
@@ -64,8 +64,8 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     creationDate: new Date(),
     changeDate: new Date(),
     requestNumber: '',
-    initiatorId: 0,
-    executorId: 0,
+    initiatorUpn: '',
+    executorUpn: '',
     serviceId: 1,
     topic: '',
     description: '',
@@ -76,7 +76,7 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
   };
 
   try {
-    const employee = await getEmployeeByUPN(mail.from?.value[0].address);
+    const employee = await getEmployeeByMail(mail.from?.value[0].address);
     /**
      * mailText содержит текст письма без пустых строк
      */
@@ -92,8 +92,9 @@ async function createUserRequest(mail: ParsedMail, wss: Server<WebSocket>): Prom
     userRequestAllData.creationDate = mail.headers.get('date');
     userRequestAllData.changeDate = mail.headers.get('date');
     userRequestAllData.requestNumber = await getUserRequestNewNumber();
-    userRequestAllData.initiatorId = employee.id;
-    userRequestAllData.executorId = executorIdList[Math.floor(Math.random() * executorIdList.length)];
+    userRequestAllData.initiatorUpn = employee.userPrincipalName;
+    // переделать исполнителя
+    userRequestAllData.executorUpn = executorUpnList[Math.floor(Math.random() * executorUpnList.length)];
     userRequestAllData.topic = mail.subject ? mail.subject : '';
     userRequestAllData.description = clearText || '';
     userRequestAllData.priorityId = mail.headers.get('priority') === 'high' ? 2 : 1;
