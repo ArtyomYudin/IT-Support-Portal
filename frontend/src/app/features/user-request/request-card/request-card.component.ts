@@ -17,7 +17,7 @@ import { Buffer } from 'buffer';
   selector: 'fe-user-request-card',
   templateUrl: './request-card.component.html',
   styleUrls: ['./request-card.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestCardComponent implements OnInit, OnDestroy {
   public userRequest: any;

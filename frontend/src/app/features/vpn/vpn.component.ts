@@ -10,7 +10,8 @@ export class VpnComponent implements OnInit {
   constructor(private wsService: WebsocketService) {}
 
   ngOnInit(): void {
-    this.wsService.send('getVpnCompletedSession', 6);
     this.wsService.send('getVpnActiveSession', null);
+    this.wsService.send('getEmployee', null);
+    this.wsService.send('getVpnCompletedSession', 720);
   }
 }

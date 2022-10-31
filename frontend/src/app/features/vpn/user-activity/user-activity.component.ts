@@ -44,8 +44,8 @@ export class UserActivityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.wsService.send('getEmployee', null);
-    this.wsService.send('getVpnCompletedSession', 720);
+    // this.wsService.send('getEmployee', null);
+    // this.wsService.send('getVpnCompletedSession', 720);
     /*
     this.reloadVpnSession = setInterval(() => {
       this.loadingSession = true;

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs/internal/Subject';
@@ -17,7 +17,7 @@ import { Observable } from 'rxjs';
   selector: 'fe-user-request-new',
   templateUrl: './request-new.component.html',
   styleUrls: ['./request-new.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestNewComponent implements OnInit, OnDestroy {
   public modalOpen: boolean;
@@ -68,7 +68,12 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
-  constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private datePipe: DatePipe) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private wsService: WebsocketService,
+    private datePipe: DatePipe,
+    private cdRef: ChangeDetectorRef,
+  ) {
     this.serviceListArray$ = this.wsService
       .on<RequestService>(Event.EV_USER_REQUEST_SERVICE)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
@@ -118,6 +123,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
         filter(value => value.length >= 3),
         switchMap(value => {
           this.wsService.send('getFilteredRequestInitiator', value);
+          this.cdRef.markForCheck();
           return this.wsService.on<Employee>(Event.EV_FILTERED_EMPLOYEE);
         }),
         takeUntil(this.ngUnsubscribe$),
@@ -127,6 +133,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
           this.filteredInitiator = null;
         } else {
           this.filteredInitiator = data;
+          this.cdRef.markForCheck();
         }
       });
   }

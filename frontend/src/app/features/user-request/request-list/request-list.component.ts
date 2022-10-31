@@ -15,7 +15,7 @@ import { RequestCardComponent } from '@feature/user-request/request-card/request
   selector: 'fe-user-request-list',
   templateUrl: './request-list.component.html',
   styleUrls: ['./request-list.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestListComponent implements OnInit, OnDestroy {
   public selected: any = [];

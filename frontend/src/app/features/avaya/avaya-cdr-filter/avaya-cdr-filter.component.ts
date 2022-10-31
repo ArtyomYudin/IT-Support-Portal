@@ -39,6 +39,7 @@ export class AvayaCDRFilterComponent implements OnInit, OnDestroy {
     this.avayaFilterCriteria = { period: 6 };
     this.wsService.send('getAvayaCDR', 6);
     this.avayaCDRService.sendStatus(true);
+    this.wsService.send('getAvayaCDR', this.avayaFilter.controls.avayaViewPeriod.value.value);
     this.reloadAvayaCDR = setInterval(() => {
       this.wsService.send('getAvayaCDR', this.avayaFilter.controls.avayaViewPeriod.value.value);
     }, 60000);

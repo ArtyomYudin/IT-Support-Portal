@@ -63,7 +63,7 @@ export class WebsocketService implements IWebsocketService, OnDestroy {
     this.wsMessages$ = new Subject<IwsMessage<any>>();
 
     this.reconnectInterval = 5000; // pause between connections
-    this.reconnectAttempts = 10; // number of connection attempts
+    this.reconnectAttempts = 200; // number of connection attempts
 
     this.config = {
       url: `wss://${environment.apiHost}:${environment.apiPort}`,

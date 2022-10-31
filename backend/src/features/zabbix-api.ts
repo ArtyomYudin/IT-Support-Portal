@@ -94,9 +94,9 @@ async function sendProviderInfo(wss: Server<WebSocket>, data: any) {
 }
 
 export async function initZabbixAPI(wss: Server<WebSocket>): Promise<void> {
-  const token = await getAuthToken();
+  // const token = await getAuthToken();
   setInterval(() => {
-    getProviderInfo(token).then(data => {
+    getProviderInfo(process.env.ZABBIX_TOKEN).then(data => {
       sendProviderInfo(wss, data);
     });
   }, 30000);
