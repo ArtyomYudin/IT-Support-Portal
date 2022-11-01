@@ -32,13 +32,13 @@ export async function getEmployee(dbPool: Pool, ws: WebSocket) {
   }
 }
 
-export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, filter: number) {
+export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, value: any) {
   let conn;
 
   const completedSessionArray: any[] = [];
   try {
     conn = await dbPool.getConnection();
-    const rows = await conn.query(dbSelect.vpnCompletedSession(filter));
+    const rows = await conn.query(dbSelect.vpnCompletedSession(value.period, value.employeeUpn));
     rows.forEach((row: any, i: number) => {
       const durationArray = row.duration.split(':');
       completedSessionArray[i] = {
@@ -62,7 +62,7 @@ export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, filter
 
     ws.send(
       JSON.stringify({
-        event: 'event_vpn_completed_session',
+        event: value.employeeUpn ? 'event_vpn_completed_session_by_upn' : 'event_vpn_completed_session',
         data: { results: completedSessionArray, total: completedSessionArray.length },
       }),
     );

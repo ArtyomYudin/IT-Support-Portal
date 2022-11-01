@@ -26,6 +26,8 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('chart2', { static: true }) public refChart2: ElementRef;
 
+  @ViewChild('chart3', { static: true }) public refChart3: ElementRef;
+
   public providerListArray$: Observable<any>;
 
   public providerInfoSubscription: SubscriptionLike;
@@ -33,6 +35,8 @@ export class HomeComponent implements OnInit {
   private chart: any;
 
   private chart2: any;
+
+  private chart3: any;
 
   private inSpeedInfo: any = [];
 
@@ -48,6 +52,7 @@ export class HomeComponent implements OnInit {
     this.loadScripts();
     this.providerSpeedChart();
     this.createChart2();
+    this.createChart3();
     this.providerInfoSubscription = this.providerListArray$.subscribe(value => {
       this.inSpeedInfo.length = 0;
       this.outSpeedInfo.length = 0;
@@ -132,12 +137,12 @@ export class HomeComponent implements OnInit {
           {
             label: 'Входящий траффик',
             data: this.inSpeedInfo,
-            backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 0.2)'],
+            backgroundColor: 'hsl(93, 79%, 40%)',
           },
           {
             label: 'Исходящий траффик',
             data: this.outSpeedInfo,
-            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            backgroundColor: 'hsl(198, 66%, 57%)',
           },
         ],
       },
@@ -173,6 +178,17 @@ export class HomeComponent implements OnInit {
               },
             },
           },
+          x: {
+            type: 'linear',
+            grace: '10%',
+            ticks: {
+              font: {
+                family: "'Metropolis','Avenir Next','Helvetica Neue','Arial','sans-serif'",
+                size: 13,
+                weight: '500',
+              },
+            },
+          },
         },
         aspectRatio: 2.5,
       },
@@ -191,7 +207,7 @@ export class HomeComponent implements OnInit {
         datasets: [
           {
             data: ['0', '9', '2', '1'],
-            backgroundColor: ['hsla(198, 66%, 57%, 0.5)', 'hsla(198, 66%, 57%, 0.5)', 'hsla(282, 43%, 54%, 0.5)', 'hsl(93, 67%, 38%, 0.5)'],
+            backgroundColor: ['hsl(198, 66%, 57%)', 'hsl(198, 66%, 57%)', 'hsl(282, 43%, 54%)', 'hsl(93, 67%, 38%)'],
           },
         ],
       },
@@ -228,6 +244,67 @@ export class HomeComponent implements OnInit {
           },
           centerText: {
             text: '20',
+            color: 'red',
+            fontStyle: "'Metropolis','Avenir Next','Helvetica Neue','Arial','sans-serif'",
+            sidePadding: 20,
+          },
+        },
+      },
+    });
+  }
+
+  createChart3() {
+    const chart3 = this.refChart3.nativeElement;
+    const ctx = chart3.getContext('2d');
+    this.chart3 = new Chart(ctx, {
+      type: 'doughnut', // this denotes tha type of chart
+
+      data: {
+        // values on X-Axis
+        labels: ['Свободные', 'Занятые'],
+        datasets: [
+          {
+            data: ['52', '8'],
+            backgroundColor: ['hsl(93, 79%, 40%)', 'hsl(48, 94%, 57%)'],
+          },
+        ],
+      },
+      plugins: [this.centerTextPlugin],
+
+      options: {
+        aspectRatio: 2.5,
+        // responsive: true,
+        cutout: 40,
+        layout: {
+          padding: 0,
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'left',
+            labels: {
+              filter: (legendItem, data) => {
+                const label = legendItem.text;
+                const labelIndex = data.labels.findIndex(labelName => labelName === label);
+                const qtd = data.datasets[0].data[labelIndex];
+
+                // eslint-disable-next-line no-param-reassign
+                legendItem.text = `${legendItem.text} : ${qtd}`;
+                // return (qtd !=='0')?true:false;
+                return true;
+              },
+              font: {
+                family: "'Metropolis','Avenir Next','Helvetica Neue','Arial','sans-serif'",
+                size: 13,
+                weight: '500',
+              },
+            },
+          },
+          title: {
+            display: false,
+          },
+          centerText: {
+            text: '8',
             color: 'red',
             fontStyle: "'Metropolis','Avenir Next','Helvetica Neue','Arial','sans-serif'",
             sidePadding: 20,

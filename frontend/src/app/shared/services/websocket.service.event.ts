@@ -29,6 +29,7 @@ export enum Event {
   EV_AVAYA_CDR_FILTERED = 'event_avaya_cdr_filtered',
 
   EV_VPN_COMPLETED_SESSION = 'event_vpn_completed_session',
+  EV_VPN_COMPLETED_SESSION_BY_UPN = 'event_vpn_completed_session_by_upn',
   EV_VPN_ACTIVE_SESSION = 'event_vpn_active_session',
 
   EV_PROVIDER_INFO = 'event_provider_info',

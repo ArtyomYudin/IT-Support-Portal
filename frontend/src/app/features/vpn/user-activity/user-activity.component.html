@@ -14,7 +14,7 @@
                         </clr-dg-cell>
                     </clr-dg-row>
 
-                    <ng-template clrIfDetail let-detail (clrIfDetailChange)="onDetailOpen($event?.user)">
+                    <ng-template clrIfDetail let-detail (clrIfDetailChange)="onDetailOpen($event?.userPrincipalName)">
                         <clr-dg-detail>
                             <clr-dg-detail-header>
                                 <div class="photo">
@@ -35,11 +35,28 @@
                                 </div>
                                 <div class="history-limit-height">
                                     <clr-datagrid class="datagrid-compact">
-                                        <clr-dg-column>Время подключения</clr-dg-column>
-                                        <clr-dg-column>Продолжительность подключения (чч:мм)</clr-dg-column>
-
+                                        <clr-dg-column class="date-column">Дата</clr-dg-column>
+                                        <clr-dg-column>Длительность</clr-dg-column>
+                                        <clr-dg-column class="byte-column">Передано</clr-dg-column>
+                                        <clr-dg-column class="byte-column">Принято</clr-dg-column>
                                         <clr-dg-placeholder>Мы не смогли найти историю сеансов!</clr-dg-placeholder>
-
+                                        <clr-dg-row
+                                            *clrDgItems="let sessionbyUpn of (sessionByUpnListArray$ | async)?.results"
+                                            [clrDgItem]="sessionbyUpn"
+                                        >
+                                            <clr-dg-cell class="date-column">
+                                                {{ sessionbyUpn.sessionStart }}
+                                            </clr-dg-cell>
+                                            <clr-dg-cell>
+                                                {{ sessionbyUpn.duration }}
+                                            </clr-dg-cell>
+                                            <clr-dg-cell class="byte-column">
+                                                {{ sessionbyUpn.byteRcv | byteConvert }}
+                                            </clr-dg-cell>
+                                            <clr-dg-cell class="byte-column">
+                                                {{ sessionbyUpn.byteXmt | byteConvert }}
+                                            </clr-dg-cell>
+                                        </clr-dg-row>
                                         <clr-dg-footer> </clr-dg-footer>
                                     </clr-datagrid>
                                 </div>

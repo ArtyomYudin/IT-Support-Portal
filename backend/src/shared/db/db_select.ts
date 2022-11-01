@@ -282,7 +282,7 @@ export const avayaCDRList = (filter: number) => `
               WHERE avaya_cdr.date >= NOW() - INTERVAL ${filter} HOUR
               order by avaya_cdr.date DESC`;
 
-export const vpnCompletedSession = (filter: number) => `
+export const vpnCompletedSession = (period: number, employeeUpn: string | null) => `
        SELECT DISTINCT
               connect.date AS sessionEnd,
               connect.host AS vpnNode,
@@ -302,7 +302,8 @@ export const vpnCompletedSession = (filter: number) => `
                      else SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 2), ' ',-1)
                      end)
               )
-       WHERE (connect.date >= NOW() - INTERVAL ${filter} HOUR) and LOCATE('%ASA-4-113019',connect.event)
+       WHERE (connect.date >= NOW() - INTERVAL ${period} HOUR) AND LOCATE('%ASA-4-113019',connect.event) 
+       ${employeeUpn ? ` AND employee.user_principal_name = '${employeeUpn}'` : ''}
        order by connect.date DESC`;
 
 export const vpnActiveSession = `

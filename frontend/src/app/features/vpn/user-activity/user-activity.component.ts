@@ -22,6 +22,8 @@ export class UserActivityComponent implements OnInit, OnDestroy {
 
   public sessionListArray$: Observable<IVpnSession>;
 
+  public sessionByUpnListArray$: Observable<IVpnSession>;
+
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   private reloadVpnSession: NodeJS.Timer;
@@ -35,6 +37,13 @@ export class UserActivityComponent implements OnInit, OnDestroy {
       }),
     );
     this.sessionListArray$ = this.wsService.on<IVpnSession>(Event.EV_VPN_COMPLETED_SESSION).pipe(
+      distinctUntilChanged(),
+      takeUntil(this.ngUnsubscribe$),
+      tap(() => {
+        this.loadingSession = false;
+      }),
+    );
+    this.sessionByUpnListArray$ = this.wsService.on<IVpnSession>(Event.EV_VPN_COMPLETED_SESSION_BY_UPN).pipe(
       distinctUntilChanged(),
       takeUntil(this.ngUnsubscribe$),
       tap(() => {
@@ -60,10 +69,12 @@ export class UserActivityComponent implements OnInit, OnDestroy {
     clearInterval(this.reloadVpnSession);
   }
 
-  public onDetailOpen(user: string): void {}
+  public onDetailOpen(user: string): void {
+    this.wsService.send('getVpnCompletedSession', { period: 720, employeeUpn: user });
+  }
 
   public sessionRefresh() {
     this.loadingSession = true;
-    this.wsService.send('getVpnCompletedSession', 720);
+    this.wsService.send('getVpnCompletedSession', { period: 720, employeeUpn: null });
   }
 }

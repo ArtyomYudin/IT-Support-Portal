@@ -12,6 +12,6 @@ export class VpnComponent implements OnInit {
   ngOnInit(): void {
     this.wsService.send('getVpnActiveSession', null);
     this.wsService.send('getEmployee', null);
-    this.wsService.send('getVpnCompletedSession', 720);
+    this.wsService.send('getVpnCompletedSession', { period: 720, employeeUpn: null });
   }
 }

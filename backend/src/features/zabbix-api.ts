@@ -1,5 +1,6 @@
 import { Server, WebSocket } from 'ws';
 import fetch from 'node-fetch';
+import { Console } from 'node:console';
 import { logger } from './logger';
 
 const hardwareGroup = {
@@ -93,11 +94,34 @@ async function sendProviderInfo(wss: Server<WebSocket>, data: any) {
   }
 }
 
+async function getAvayaE1ChannelInfo(token: any) {
+  const postData = {
+    jsonrpc: '2.0',
+    method: 'item.get',
+    id: 1,
+    auth: token,
+    params: {
+      hostids: [10254],
+      output: ['hostid', 'key_', 'lastvalue'],
+      sortfield: 'itemid',
+    },
+  };
+
+  const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
+    method: 'post',
+    body: JSON.stringify(postData),
+    headers: { 'Content-Type': 'application/json-rpc' },
+  });
+  const dataJSON = await dataResponse.json();
+  return dataJSON.result;
+}
+
 export async function initZabbixAPI(wss: Server<WebSocket>): Promise<void> {
   // const token = await getAuthToken();
   setInterval(() => {
     getProviderInfo(process.env.ZABBIX_TOKEN).then(data => {
       sendProviderInfo(wss, data);
     });
+    // getAvayaE1ChannelInfo(process.env.ZABBIX_TOKEN);
   }, 30000);
 }
