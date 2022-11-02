@@ -22,53 +22,64 @@ Chart.register(...registerables);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-  @ViewChild('chart', { static: true }) public refChart: ElementRef;
+  @ViewChild('providerSpeedChart', { static: true }) public refProviderSpeedChart: ElementRef;
 
   @ViewChild('chart2', { static: true }) public refChart2: ElementRef;
 
-  @ViewChild('chart3', { static: true }) public refChart3: ElementRef;
+  @ViewChild('avayaE1Chart', { static: true }) public refAvayaE1Chart: ElementRef;
 
   public providerListArray$: Observable<any>;
 
+  public avayaE1ListArray$: Observable<any>;
+
   public providerInfoSubscription: SubscriptionLike;
 
-  private chart: any;
+  public avayaE1InfoSubscription: SubscriptionLike;
+
+  private providerSpeedChart: any;
 
   private chart2: any;
 
-  private chart3: any;
+  private avayaE1Chart: any;
 
   private inSpeedInfo: any = [];
 
   private outSpeedInfo: any = [];
 
+  private avayaE1Channel: any = [60, 0];
+
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   constructor(private dynamicScriptLoader: DynamicScriptLoaderService, private wsService: WebsocketService) {
     this.providerListArray$ = this.wsService.on<any>(Event.EV_PROVIDER_INFO).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.avayaE1ListArray$ = this.wsService.on<any>(Event.EV_AVAYA_E1_INFO).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.loadScripts();
-    this.providerSpeedChart();
+    this.createProviderSpeedChart();
     this.createChart2();
-    this.createChart3();
+    this.createAvayaE1Chart();
     this.providerInfoSubscription = this.providerListArray$.subscribe(value => {
       this.inSpeedInfo.length = 0;
       this.outSpeedInfo.length = 0;
       this.inSpeedInfo.push(value.inSpeedOrange, value.inSpeedTelros, value.inSpeedFilanco);
       this.outSpeedInfo.push(value.outSpeedOrange, value.outSpeedTelros, value.outSpeedFilanco);
-      // this.chart.data.datasets[0].forEach((dataset: any) => {
-      //   dataset.data.push([1001]);
-      // });
-      this.chart.update('none');
+      this.providerSpeedChart.update('none');
+    });
+    this.avayaE1InfoSubscription = this.avayaE1ListArray$.subscribe(value => {
+      this.avayaE1Channel.length = 0;
+      this.avayaE1Channel.push(value.allChannel - value.activeChannel, value.activeChannel);
+      this.avayaE1Chart.options.plugins.centerText.text = value.activeChannel;
+      this.avayaE1Chart.update('none');
     });
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
     this.providerInfoSubscription.unsubscribe();
+    this.avayaE1InfoSubscription.unsubscribe();
   }
 
   private loadScripts() {
@@ -83,7 +94,7 @@ export class HomeComponent implements OnInit {
       .catch(error => console.log(error));
   }
 
-  centerTextPlugin = {
+  private centerTextPlugin = {
     id: 'centerText',
     beforeDraw(chart: any, args: any, options: any) {
       // Get ctx from string
@@ -125,11 +136,11 @@ export class HomeComponent implements OnInit {
     },
   };
 
-  providerSpeedChart() {
-    const chart = this.refChart.nativeElement;
-    const ctx = chart.getContext('2d');
-    this.chart = new Chart(ctx, {
-      type: 'bar', // this denotes tha type of chart
+  private createProviderSpeedChart() {
+    const providerSpeedChart = this.refProviderSpeedChart.nativeElement;
+    const ctx = providerSpeedChart.getContext('2d');
+    this.providerSpeedChart = new Chart(ctx, {
+      type: 'bar',
       data: {
         // values on X-Axis
         labels: ['Orange', 'Телрос', 'Филанка'],
@@ -195,7 +206,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  createChart2() {
+  private createChart2() {
     const chart2 = this.refChart2.nativeElement;
     const ctx = chart2.getContext('2d');
     this.chart2 = new Chart(ctx, {
@@ -212,7 +223,6 @@ export class HomeComponent implements OnInit {
         ],
       },
       plugins: [this.centerTextPlugin],
-
       options: {
         aspectRatio: 2.5,
         // responsive: true,
@@ -226,8 +236,6 @@ export class HomeComponent implements OnInit {
                 const label = legendItem.text;
                 const labelIndex = data.labels.findIndex(labelName => labelName === label);
                 const qtd = data.datasets[0].data[labelIndex];
-
-                // eslint-disable-next-line no-param-reassign
                 legendItem.text = `${legendItem.text} : ${qtd}`;
                 // return (qtd !=='0')?true:false;
                 return true;
@@ -253,24 +261,22 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  createChart3() {
-    const chart3 = this.refChart3.nativeElement;
-    const ctx = chart3.getContext('2d');
-    this.chart3 = new Chart(ctx, {
-      type: 'doughnut', // this denotes tha type of chart
-
+  private createAvayaE1Chart() {
+    const avayaE1Chart = this.refAvayaE1Chart.nativeElement;
+    const ctx = avayaE1Chart.getContext('2d');
+    this.avayaE1Chart = new Chart(ctx, {
+      type: 'doughnut',
       data: {
         // values on X-Axis
         labels: ['Свободные', 'Занятые'],
         datasets: [
           {
-            data: ['52', '8'],
+            data: this.avayaE1Channel,
             backgroundColor: ['hsl(93, 79%, 40%)', 'hsl(48, 94%, 57%)'],
           },
         ],
       },
       plugins: [this.centerTextPlugin],
-
       options: {
         aspectRatio: 2.5,
         // responsive: true,
@@ -287,8 +293,6 @@ export class HomeComponent implements OnInit {
                 const label = legendItem.text;
                 const labelIndex = data.labels.findIndex(labelName => labelName === label);
                 const qtd = data.datasets[0].data[labelIndex];
-
-                // eslint-disable-next-line no-param-reassign
                 legendItem.text = `${legendItem.text} : ${qtd}`;
                 // return (qtd !=='0')?true:false;
                 return true;
@@ -304,7 +308,7 @@ export class HomeComponent implements OnInit {
             display: false,
           },
           centerText: {
-            text: '8',
+            text: this.avayaE1Channel[1],
             color: 'red',
             fontStyle: "'Metropolis','Avenir Next','Helvetica Neue','Arial','sans-serif'",
             sidePadding: 20,

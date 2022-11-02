@@ -89,6 +89,7 @@
         "ignoreComments": true,
         "tabWidth": 4
       }
-    ]
+    ],
+    "no-param-reassign": ["error", { "props": false }]
   }
 }

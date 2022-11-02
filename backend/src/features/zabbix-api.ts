@@ -1,15 +1,15 @@
 import { Server, WebSocket } from 'ws';
 import fetch from 'node-fetch';
-import { Console } from 'node:console';
+import { isAnyArrayBuffer } from 'util/types';
 import { logger } from './logger';
 
-const hardwareGroup = {
-  7: 'ups',
-  10: 'switch',
-  13: 'vmware',
-  17: 'router',
-  21: 'server',
-};
+const hardwareGroup = [
+  { id: 7, name: 'ups' },
+  { id: 10, name: 'switch' },
+  { id: 13, name: 'vmware' },
+  { id: 17, name: 'router' },
+  { id: 21, name: 'server' },
+];
 
 // Log in and obtain an authentication token.
 async function getAuthToken() {
@@ -35,7 +35,7 @@ async function getAuthToken() {
   return tokenJSON.result;
 }
 
-async function getProviderInfo(token: any) {
+async function getProviderInfo(token: string | undefined) {
   const postData = {
     jsonrpc: '2.0',
     method: 'item.get',
@@ -58,14 +58,18 @@ async function getProviderInfo(token: any) {
       },
     },
   };
-
-  const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
-    method: 'post',
-    body: JSON.stringify(postData),
-    headers: { 'Content-Type': 'application/json-rpc' },
-  });
-  const dataJSON = await dataResponse.json();
-  return dataJSON.result;
+  try {
+    const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
+      method: 'post',
+      body: JSON.stringify(postData),
+      headers: { 'Content-Type': 'application/json-rpc' },
+    });
+    const dataJSON = await dataResponse.json();
+    return dataJSON.result;
+  } catch (error) {
+    logger.error(`getProviderInfo - ${error}`);
+    return false;
+  }
 }
 
 async function sendProviderInfo(wss: Server<WebSocket>, data: any) {
@@ -94,7 +98,8 @@ async function sendProviderInfo(wss: Server<WebSocket>, data: any) {
   }
 }
 
-async function getAvayaE1ChannelInfo(token: any) {
+async function getAvayaE1ChannelInfo(token: string | undefined) {
+  let activeChannel = 0;
   const postData = {
     jsonrpc: '2.0',
     method: 'item.get',
@@ -106,22 +111,74 @@ async function getAvayaE1ChannelInfo(token: any) {
       sortfield: 'itemid',
     },
   };
+  try {
+    const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
+      method: 'post',
+      body: JSON.stringify(postData),
+      headers: { 'Content-Type': 'application/json-rpc' },
+    });
+    const dataJSON = await dataResponse.json();
+    dataJSON.result.forEach((channel: any) => {
+      if (channel.lastvalue === 'in-service/active') {
+        activeChannel += 1;
+      }
+    });
+    return { activeChannel, allChannel: dataJSON.result.length };
+  } catch (error) {
+    logger.error(`getAvayaE1ChannelInfo - ${error}`);
+    return false;
+  }
+}
 
-  const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
-    method: 'post',
-    body: JSON.stringify(postData),
-    headers: { 'Content-Type': 'application/json-rpc' },
-  });
-  const dataJSON = await dataResponse.json();
-  return dataJSON.result;
+async function getHardwareEvent(token: string | undefined, hwGroup: any) {
+  try {
+    const postData = {
+      jsonrpc: '2.0',
+      method: 'problem.get',
+      id: 1,
+      auth: token,
+      params: {
+        groupids: hwGroup.id,
+        severities: [2, 3, 4, 5],
+        sortfield: ['eventid'],
+        sortorder: 'DESC',
+      },
+    };
+    const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
+      method: 'post',
+      body: JSON.stringify(postData),
+      headers: { 'Content-Type': 'application/json-rpc' },
+    });
+    const dataJSON = await dataResponse.json();
+    return dataJSON.result;
+  } catch (error) {
+    logger.error(`getHardwareEvent - ${error}`);
+    return false;
+  }
 }
 
 export async function initZabbixAPI(wss: Server<WebSocket>): Promise<void> {
-  // const token = await getAuthToken();
   setInterval(() => {
     getProviderInfo(process.env.ZABBIX_TOKEN).then(data => {
       sendProviderInfo(wss, data);
     });
-    // getAvayaE1ChannelInfo(process.env.ZABBIX_TOKEN);
   }, 30000);
+
+  setInterval(() => {
+    getAvayaE1ChannelInfo(process.env.ZABBIX_TOKEN).then(data => {
+      wss.clients.forEach((client: any) => {
+        client.send(
+          JSON.stringify({
+            event: 'event_avaya_e1_info',
+            data,
+          }),
+        );
+      });
+    });
+  }, 60000);
+  setInterval(() => {
+    hardwareGroup.forEach((group: any, i: number) => {
+      getHardwareEvent(process.env.ZABBIX_TOKEN, group);
+    });
+  }, 60000);
 }
