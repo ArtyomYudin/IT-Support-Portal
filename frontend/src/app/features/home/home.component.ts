@@ -24,7 +24,7 @@ Chart.register(...registerables);
 export class HomeComponent implements OnInit {
   @ViewChild('providerSpeedChart', { static: true }) public refProviderSpeedChart: ElementRef;
 
-  @ViewChild('chart2', { static: true }) public refChart2: ElementRef;
+  @ViewChild('hwAlarmChart', { static: true }) public refHWAlarmChart: ElementRef;
 
   @ViewChild('avayaE1Chart', { static: true }) public refAvayaE1Chart: ElementRef;
 
@@ -32,13 +32,17 @@ export class HomeComponent implements OnInit {
 
   public avayaE1ListArray$: Observable<any>;
 
+  public hwGroupAlarmListArray$: Observable<any>;
+
   public providerInfoSubscription: SubscriptionLike;
 
   public avayaE1InfoSubscription: SubscriptionLike;
 
+  public hwGroupAlarmSubscription: SubscriptionLike;
+
   private providerSpeedChart: any;
 
-  private chart2: any;
+  private hwAlarmChart: any;
 
   private avayaE1Chart: any;
 
@@ -48,17 +52,24 @@ export class HomeComponent implements OnInit {
 
   private avayaE1Channel: any = [60, 0];
 
+  private hwAlarmLabel: any = ['Сбоев'];
+
+  private hwAlarmValue: any = [0];
+
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   constructor(private dynamicScriptLoader: DynamicScriptLoaderService, private wsService: WebsocketService) {
     this.providerListArray$ = this.wsService.on<any>(Event.EV_PROVIDER_INFO).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
     this.avayaE1ListArray$ = this.wsService.on<any>(Event.EV_AVAYA_E1_INFO).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.hwGroupAlarmListArray$ = this.wsService
+      .on<any>(Event.EV_HARDWARE_GROUP_ALARM)
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
   }
 
   public ngOnInit(): void {
     this.loadScripts();
     this.createProviderSpeedChart();
-    this.createChart2();
+    this.createHWAlarmChart();
     this.createAvayaE1Chart();
     this.providerInfoSubscription = this.providerListArray$.subscribe(value => {
       this.inSpeedInfo.length = 0;
@@ -72,6 +83,20 @@ export class HomeComponent implements OnInit {
       this.avayaE1Channel.push(value.allChannel - value.activeChannel, value.activeChannel);
       this.avayaE1Chart.options.plugins.centerText.text = value.activeChannel;
       this.avayaE1Chart.update('none');
+    });
+    this.hwGroupAlarmSubscription = this.hwGroupAlarmListArray$.subscribe(groupAlarm => {
+      this.hwAlarmLabel.length = 0;
+      this.hwAlarmValue.length = 0;
+      groupAlarm.forEach((group: { group: any; count: any }) => {
+        if (group.count !== 0) {
+          this.hwAlarmLabel.push(group.group);
+          this.hwAlarmValue.push(group.count);
+        }
+      });
+      this.hwAlarmChart.options.plugins.centerText.text = this.hwAlarmValue.reduce((sum: any, elem: any) => {
+        return sum + elem;
+      }, 0);
+      this.hwAlarmChart.update('none');
     });
   }
 
@@ -206,19 +231,26 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private createChart2() {
-    const chart2 = this.refChart2.nativeElement;
-    const ctx = chart2.getContext('2d');
-    this.chart2 = new Chart(ctx, {
+  private createHWAlarmChart() {
+    const hwAlarmChart = this.refHWAlarmChart.nativeElement;
+    const ctx = hwAlarmChart.getContext('2d');
+    this.hwAlarmChart = new Chart(ctx, {
       type: 'doughnut', // this denotes tha type of chart
 
       data: {
         // values on X-Axis
-        labels: ['Маршрутизаторы', 'Коммутаторы', 'ИБП', 'Сервера'],
+        labels: this.hwAlarmLabel,
         datasets: [
           {
-            data: ['0', '9', '2', '1'],
-            backgroundColor: ['hsl(198, 66%, 57%)', 'hsl(198, 66%, 57%)', 'hsl(282, 43%, 54%)', 'hsl(93, 67%, 38%)'],
+            data: this.hwAlarmValue,
+            backgroundColor: [
+              'hsl(198, 100%, 24%)',
+              'hsl(14, 91%, 55%)',
+              'hsl(198, 100%, 41%)',
+              'hsl(198, 100%, 34%))',
+              'hsl(14, 83%, 84%)',
+              'hsl(198, 57%, 85%)',
+            ],
           },
         ],
       },
@@ -251,7 +283,7 @@ export class HomeComponent implements OnInit {
             display: false,
           },
           centerText: {
-            text: '20',
+            text: this.hwAlarmValue[0],
             color: 'red',
             fontStyle: "'Metropolis','Avenir Next','Helvetica Neue','Arial','sans-serif'",
             sidePadding: 20,

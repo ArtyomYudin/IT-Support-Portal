@@ -34,4 +34,5 @@ export enum Event {
 
   EV_PROVIDER_INFO = 'event_provider_info',
   EV_AVAYA_E1_INFO = 'event_avaya_e1_info',
+  EV_HARDWARE_GROUP_ALARM = 'event_hardware_group_alarm',
 }

@@ -1,15 +1,8 @@
 import { Server, WebSocket } from 'ws';
 import fetch from 'node-fetch';
-import { isAnyArrayBuffer } from 'util/types';
 import { logger } from './logger';
 
-const hardwareGroup = [
-  { id: 7, name: 'ups' },
-  { id: 10, name: 'switch' },
-  { id: 13, name: 'vmware' },
-  { id: 17, name: 'router' },
-  { id: 21, name: 'server' },
-];
+const hardwareGroup: any[] = [];
 
 // Log in and obtain an authentication token.
 async function getAuthToken() {
@@ -33,6 +26,31 @@ async function getAuthToken() {
   });
   const tokenJSON: any = await authTokenResponse.json();
   return tokenJSON.result;
+}
+async function getHWGroup(token: string | undefined) {
+  hardwareGroup.length = 0;
+  const postData = {
+    jsonrpc: '2.0',
+    method: 'hostgroup.get',
+    id: 1,
+    auth: token,
+    params: {
+      output: ['groupid', 'name'],
+    },
+  };
+  try {
+    const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
+      method: 'post',
+      body: JSON.stringify(postData),
+      headers: { 'Content-Type': 'application/json-rpc' },
+    });
+    const dataJSON = await dataResponse.json();
+    dataJSON.result.forEach((group: { groupid: any; name: any }) => {
+      hardwareGroup.push({ id: group.groupid, name: group.name });
+    });
+  } catch (error) {
+    logger.error(`getHWGroup - ${error}`);
+  }
 }
 
 async function getProviderInfo(token: string | undefined) {
@@ -94,7 +112,7 @@ async function sendProviderInfo(wss: Server<WebSocket>, data: any) {
       );
     });
   } catch (error) {
-    logger.error(error);
+    logger.error(`sendProviderInfo - ${error}`);
   }
 }
 
@@ -130,7 +148,7 @@ async function getAvayaE1ChannelInfo(token: string | undefined) {
   }
 }
 
-async function getHardwareEvent(token: string | undefined, hwGroup: any) {
+async function getHardwareGroupEvent(token: string | undefined, hwGroup: any) {
   try {
     const postData = {
       jsonrpc: '2.0',
@@ -150,14 +168,38 @@ async function getHardwareEvent(token: string | undefined, hwGroup: any) {
       headers: { 'Content-Type': 'application/json-rpc' },
     });
     const dataJSON = await dataResponse.json();
-    return dataJSON.result;
+    return { group: hwGroup.name, event: dataJSON.result, count: dataJSON.result.length };
   } catch (error) {
     logger.error(`getHardwareEvent - ${error}`);
     return false;
   }
 }
 
+function sendHardwareGroupEvent(wss: Server<WebSocket>) {
+  const hwGroupEvent: any[] = [];
+  hardwareGroup.forEach((group: any) => {
+    const groupEvent = getHardwareGroupEvent(process.env.ZABBIX_TOKEN, group);
+    hwGroupEvent.push(groupEvent);
+  });
+  Promise.all(hwGroupEvent).then(data => {
+    // console.log(data);
+    try {
+      wss.clients.forEach((client: any) => {
+        client.send(
+          JSON.stringify({
+            event: 'event_hardware_group_alarm',
+            data,
+          }),
+        );
+      });
+    } catch (error) {
+      logger.error(`sendHardwareGroupEvent - ${error}`);
+    }
+  });
+}
+
 export async function initZabbixAPI(wss: Server<WebSocket>): Promise<void> {
+  getHWGroup(process.env.ZABBIX_TOKEN);
   setInterval(() => {
     getProviderInfo(process.env.ZABBIX_TOKEN).then(data => {
       sendProviderInfo(wss, data);
@@ -177,8 +219,6 @@ export async function initZabbixAPI(wss: Server<WebSocket>): Promise<void> {
     });
   }, 60000);
   setInterval(() => {
-    hardwareGroup.forEach((group: any, i: number) => {
-      getHardwareEvent(process.env.ZABBIX_TOKEN, group);
-    });
+    sendHardwareGroupEvent(wss);
   }, 60000);
 }
