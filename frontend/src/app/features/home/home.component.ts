@@ -67,6 +67,7 @@ export class HomeComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.wsService.send('getDashboardEvent', null);
     this.loadScripts();
     this.createProviderSpeedChart();
     this.createHWAlarmChart();
@@ -174,11 +175,13 @@ export class HomeComponent implements OnInit {
             label: 'Входящий траффик',
             data: this.inSpeedInfo,
             backgroundColor: 'hsl(93, 79%, 40%)',
+            borderWidth: 0,
           },
           {
             label: 'Исходящий траффик',
             data: this.outSpeedInfo,
             backgroundColor: 'hsl(198, 66%, 57%)',
+            borderWidth: 0,
           },
         ],
       },
@@ -216,7 +219,7 @@ export class HomeComponent implements OnInit {
           },
           x: {
             type: 'linear',
-            grace: '10%',
+            grace: '12%',
             ticks: {
               font: {
                 family: "'Metropolis','Avenir Next','Helvetica Neue','Arial','sans-serif'",

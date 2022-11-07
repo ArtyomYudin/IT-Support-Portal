@@ -45,6 +45,7 @@
 
     // Header
     &-header {
+      padding: 0.4rem 0.7rem;
       &__head {
         margin: 0;
         text-align: right;
@@ -79,8 +80,13 @@
         font-weight: 500;
       }
     }
+    // Block
+    &-block {
+      padding: 0.4rem 0.7rem;
+    }
     // Footer
     &-footer {
+      padding: 0.4rem 0.7rem;
       display: flex;
 
       // Footer Head

@@ -90,39 +90,49 @@ async function getProviderInfo(token: string | undefined) {
   }
 }
 
-async function sendProviderInfo(wss: Server<WebSocket>, data: any) {
+async function sendProviderInfo(wss: Server<WebSocket>, ws?: WebSocket) {
   // logger.info(data);
+  const providerInfo = await getProviderInfo(process.env.ZABBIX_TOKEN);
   const providerSpeed = {
-    inSpeedOrange: (data[8].lastvalue / 1000 / 1000).toFixed(2),
-    outSpeedOrange: (data[11].lastvalue / 1000 / 1000).toFixed(2),
-    inSpeedTelros: (data[0].lastvalue / 1000 / 1000).toFixed(2),
-    outSpeedTelros: (data[3].lastvalue / 1000 / 1000).toFixed(2),
-    inSpeedFilanco: (data[1].lastvalue / 1000 / 1000).toFixed(2),
-    outSpeedFilanco: (data[4].lastvalue / 1000 / 1000).toFixed(2),
+    inSpeedOrange: (providerInfo[8].lastvalue / 1000 / 1000).toFixed(2),
+    outSpeedOrange: (providerInfo[11].lastvalue / 1000 / 1000).toFixed(2),
+    inSpeedTelros: (providerInfo[0].lastvalue / 1000 / 1000).toFixed(2),
+    outSpeedTelros: (providerInfo[3].lastvalue / 1000 / 1000).toFixed(2),
+    inSpeedFilanco: (providerInfo[1].lastvalue / 1000 / 1000).toFixed(2),
+    outSpeedFilanco: (providerInfo[4].lastvalue / 1000 / 1000).toFixed(2),
     // bgp62: data[3].lastvalue,
     // bgp176: data[2].lastvalue,
   };
   try {
-    wss.clients.forEach((client: any) => {
-      client.send(
+    if (ws) {
+      ws.send(
         JSON.stringify({
           event: 'event_provider_info',
           data: providerSpeed,
         }),
       );
-    });
+    } else {
+      wss.clients.forEach((client: any) => {
+        client.send(
+          JSON.stringify({
+            event: 'event_provider_info',
+            data: providerSpeed,
+          }),
+        );
+      });
+    }
   } catch (error) {
     logger.error(`sendProviderInfo - ${error}`);
   }
 }
 
-async function getAvayaE1ChannelInfo(token: string | undefined) {
+async function getAvayaE1ChannelInfo(wss: Server<WebSocket>, ws?: WebSocket) {
   let activeChannel = 0;
   const postData = {
     jsonrpc: '2.0',
     method: 'item.get',
     id: 1,
-    auth: token,
+    auth: process.env.ZABBIX_TOKEN,
     params: {
       hostids: [10254],
       output: ['hostid', 'key_', 'lastvalue'],
@@ -141,10 +151,25 @@ async function getAvayaE1ChannelInfo(token: string | undefined) {
         activeChannel += 1;
       }
     });
-    return { activeChannel, allChannel: dataJSON.result.length };
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          event: 'event_avaya_e1_info',
+          data: { activeChannel, allChannel: dataJSON.result.length },
+        }),
+      );
+    } else {
+      wss.clients.forEach((client: any) => {
+        client.send(
+          JSON.stringify({
+            event: 'event_avaya_e1_info',
+            data: { activeChannel, allChannel: dataJSON.result.length },
+          }),
+        );
+      });
+    }
   } catch (error) {
     logger.error(`getAvayaE1ChannelInfo - ${error}`);
-    return false;
   }
 }
 
@@ -175,7 +200,7 @@ async function getHardwareGroupEvent(token: string | undefined, hwGroup: any) {
   }
 }
 
-function sendHardwareGroupEvent(wss: Server<WebSocket>) {
+function sendHardwareGroupEvent(wss: Server<WebSocket>, ws?: WebSocket) {
   const hwGroupEvent: any[] = [];
   hardwareGroup.forEach((group: any) => {
     const groupEvent = getHardwareGroupEvent(process.env.ZABBIX_TOKEN, group);
@@ -184,41 +209,43 @@ function sendHardwareGroupEvent(wss: Server<WebSocket>) {
   Promise.all(hwGroupEvent).then(data => {
     // console.log(data);
     try {
-      wss.clients.forEach((client: any) => {
-        client.send(
+      if (ws) {
+        ws.send(
           JSON.stringify({
             event: 'event_hardware_group_alarm',
             data,
           }),
         );
-      });
+      } else {
+        wss?.clients.forEach((client: any) => {
+          client.send(
+            JSON.stringify({
+              event: 'event_hardware_group_alarm',
+              data,
+            }),
+          );
+        });
+      }
     } catch (error) {
       logger.error(`sendHardwareGroupEvent - ${error}`);
     }
   });
 }
 
+export function getDashboardEvent(wss: Server<WebSocket>, ws: WebSocket) {
+  sendProviderInfo(wss, ws);
+  sendHardwareGroupEvent(wss, ws);
+  getAvayaE1ChannelInfo(wss, ws);
+}
+
 export async function initZabbixAPI(wss: Server<WebSocket>): Promise<void> {
   getHWGroup(process.env.ZABBIX_TOKEN);
   setInterval(() => {
-    getProviderInfo(process.env.ZABBIX_TOKEN).then(data => {
-      sendProviderInfo(wss, data);
-    });
+    sendProviderInfo(wss);
   }, 30000);
 
   setInterval(() => {
-    getAvayaE1ChannelInfo(process.env.ZABBIX_TOKEN).then(data => {
-      wss.clients.forEach((client: any) => {
-        client.send(
-          JSON.stringify({
-            event: 'event_avaya_e1_info',
-            data,
-          }),
-        );
-      });
-    });
-  }, 60000);
-  setInterval(() => {
+    getAvayaE1ChannelInfo(wss);
     sendHardwareGroupEvent(wss);
   }, 60000);
 }

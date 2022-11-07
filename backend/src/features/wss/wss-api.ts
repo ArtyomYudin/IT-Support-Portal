@@ -5,6 +5,7 @@ import * as purchaseAPI from '../purchase-api';
 import * as userRequestAPI from '../user-request-api';
 import * as avayaAPI from '../avaya-api';
 import * as vpnAPI from '../vpn-api';
+import * as zabbixAPI from '../zabbix-api';
 
 export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocket>, msg: any): void {
   /*
@@ -159,6 +160,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
       break;
     case 'getVpnActiveSession':
       vpnAPI.getVpnActiveSession(dbPool, ws);
+      break;
+    case 'getDashboardEvent':
+      zabbixAPI.getDashboardEvent(wss, ws);
       break;
     default:
       break;
