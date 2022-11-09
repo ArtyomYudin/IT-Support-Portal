@@ -5,6 +5,7 @@ import { logger } from './logger';
 const hardwareGroup: any[] = [];
 
 // Log in and obtain an authentication token.
+/*
 async function getAuthToken() {
   const authData = {
     jsonrpc: '2.0',
@@ -27,6 +28,7 @@ async function getAuthToken() {
   const tokenJSON: any = await authTokenResponse.json();
   return tokenJSON.result;
 }
+*/
 async function getHWGroup(token: string | undefined) {
   hardwareGroup.length = 0;
   const postData = {
@@ -93,17 +95,17 @@ async function getProviderInfo(token: string | undefined) {
 async function sendProviderInfo(wss: Server<WebSocket>, ws?: WebSocket) {
   // logger.info(data);
   const providerInfo = await getProviderInfo(process.env.ZABBIX_TOKEN);
-  const providerSpeed = {
-    inSpeedOrange: (providerInfo[8].lastvalue / 1000 / 1000).toFixed(2),
-    outSpeedOrange: (providerInfo[11].lastvalue / 1000 / 1000).toFixed(2),
-    inSpeedTelros: (providerInfo[0].lastvalue / 1000 / 1000).toFixed(2),
-    outSpeedTelros: (providerInfo[3].lastvalue / 1000 / 1000).toFixed(2),
-    inSpeedFilanco: (providerInfo[1].lastvalue / 1000 / 1000).toFixed(2),
-    outSpeedFilanco: (providerInfo[4].lastvalue / 1000 / 1000).toFixed(2),
-    // bgp62: data[3].lastvalue,
-    // bgp176: data[2].lastvalue,
-  };
   try {
+    const providerSpeed = {
+      inSpeedOrange: (providerInfo[8].lastvalue / 1000 / 1000).toFixed(2),
+      outSpeedOrange: (providerInfo[11].lastvalue / 1000 / 1000).toFixed(2),
+      inSpeedTelros: (providerInfo[0].lastvalue / 1000 / 1000).toFixed(2),
+      outSpeedTelros: (providerInfo[3].lastvalue / 1000 / 1000).toFixed(2),
+      inSpeedFilanco: (providerInfo[1].lastvalue / 1000 / 1000).toFixed(2),
+      outSpeedFilanco: (providerInfo[4].lastvalue / 1000 / 1000).toFixed(2),
+      // bgp62: data[3].lastvalue,
+      // bgp176: data[2].lastvalue,
+    };
     if (ws) {
       ws.send(
         JSON.stringify({
@@ -200,36 +202,37 @@ async function getHardwareGroupEvent(token: string | undefined, hwGroup: any) {
   }
 }
 
-function sendHardwareGroupEvent(wss: Server<WebSocket>, ws?: WebSocket) {
+async function sendHardwareGroupEvent(wss: Server<WebSocket>, ws?: WebSocket) {
   const hwGroupEvent: any[] = [];
   hardwareGroup.forEach((group: any) => {
     const groupEvent = getHardwareGroupEvent(process.env.ZABBIX_TOKEN, group);
     hwGroupEvent.push(groupEvent);
   });
-  Promise.all(hwGroupEvent).then(data => {
-    // console.log(data);
-    try {
-      if (ws) {
-        ws.send(
+  const eventData = await Promise.all(hwGroupEvent);
+  // Promise.all(hwGroupEvent).then(data => {
+  // console.log(eventData);
+  try {
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          event: 'event_hardware_group_alarm',
+          data: eventData,
+        }),
+      );
+    } else {
+      wss?.clients.forEach((client: any) => {
+        client.send(
           JSON.stringify({
             event: 'event_hardware_group_alarm',
-            data,
+            data: eventData,
           }),
         );
-      } else {
-        wss?.clients.forEach((client: any) => {
-          client.send(
-            JSON.stringify({
-              event: 'event_hardware_group_alarm',
-              data,
-            }),
-          );
-        });
-      }
-    } catch (error) {
-      logger.error(`sendHardwareGroupEvent - ${error}`);
+      });
     }
-  });
+  } catch (error) {
+    logger.error(`sendHardwareGroupEvent - ${error}`);
+  }
+  // });
 }
 
 export function getDashboardEvent(wss: Server<WebSocket>, ws: WebSocket) {

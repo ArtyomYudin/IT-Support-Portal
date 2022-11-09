@@ -95,11 +95,17 @@
   margin-top: 0.45rem;
   margin-left: 2.2rem;
 }
+.vpn-filter {
+  //& .clr-control-container {
+  //  max-width: fit-content !important;
+  //}
+  text-align: end;
+}
 
 .view-period {
   max-width: 41%;
   position: absolute;
-  margin-left: calc(65vw - 15rem);
+  margin-left: calc(65vw - 20rem);
 
   &-container {
     &-label {
@@ -113,7 +119,7 @@
 
     &.clr-form-control {
       //align-items: unset;
-      margin-top: 0rem;
+      margin-top: 0.1rem;
       flex-direction: row;
     }
 

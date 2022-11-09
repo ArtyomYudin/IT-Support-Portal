@@ -1,13 +1,30 @@
-<div class="view-period">
-    <clr-input-container class="view-period-container">
-        <label class="view-period-container-label">За последний:</label>
-        <input class="view-period-container-input" formControlName="avayaViewPeriod" type="text" clrInput onkeydown="return false" />
-    </clr-input-container>
-</div>
+<form [formGroup]="vpnFilter" clrForm class="vpn-filter" [clrLayout]="'horizontal'" autocomplete="off">
+    <div class="view-period" *ngIf="tabName == 'sessionTab'">
+        <clr-input-container class="view-period-container">
+            <label class="view-period-container-label">За последний:</label>
+            <input
+                class="view-period-container-input"
+                formControlName="vpnViewPeriod"
+                type="text"
+                clrInput
+                [matAutocomplete]="viewPeriod"
+                onkeydown="return false"
+            />
+            <mat-autocomplete #viewPeriod="matAutocomplete" [displayWith]="displayFn">
+                <ng-container>
+                    <mat-option *ngFor="let period of this.periods" [value]="period" (onSelectionChange)="onFilterPeriodChange($event)">
+                        {{ period.name }}
+                    </mat-option>
+                </ng-container>
+            </mat-autocomplete>
+        </clr-input-container>
+    </div>
+</form>
+
 <clr-tabs class="vpn-history-switch">
     <clr-tab>
-        <button clrTabLink id="link1">История по пользователям</button>
-        <clr-tab-content id="content1">
+        <button clrTabLink (click)="onTabChange('employeeTab')">История по пользователям</button>
+        <clr-tab-content>
             <div class="limit-height">
                 <clr-datagrid class="datagrid-compact vpn-user-activity-datagrid" [clrDgLoading]="loadingEmployee">
                     <clr-dg-column>Пользователь</clr-dg-column>
@@ -81,7 +98,7 @@
         </clr-tab-content>
     </clr-tab>
     <clr-tab>
-        <button clrTabLink>История по сеансам</button>
+        <button clrTabLink (click)="onTabChange('sessionTab')">История по сеансам</button>
         <clr-tab-content>
             <div class="limit-height">
                 <clr-datagrid class="datagrid-compact vpn-user-activity-datagrid" [clrDgLoading]="loadingSession">
