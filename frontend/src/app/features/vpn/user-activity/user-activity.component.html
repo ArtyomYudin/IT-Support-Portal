@@ -103,7 +103,7 @@
             <div class="limit-height">
                 <clr-datagrid class="datagrid-compact vpn-user-activity-datagrid" [clrDgLoading]="loadingSession">
                     <clr-dg-column class="date-column">Дата</clr-dg-column>
-                    <clr-dg-column>Пользователь</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'displayName'">Пользователь</clr-dg-column>
                     <clr-dg-column>Длительность</clr-dg-column>
                     <clr-dg-column>Тип</clr-dg-column>
                     <clr-dg-column class="byte-column">Передано</clr-dg-column>

@@ -4,9 +4,11 @@ import { Subject } from 'rxjs/internal/Subject';
 import { Observable } from 'rxjs/internal/Observable';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { russionLocale } from '@translation/russion';
 import { IEmployee } from '@model/employee.model';
 import { IVpnSession } from '@model/vpn-session.model';
 import { Event } from '@service/websocket.service.event';
+import { ClrCommonStringsService } from '@clr/angular';
 
 @Component({
   selector: 'fe-vpn-user-activity',
@@ -44,7 +46,9 @@ export class UserActivityComponent implements OnInit, OnDestroy {
 
   private reloadVpnSession: NodeJS.Timer;
 
-  constructor(private wsService: WebsocketService, private formBuilder: FormBuilder) {
+  constructor(private wsService: WebsocketService, private commonStrings: ClrCommonStringsService, private formBuilder: FormBuilder) {
+    commonStrings.localize(russionLocale);
+
     this.employeeListArray$ = this.wsService.on<IEmployee>(Event.EV_EMPLOYEE).pipe(
       distinctUntilChanged(),
       takeUntil(this.ngUnsubscribe$),
