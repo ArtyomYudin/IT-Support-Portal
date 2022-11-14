@@ -15,7 +15,7 @@
                     <clr-signpost-content [clrPosition]="'bottom-left'" *clrIfOpen> Lorem ipsum... </clr-signpost-content>
                 </clr-signpost>
             </div>
-            <span class="title">&nbsp;&nbsp;{{ clock | async | date: 'dd MMMM, HH:mm' }} </span>
+            <span class="title">&nbsp;&nbsp;{{ clock | async | date: 'E dd MMMM, HH:mm' }} </span>
         </div>
 
         <img class="person-photo" [src]="currentUser.userPhoto | thumbnailPhoto" />

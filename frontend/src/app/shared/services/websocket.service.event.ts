@@ -31,6 +31,7 @@ export enum Event {
   EV_VPN_COMPLETED_SESSION = 'event_vpn_completed_session',
   EV_VPN_COMPLETED_SESSION_BY_UPN = 'event_vpn_completed_session_by_upn',
   EV_VPN_ACTIVE_SESSION = 'event_vpn_active_session',
+  EV_VPN_ACTIVE_SESSION_COUNT = 'event_vpn_active_session_count',
 
   EV_PROVIDER_INFO = 'event_provider_info',
   EV_AVAYA_E1_INFO = 'event_avaya_e1_info',

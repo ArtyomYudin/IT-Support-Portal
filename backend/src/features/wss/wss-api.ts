@@ -162,7 +162,7 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
       vpnAPI.getVpnActiveSession(dbPool, ws);
       break;
     case 'getDashboardEvent':
-      zabbixAPI.getDashboardEvent(wss, ws);
+      zabbixAPI.getDashboardEvent(dbPool, wss, ws);
       break;
     default:
       break;

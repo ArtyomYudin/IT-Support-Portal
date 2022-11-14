@@ -1,7 +1,7 @@
 <!--[ngStyle]="{ display: userRequest.length != 1 ? 'none' : '' }"-->
 <clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="true" [clrModalSize]="'xl'">
     <h5 class="modal-title">
-        Обращение пользователея № {{ this.userRequest?.requestNumber }} от {{ this.userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
+        Обращение пользователя № {{ this.userRequest?.requestNumber }} от {{ this.userRequest?.creationDate | date: 'dd.MM.YYYY' }} г.
         <!-- <div class="clr-row clr-justify-content-start request-title-container">
             <div class="request-title">
                 Обращение пользователея № {{ this.userRequest?.requestNumber }} от
@@ -221,7 +221,7 @@
                                         {{ event.eventDate | date: 'dd.MM.YYYY HH:mm' }} {{ event.employee | employeeName }}
                                     </p>
                                     <p class="request-lifecycle-event" *ngIf="event.eventType == 'status'">
-                                        изменен стаут заявки <clr-icon shape="arrow right"></clr-icon> {{ event.eventValue }}
+                                        изменен статус заявки <clr-icon shape="arrow right"></clr-icon> {{ event.eventValue }}
                                     </p>
                                     <p class="request-lifecycle-event" *ngIf="event.eventType == 'delegate'">
                                         изменен исполнитель заявки <clr-icon shape="arrow right"></clr-icon> {{ event.eventValue }}

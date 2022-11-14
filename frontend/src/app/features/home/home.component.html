@@ -118,7 +118,7 @@
                         <div class="card-icon card-icon__blue">
                             <clr-icon shape="network-globe" style="width: 24px; height: 24px"></clr-icon>
                         </div>
-                        <h5 class="card-header__head">Интернет</h5>
+                        <h5 class="card-header__head">Интернет (Мб/с)</h5>
                     </div>
                     <div class="card-block">
                         <div class="canvas-container">
@@ -169,17 +169,30 @@
                         <h5 class="card-header__head">VPN</h5>
                     </div>
                     <div class="card-block">
-                        <div class="card-info">
-                            <p class="card-info__head">Romy</p>
-                            <p class="card-info__data">24</p>
-                        </div>
-                        <div class="card-info">
-                            <p class="card-info__head">Michele</p>
-                            <p class="card-info__data">24</p>
+                        <div class="card-info" *ngFor="let session of vpnActiveSessionCountArray$ | async">
+                            <p class="card-info__head">{{ session.node.charAt(0).toUpperCase() + session.node.slice(1) }}</p>
+                            <p class="card-info__data">{{ session.count }}</p>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon__red">
+                            <clr-icon shape="error-standard" style="width: 24px; height: 24px"></clr-icon>
+                        </div>
+                        <h5 class="card-header__head">Avaya E1 каналы за день</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="canvas-container">
+                            <canvas #avayaE1DailyChart></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!--
             <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
                 <div class="card clickable" routerLink="">

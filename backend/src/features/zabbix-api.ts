@@ -1,6 +1,8 @@
 import { Server, WebSocket } from 'ws';
 import fetch from 'node-fetch';
+import { Pool } from 'mariadb';
 import { logger } from './logger';
+import { getVpnActiveSessionCount } from './vpn-api';
 
 const hardwareGroup: any[] = [];
 
@@ -235,13 +237,14 @@ async function sendHardwareGroupEvent(wss: Server<WebSocket>, ws?: WebSocket) {
   // });
 }
 
-export function getDashboardEvent(wss: Server<WebSocket>, ws: WebSocket) {
+export function getDashboardEvent(dbPool: Pool, wss: Server<WebSocket>, ws: WebSocket) {
   sendProviderInfo(wss, ws);
   sendHardwareGroupEvent(wss, ws);
   getAvayaE1ChannelInfo(wss, ws);
+  getVpnActiveSessionCount(dbPool, wss, ws);
 }
 
-export async function initZabbixAPI(wss: Server<WebSocket>): Promise<void> {
+export async function initZabbixAPI(dbPool: Pool, wss: Server<WebSocket>): Promise<void> {
   getHWGroup(process.env.ZABBIX_TOKEN);
   setInterval(() => {
     sendProviderInfo(wss);
@@ -250,5 +253,6 @@ export async function initZabbixAPI(wss: Server<WebSocket>): Promise<void> {
   setInterval(() => {
     getAvayaE1ChannelInfo(wss);
     sendHardwareGroupEvent(wss);
+    getVpnActiveSessionCount(dbPool, wss);
   }, 60000);
 }

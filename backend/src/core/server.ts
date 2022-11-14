@@ -16,7 +16,7 @@ process.on('uncaughtException', err => {
 (async () => {
   const httpServer = await initHTTPSServer(dbPool);
   const wss = await websocketServer(httpServer);
-  initZabbixAPI(wss);
+  initZabbixAPI(dbPool, wss);
 
   const clients: any[] = [];
 

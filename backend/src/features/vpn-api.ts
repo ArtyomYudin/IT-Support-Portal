@@ -1,5 +1,5 @@
 import { Pool } from 'mariadb';
-import { WebSocket } from 'ws';
+import { Server, WebSocket } from 'ws';
 import { logger } from './logger';
 import * as dbSelect from '../shared/db/db_select';
 
@@ -100,6 +100,44 @@ export async function getVpnActiveSession(dbPool: Pool, ws: WebSocket) {
     );
   } catch (error) {
     logger.error(`getVpnActiveSession - ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
+export async function getVpnActiveSessionCount(dbPool: Pool, wss: Server<WebSocket>, ws?: WebSocket) {
+  let conn;
+
+  const activeSessionCountArray: any[] = [];
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.vpnActiveSessionCount);
+    rows.forEach((row: any, i: number) => {
+      activeSessionCountArray[i] = {
+        node: row.vpnNode,
+        count: row.count.toString(),
+      };
+    });
+    // console.log(activeSessionCountArray);
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          event: 'event_vpn_active_session_count',
+          data: activeSessionCountArray,
+        }),
+      );
+    } else {
+      wss.clients.forEach((client: any) => {
+        client.send(
+          JSON.stringify({
+            event: 'event_vpn_active_session_count',
+            data: activeSessionCountArray,
+          }),
+        );
+      });
+    }
+  } catch (error) {
+    logger.error(`getVpnActiveSessionCount - ${error}`);
   } finally {
     if (conn) conn.release();
   }

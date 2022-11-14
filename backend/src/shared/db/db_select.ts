@@ -342,3 +342,20 @@ export const vpnActiveSession = `
                             disconnect.sessionEnd >= connect.date)
               WHERE LOCATE('%ASA-7-746012',connect.event) and disconnect.sessionEnd is Null
               order by connect.date DESC`;
+
+export const vpnActiveSessionCount = `
+              SELECT 
+                     connect.host AS vpnNode,
+                     COUNT(*) as count
+              FROM cisco_vpn_event connect
+              LEFT OUTER JOIN (
+                     SELECT
+                            cisco_vpn_event.date AS sessionEnd,
+                            SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS ip
+                     FROM cisco_vpn_event
+                     WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event)
+              ) disconnect on(
+                     disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
+                     disconnect.sessionEnd >= connect.date)
+              WHERE LOCATE('%ASA-7-746012',connect.event) and disconnect.sessionEnd is Null
+              group by connect.host`;
