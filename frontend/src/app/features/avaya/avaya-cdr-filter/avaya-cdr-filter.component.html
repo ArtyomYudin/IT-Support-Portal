@@ -78,7 +78,8 @@
                 </mat-autocomplete>
             </clr-input-container>
         </div>
-        <div class="clr-col-3">
+        <div class="clr-col-3 filter-button">
+            <!--
             <clr-button-group class="filter-button btn-group btn-link btn-icon">
                 <clr-button class="btn" title="Фильтровать">
                     <clr-icon shape="search"></clr-icon>
@@ -90,6 +91,69 @@
                     <clr-icon shape="times" title="Отменить поиск"></clr-icon>
                 </clr-button>
             </clr-button-group>
+        -->
+
+            <clr-signpost>
+                <button class="btn btn-link btn-icon" clrSignpostTrigger>
+                    <clr-icon shape="search"> </clr-icon>
+                </button>
+                <clr-signpost-content [clrPosition]="'bottom-left'" *clrIfOpen>
+                    <div class="clr-row clr-justify-content-start">
+                        <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+                            <clr-date-container>
+                                <label class="avaya-filter-label">Вызовы с:</label>
+                                <input class="avaya-filter-input" clrDate type="date" formControlName="callingDateStart" />
+                            </clr-date-container>
+                        </div>
+
+                        <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+                            <clr-date-container>
+                                <label class="avaya-filter-label">по:</label>
+                                <input class="avaya-filter-input" clrDate type="date" formControlName="callingDateEnd" />
+                            </clr-date-container>
+                        </div>
+
+                        <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+                            <clr-input-container>
+                                <label class="avaya-filter-label">Номер:</label>
+                                <input
+                                    class="avaya-filter-input"
+                                    type="text"
+                                    placeholder="Номер телефона"
+                                    formControlName="callNumber"
+                                    clrInput
+                                />
+                            </clr-input-container>
+                        </div>
+
+                        <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+                            <clr-input-container>
+                                <label class="avaya-filter-label">Фамилия:</label>
+                                <input class="avaya-filter-input" type="text" placeholder="Фамилия" formControlName="callName" clrInput />
+                            </clr-input-container>
+                        </div>
+
+                        <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
+                            <clr-checkbox-container class="directionGroup" clrInline>
+                                <clr-checkbox-wrapper class="directionGroupCheck">
+                                    <input type="checkbox" clrCheckbox formControlName="callDirectionIn" />
+                                    <label class="avaya-filter-label">входящие звонки</label>
+                                </clr-checkbox-wrapper>
+                                <clr-checkbox-wrapper class="directionGroupCheck">
+                                    <input type="checkbox" clrCheckbox formControlName="callDirectionOut" />
+                                    <label class="avaya-filter-label">исходящие звонки</label>
+                                </clr-checkbox-wrapper>
+                            </clr-checkbox-container>
+                        </div>
+                    </div>
+                </clr-signpost-content>
+            </clr-signpost>
+            <button class="btn btn-link btn-icon">
+                <clr-icon shape="export" title="Экспортировать в Excel"></clr-icon>
+            </button>
+            <button class="btn btn-link btn-icon">
+                <clr-icon shape="times" title="Отменить поиск"></clr-icon>
+            </button>
         </div>
     </div>
 </form>

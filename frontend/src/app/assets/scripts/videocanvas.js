@@ -8,6 +8,7 @@ function streamCam() {
     canvas,
     audio: false,
   });
+  return player;
 }
 function streamCamRoom1() {
   const client = 'wss://it.center-inform.ru:9997';
@@ -16,6 +17,7 @@ function streamCamRoom1() {
     canvas,
     audio: false,
   });
+  return player;
 }
 
 function streamCamRoom2() {
@@ -25,4 +27,5 @@ function streamCamRoom2() {
     canvas,
     audio: false,
   });
+  return player;
 }

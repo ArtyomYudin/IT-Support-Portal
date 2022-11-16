@@ -1,142 +1,140 @@
-:host {
-  // Card
-  .card {
-    z-index: 3;
-    //box-shadow: 0 1px 4px #00000024;
-    box-shadow: 0 0.05rem 0.15rem #8c8c8c40;
+.card {
+  z-index: 3;
+  //box-shadow: 0 1px 4px #00000024;
+  box-shadow: 0 0.05rem 0.15rem #8c8c8c40;
 
-    //border-radius: 50px;
-    //background: #e0e0e0;
-    //box-shadow: 20px 20px 40px #d5d5d5, -20px -20px 40px #ffffff;
-    //Icon
-    &-icon {
-      border-radius: 3px;
-      background-color: #999;
-      color: white;
-      padding: 10px;
-      margin-top: -24px;
-      margin-right: 15px;
-      float: left;
+  //border-radius: 50px;
+  //background: #e0e0e0;
+  //box-shadow: 20px 20px 40px #d5d5d5, -20px -20px 40px #ffffff;
+  //Icon
+  &-icon {
+    border-radius: 3px;
+    background-color: #999;
+    color: white;
+    padding: 10px;
+    margin-top: -24px;
+    margin-right: 15px;
+    float: left;
 
-      // Icon Blue
-      &__blue {
-        background: linear-gradient(60deg, #03a9f4, #027bb1);
-        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #027bb1;
-      }
-
-      //Icon Red
-      &__red {
-        background: linear-gradient(60deg, #ef5350, #ea2027);
-        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #ea2027;
-      }
-
-      //Icon Yellow
-      &__yellow {
-        background: linear-gradient(60deg, #ffc312, #fb8c00);
-        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #fb8c00;
-      }
-
-      //Icon Green
-      &__green {
-        background: linear-gradient(60deg, #66bb6a, #43a047);
-        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #43a047;
-      }
+    // Icon Blue
+    &__blue {
+      background: linear-gradient(60deg, #03a9f4, #027bb1) !important;
+      box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #027bb1;
     }
 
-    // Header
-    &-header {
-      padding: 0.4rem 0.7rem;
-      &__head {
-        margin: 0;
-        text-align: right;
-        //   font-weight: 700;
-        color: #565656;
-      }
-
-      // Card Data
-      &__data {
-        margin: 6px 0 0 0;
-        text-align: right;
-        font-weight: 600;
-      }
+    //Icon Red
+    &__red {
+      background: linear-gradient(60deg, #ef5350, #ea2027);
+      box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #ea2027;
     }
 
-    // Info
-    &-info {
-      display: flex;
-
-      // Info Head
-      &__head {
-        margin: 0;
-        font-weight: 500;
-      }
-
-      // Info Data
-      &__data {
-        font-size: 0.631rem;
-        flex: 1;
-        text-align: right;
-        margin: 0;
-        font-weight: 500;
-      }
+    //Icon Yellow
+    &__yellow {
+      background: linear-gradient(60deg, #ffc312, #fb8c00);
+      box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #fb8c00;
     }
-    // Block
-    &-block {
-      padding: 0.4rem 0.7rem;
-    }
-    // Footer
-    &-footer {
-      padding: 0.4rem 0.7rem;
-      display: flex;
 
-      // Footer Head
-      &__head {
-        margin: 0;
-        font-weight: 700;
-      }
-
-      // Footer Data
-      &__data {
-        font-size: 0.631rem;
-        flex: 1;
-        text-align: right;
-        margin: 0;
-        font-weight: 500;
-      }
-
-      // Footer Icon
-      &__icon {
-        -webkit-transform: rotate(180deg);
-        -moz-transform: rotate(180deg);
-        -ms-transform: rotate(180deg);
-        -o-transform: rotate(180deg);
-        transform: rotate(180deg);
-        display: inline-block;
-      }
+    //Icon Green
+    &__green {
+      background: linear-gradient(60deg, #66bb6a, #43a047);
+      box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #43a047;
     }
   }
-  // Table
-  .card-chart .table {
-    border: none;
-    margin-top: 0;
+
+  // Header
+  &-header {
+    padding: 0.4rem 0.7rem;
+    &__head {
+      margin: 0;
+      text-align: right;
+      //   font-weight: 700;
+      color: #565656;
+    }
+
+    // Card Data
+    &__data {
+      margin: 6px 0 0 0;
+      text-align: right;
+      font-weight: 600;
+    }
   }
 
-  //Clickble Hover
-  .card.clickable:hover {
-    //box-shadow: 0 0.15rem 0 0 #03a9f4;
-    //border: 1px solid #03a9f4;
-    box-shadow: 0 0.05rem 0.15rem #8c8c8c40;
-    border-color: #dedede;
-    cursor: pointer;
-    text-decoration: none;
-    -webkit-transform: translateY(-4px);
-    transform: translateY(-4px);
-    transition: border 0.2s ease-out, -webkit-transform 0.2s ease-outease-out;
-    transition: border 0.2s ease-out, transform 0.2s ease-out;
-    transition: border 0.2s ease-out, transform 0.2s ease-out, -webkit-transform 0.2s ease-out;
-  }
+  // Info
+  &-info {
+    display: flex;
 
-  /*
+    // Info Head
+    &__head {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    // Info Data
+    &__data {
+      font-size: 0.631rem;
+      flex: 1;
+      text-align: right;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+  // Block
+  &-block {
+    padding: 0.4rem 0.7rem;
+  }
+  // Footer
+  &-footer {
+    padding: 0.4rem 0.7rem;
+    display: flex;
+
+    // Footer Head
+    &__head {
+      margin: 0;
+      font-weight: 700;
+    }
+
+    // Footer Data
+    &__data {
+      font-size: 0.631rem;
+      flex: 1;
+      text-align: right;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    // Footer Icon
+    &__icon {
+      -webkit-transform: rotate(180deg);
+      -moz-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+      -o-transform: rotate(180deg);
+      transform: rotate(180deg);
+      display: inline-block;
+    }
+  }
+}
+// Table
+.card-chart .table {
+  border: none;
+  margin-top: 0;
+}
+
+//Clickble Hover
+.card.clickable:hover {
+  //box-shadow: 0 0.15rem 0 0 #03a9f4;
+  //border: 1px solid #03a9f4;
+  box-shadow: 0 0.05rem 0.15rem #8c8c8c40;
+  border-color: #dedede;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-transform: translateY(-4px);
+  transform: translateY(-4px);
+  transition: border 0.2s ease-out, -webkit-transform 0.2s ease-outease-out;
+  transition: border 0.2s ease-out, transform 0.2s ease-out;
+  transition: border 0.2s ease-out, transform 0.2s ease-out, -webkit-transform 0.2s ease-out;
+}
+
+/*
   .card [class*='card-header-'] {
     margin: 0 15px;
     padding: 0;
@@ -144,12 +142,12 @@
   }
 */
 
-  .request-section,
-  .monitoring-section {
-    padding-top: 0rem;
-  }
+.request-section,
+.monitoring-section {
+  padding-top: 0rem;
+}
 
-  /*
+/*
   .camera-section {
     & .card {
       height: 200px;
@@ -157,12 +155,12 @@
   }
   */
 
-  .chart-section {
-    & .card {
-      height: 408px;
-    }
+.chart-section {
+  & .card {
+    height: 408px;
   }
-  /*
+}
+/*
   .canvas-container {
     //position: relative;
     //z-index: 1;
@@ -170,9 +168,8 @@
     //height: 240px;
   }
   */
-  .context-canvas {
-    width: 100%;
-    //height: 100%;
-    //z-index: 1;
-  }
+.context-canvas {
+  width: 100%;
+  //height: 100%;
+  //z-index: 1;
 }
