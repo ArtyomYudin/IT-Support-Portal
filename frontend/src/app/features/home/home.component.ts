@@ -44,9 +44,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
-    this.mainCamPlayer.stop();
-    this.room1CamPlayer.stop();
-    this.room2CamPlayer.stop();
+    this.mainCamPlayer.destroy();
+    this.room1CamPlayer.destroy();
+    this.room2CamPlayer.destroy();
   }
 
   private loadScripts() {

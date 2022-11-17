@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -29,6 +29,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private cdRef: ChangeDetectorRef,
     private authenticationService: AuthenticationService,
   ) {}
 
@@ -75,6 +76,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         (error: string) => {
           this.error = error;
           this.loading = false;
+          this.cdRef.markForCheck();
         },
       );
   }

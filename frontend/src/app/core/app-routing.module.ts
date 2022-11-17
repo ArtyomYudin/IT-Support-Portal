@@ -10,6 +10,7 @@ const routes: Routes = [
     loadChildren: () => import('../features/home/home.module').then(m => m.HomeModule),
     canActivate: [AuthGuard],
     // data: { key: 'cached_home' },
+    // data: { reuseRoute: true },
   },
   {
     path: 'user-request',
@@ -49,6 +50,13 @@ const routes: Routes = [
   {
     path: 'vpn',
     loadChildren: () => import('../features/vpn/vpn.module').then(m => m.VpnModule),
+    canActivate: [AuthGuard],
+    // data: { key: 'cached_vpn' },
+    data: { reuseRoute: true },
+  },
+  {
+    path: 'zabbix',
+    loadChildren: () => import('../features/zabbix/zabbix.module').then(m => m.ZabbixModule),
     canActivate: [AuthGuard],
     // data: { key: 'cached_vpn' },
     data: { reuseRoute: true },

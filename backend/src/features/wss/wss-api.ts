@@ -140,6 +140,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
     case 'getEmployeeByParentDepartment':
       userRequestAPI.getEmployeeByParentDepartment(dbPool, ws, parseMsg.data);
       break;
+    case 'getEmployeeByUPN':
+      userRequestAPI.getEmployeeByUPN(dbPool, ws, parseMsg.data);
+      break;
     case 'saveNewUserRequest':
       userRequestAPI.saveNewUserRequest(dbPool, parseMsg.data, wss);
       break;

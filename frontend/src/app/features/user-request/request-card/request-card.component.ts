@@ -34,8 +34,6 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   // public userRequestCardModel: any;
 
-  private ngUnsubscribe$: Subject<any> = new Subject();
-
   public userRequest$: Observable<any>;
 
   public userRequestSubscription: SubscriptionLike;
@@ -63,7 +61,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
 
   public previewDialogStatus: boolean = null;
 
-  public token = JSON.parse(localStorage.getItem('IT-Support-Portal'));
+  private ngUnsubscribe$: Subject<any> = new Subject();
+
+  private token = JSON.parse(localStorage.getItem('IT-Support-Portal'));
 
   static clearSubscription(subscription: SubscriptionLike) {
     let subs = subscription;

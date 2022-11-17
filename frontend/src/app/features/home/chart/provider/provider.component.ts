@@ -50,6 +50,7 @@ export class ProviderChartComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
     this.providerInfoSubscription.unsubscribe();
+    this.providerSpeedChart.destroy();
   }
 
   private createProviderSpeedChart() {

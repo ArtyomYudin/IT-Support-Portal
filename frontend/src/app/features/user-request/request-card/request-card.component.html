@@ -220,6 +220,7 @@
                                     <p class="request-lifecycle-header">
                                         {{ event.eventDate | date: 'dd.MM.YYYY HH:mm' }} {{ event.employee | employeeName }}
                                     </p>
+                                    <p class="request-lifecycle-event" *ngIf="event.eventType === 'creation'">создание заявки</p>
                                     <p class="request-lifecycle-event" *ngIf="event.eventType == 'status'">
                                         изменен статус заявки <clr-icon shape="arrow right"></clr-icon> {{ event.eventValue }}
                                     </p>

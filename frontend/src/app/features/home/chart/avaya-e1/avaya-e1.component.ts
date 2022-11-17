@@ -47,6 +47,7 @@ export class AvayaE1ChartComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.complete();
 
     this.avayaE1InfoSubscription.unsubscribe();
+    this.avayaE1Chart.destroy();
   }
 
   private centerTextPlugin = {

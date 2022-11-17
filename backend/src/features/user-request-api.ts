@@ -342,21 +342,29 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
 
   try {
     conn = await dbPool.getConnection();
-    response = await conn.query(
-      dbInsert.insertUserRequest(
-        value.creationDate ? changeDateFormat(value.creationDate) : changeDateFormat(new Date()),
-        value.changeDate ? changeDateFormat(value.changeDate) : changeDateFormat(new Date()),
-        value.requestNumber,
-        value.initiatorUpn,
-        value.executorUpn,
-        value.serviceId,
-        value.topic,
-        value.description,
-        value.statusId,
-        value.priorityId,
-        value.deadline,
-      ),
-    );
+    response = await conn
+      .query(
+        dbInsert.insertUserRequest(
+          value.creationDate ? changeDateFormat(value.creationDate) : changeDateFormat(new Date()),
+          value.changeDate ? changeDateFormat(value.changeDate) : changeDateFormat(new Date()),
+          value.requestNumber,
+          value.creatorUpn,
+          value.initiatorUpn,
+          value.executorUpn,
+          value.serviceId,
+          value.topic,
+          value.description,
+          value.statusId,
+          value.priorityId,
+          value.deadline,
+        ),
+      )
+      .then(
+        await conn.query(
+          dbInsert.insertUserRequestLifeCycle(value.requestNumber, value.creatorUpn, changeDateFormat(new Date()), 'creation', ''),
+        ),
+      );
+
     if (!existsSync(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}`) && value.attachments.length > 0) {
       fs.mkdir(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}`, { recursive: true }, e => {
         if (!e) {

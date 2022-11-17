@@ -58,6 +58,7 @@ export class HardwareChartComponent implements OnInit {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
     this.hwGroupAlarmSubscription.unsubscribe();
+    this.hwAlarmChart.destroy();
   }
 
   private centerTextPlugin = {

@@ -158,10 +158,12 @@ export const getEmployeeByUPN = (userPrincipalName: string) => `
                                    employee.display_name AS displayName,
                                    department.name AS departmentName,
                                    department.id AS departmentId,
-                                   position.name AS positionName
+                                   position.name AS positionName,
+                                   employee_photo.thumbnail_photo AS thumbnailPhoto
                             FROM employee
                                    INNER JOIN department on(employee.department_id = department.id)
                                    INNER JOIN position on(employee.position_id = position.id)
+                                   LEFT OUTER JOIN employee_photo on(employee.user_principal_name = employee_photo.user_principal_name)
                             WHERE employee.user_principal_name = '${userPrincipalName}'
                             LIMIT 1`;
 

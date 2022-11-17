@@ -54,9 +54,10 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   public userRequestAllData: {
     requestNumber?: string;
-    initiatorUpn?: number;
+    creatorUpn?: string;
+    initiatorUpn?: string;
     departmentId?: number;
-    executorUpn?: number;
+    executorUpn?: string;
     serviceId?: number;
     topic?: string;
     description?: string;
@@ -65,6 +66,8 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     deadline?: string;
     attachments?: any[];
   } = {};
+
+  private token = JSON.parse(localStorage.getItem('IT-Support-Portal'));
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
@@ -176,6 +179,8 @@ export class RequestNewComponent implements OnInit, OnDestroy {
     this.wsService.send('getUserRequestPriority', null);
     this.wsService.send('getUserRequestService', null);
     this.wsService.send('getEmployeeByParentDepartment', 49);
+
+    this.userRequestAllData.creatorUpn = this.token.id;
 
     this.newNumberSubscription = this.newNumber$.subscribe((number: any) => {
       this.newNumber = number.newNumber.toString().padStart(6, 0);
