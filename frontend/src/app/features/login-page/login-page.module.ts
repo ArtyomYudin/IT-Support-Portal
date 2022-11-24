@@ -15,4 +15,4 @@ const routes: Routes = [{ path: '', component: LoginPageComponent }];
   imports: [CommonModule, ClarityModule, ReactiveFormsModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class LoginPageModule {}
+export default class LoginPageModule {}

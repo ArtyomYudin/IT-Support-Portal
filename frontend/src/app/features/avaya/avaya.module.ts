@@ -17,4 +17,4 @@ const routes: Routes = [{ path: '', component: AvayaComponent }];
   imports: [CommonModule, ClarityModule, ReactiveFormsModule, MatAutocompleteModule, GlobalPipeModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AvayaModule {}
+export default class AvayaModule {}

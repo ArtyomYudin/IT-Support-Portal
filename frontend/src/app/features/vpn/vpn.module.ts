@@ -16,4 +16,4 @@ const routes: Routes = [{ path: '', component: VpnComponent }];
   imports: [CommonModule, ClarityModule, ReactiveFormsModule, MatAutocompleteModule, GlobalPipeModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class VpnModule {}
+export default class VpnModule {}

@@ -18,4 +18,4 @@ const routes: Routes = [{ path: '', component: PurchaseComponent }];
   imports: [CommonModule, ClarityModule, ReactiveFormsModule, MatAutocompleteModule, GlobalPipeModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PurchaseModule {}
+export default class PurchaseModule {}

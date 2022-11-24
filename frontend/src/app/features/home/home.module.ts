@@ -14,4 +14,4 @@ const routes: Routes = [{ path: '', component: HomeComponent }];
   imports: [CommonModule, ClarityModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class HomeModule {}
+export default class HomeModule {}

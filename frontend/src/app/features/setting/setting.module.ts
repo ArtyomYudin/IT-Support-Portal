@@ -12,4 +12,4 @@ const routes: Routes = [{ path: '', component: SettingComponent }];
   imports: [CommonModule, ClarityModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SettingModule {}
+export default class SettingModule {}

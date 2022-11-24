@@ -31,4 +31,4 @@ const routes: Routes = [{ path: '', component: UserRequestComponent }];
   exports: [RouterModule],
   providers: [DatePipe, FilePreviewService],
 })
-export class UserRequestModule {}
+export default class UserRequestModule {}

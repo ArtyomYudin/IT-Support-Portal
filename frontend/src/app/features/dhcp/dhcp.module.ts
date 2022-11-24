@@ -10,4 +10,4 @@ const routes: Routes = [{ path: '', component: DhcpComponent }];
   imports: [CommonModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class DhcpModule {}
+export default class DhcpModule {}

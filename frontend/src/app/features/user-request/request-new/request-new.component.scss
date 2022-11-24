@@ -69,6 +69,9 @@
 }
 
 .status-autocomplete-panel {
+  /*
+TODO(mdc-migration): The following rule targets internal classes of autocomplete that may no longer apply for the MDC version.
+*/
   & .mat-autocomplete-panel:not([class*='mat-elevation-z']) {
     width: inherit !important;
   }

@@ -11,4 +11,4 @@ const routes: Routes = [{ path: '', component: PacsComponent }];
   imports: [CommonModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PacsModule {}
+export default class PacsModule {}

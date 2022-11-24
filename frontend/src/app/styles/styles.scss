@@ -166,19 +166,21 @@ button.datagrid-column-title {
 ///  outline: none;
 ///}
 
-.mat-option {
+.mat-mdc-option {
   font-family: 'Metropolis', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   //color: #adbbc4;
-  height: 30px !important;
+  height: 24px !important;
   //box-shadow: 0 0.05rem 0.15rem #8c8c8c40;
-  min-height: 0%;
+  min-height: 24px !important;
 }
-.mat-autocomplete-panel {
+/* TODO(mdc-migration): The following rule targets internal classes of autocomplete that may no longer apply for the MDC version. */
+.mat-mdc-autocomplete-panel {
   border-radius: 0.15rem !important;
   width: inherit !important;
 }
-.mat-autocomplete-panel:not([class*='mat-elevation-z']) {
+/* TODO(mdc-migration): The following rule targets internal classes of autocomplete that may no longer apply for the MDC version. */
+.mat-mdc-autocomplete-panel:not([class*='mat-elevation-z']) {
   box-shadow: 0 0.05rem 0.15rem #8c8c8c40 !important;
   border-top: 0 !important;
   border-right: 0.05rem solid !important;

@@ -10,4 +10,4 @@ const routes: Routes = [{ path: '', component: ZabbixComponent }];
   imports: [CommonModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ZabbixModule {}
+export default class ZabbixModule {}

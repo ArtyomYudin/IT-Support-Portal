@@ -15,9 +15,10 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2020",
-    "module": "es2020",
-    "lib": ["es2020", "dom"],
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"],
+    "useDefineForClassFields": false,
     "paths": {
       //"core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata"],
       "@app/*": ["src/app/*"],
@@ -35,7 +36,7 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    "enableIvy": true,
+    // "enableIvy": true,
     //"fullTemplateTypeCheck": false,
     "preserveWhitespaces": true
   },
