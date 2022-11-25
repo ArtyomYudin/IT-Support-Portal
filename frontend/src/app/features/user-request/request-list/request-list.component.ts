@@ -6,13 +6,17 @@ import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { IUserRequest } from '@model/user-request.model';
 import { Observable } from 'rxjs/internal/Observable';
-import { ClrCommonStringsService } from '@clr/angular';
+import { ClarityModule, ClrCommonStringsService } from '@clr/angular';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { russionLocale } from '@translation/russion';
+import { EmployeeNamePipe } from '@pipe/employeename.pipe';
 import { RequestNewComponent } from '@feature/user-request/request-new/request-new.component';
 import { RequestCardComponent } from '@feature/user-request/request-card/request-card.component';
 
 @Component({
   selector: 'fe-user-request-list',
+  standalone: true,
+  imports: [ClarityModule, AsyncPipe, DatePipe, EmployeeNamePipe, RequestNewComponent, RequestCardComponent],
   templateUrl: './request-list.component.html',
   styleUrls: ['./request-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +40,7 @@ export class RequestListComponent implements OnInit, OnDestroy {
 
   @ViewChild(RequestCardComponent) modalCard: RequestCardComponent;
 
-  constructor(private wsService: WebsocketService, private commonStrings: ClrCommonStringsService, private notifyBar: MatSnackBar) {
+  constructor(private wsService: WebsocketService, private commonStrings: ClrCommonStringsService) {
     commonStrings.localize(russionLocale);
 
     this.userRequestArray$ = this.wsService.on<IUserRequest>(Event.EV_USER_REQUEST_ALL).pipe(
@@ -47,11 +51,12 @@ export class RequestListComponent implements OnInit, OnDestroy {
       }),
     );
 
+    /*
     this.wsService
       .on<any>(Event.EV_NOTIFY)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$))
       .subscribe(e => this.openNotifyBar(e));
-
+*/
     this.wsService.status.subscribe(status => {
       // console.log(`webSocket status: ${status}`);
       if (status) {
@@ -60,13 +65,14 @@ export class RequestListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /*
   private openNotifyBar(e: any) {
     this.notifyBar.open(e.event, '', {
       duration: 5000,
       verticalPosition: 'top',
     });
   }
-
+ */
   ngOnInit(): void {}
 
   ngOnDestroy(): void {

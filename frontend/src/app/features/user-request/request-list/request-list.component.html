@@ -57,7 +57,7 @@
                 <!--<span class="color-square" [style.backgroundColor]="userRequest.priority.color"></span>-->
                 <clr-icon class="priority-icon is-solid" [style.fill]="userRequest.priority.color" shape="flag"></clr-icon>
             </clr-dg-cell>
-            <clr-dg-cell class="date-column">{{ userRequest.creationDate | date: 'dd.MM.YYYY, HH:mm' }}</clr-dg-cell>
+            <clr-dg-cell class="date-column">{{ userRequest.creationDate | date : 'dd.MM.YYYY, HH:mm' }}</clr-dg-cell>
 
             <clr-dg-cell class="number-column">{{ userRequest.requestNumber }}</clr-dg-cell>
             <clr-dg-cell>{{ userRequest.initiator | employeeName }}</clr-dg-cell>
@@ -78,7 +78,7 @@
                 </clr-icon>
             </clr-dg-cell>
             <clr-dg-cell>{{ userRequest.executor.name | employeeName }}</clr-dg-cell>
-            <clr-dg-cell>{{ userRequest.deadline | date: 'dd.MM.YYYY' }}</clr-dg-cell>
+            <clr-dg-cell>{{ userRequest.deadline | date : 'dd.MM.YYYY' }}</clr-dg-cell>
         </clr-dg-row>
 
         <clr-dg-column-toggle>

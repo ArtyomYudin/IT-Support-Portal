@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'avayaCallCodeConvert',
+  standalone: true,
 })
 export class AvayaCallCodeConvertPipe implements PipeTransform {
   public transform(value: string, calledNumber: string, callingNumber: string): string {

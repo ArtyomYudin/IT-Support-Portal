@@ -1,3 +1,4 @@
+/*
 import { NgModule } from '@angular/core';
 import { ThumbnailPhotoPipe } from './thumbnailphoto.pipe';
 import { PurchaseTargetPipe } from './purchasetarget.pipe';
@@ -21,3 +22,4 @@ import { ByteConvertPipe } from './byteconvert.pipe';
   exports: [ThumbnailPhotoPipe, PurchaseTargetPipe, EmployeeNamePipe, AvayaDurationConvertPipe, AvayaCallCodeConvertPipe, ByteConvertPipe],
 })
 export class GlobalPipeModule {}
+*/

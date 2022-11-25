@@ -3,15 +3,32 @@ import { WebsocketService } from '@service/websocket.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { Observable } from 'rxjs/internal/Observable';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ClarityModule, ClrCommonStringsService } from '@clr/angular';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { russionLocale } from '@translation/russion';
 import { IEmployee } from '@model/employee.model';
 import { IVpnSession } from '@model/vpn-session.model';
 import { Event } from '@service/websocket.service.event';
-import { ClrCommonStringsService } from '@clr/angular';
+import { EmployeeNamePipe } from '@pipe/employeename.pipe';
+import { ByteConvertPipe } from '@pipe/byteconvert.pipe';
+import { ThumbnailPhotoPipe } from '@pipe/thumbnailphoto.pipe';
 
 @Component({
   selector: 'fe-vpn-user-activity',
+  standalone: true,
+  imports: [
+    ClarityModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    NgIf,
+    NgFor,
+    AsyncPipe,
+    EmployeeNamePipe,
+    ByteConvertPipe,
+    ThumbnailPhotoPipe,
+  ],
   templateUrl: './user-activity.component.html',
   styleUrls: ['./user-activity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

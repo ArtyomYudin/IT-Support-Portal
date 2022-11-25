@@ -1,12 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { takeUntil, share, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
+import { ClarityModule } from '@clr/angular';
 import { WebsocketService } from '@service/websocket.service';
 import { AuthenticationService } from '@service/auth.service';
 import { AuthUser } from '@model/auth-user.model';
 
+import { MainComponent } from '@core/ui/layout/main/main.component';
+import { HeaderMobileComponent } from '@core/ui/layout/header/header-mobile/header.component';
+
 @Component({
   selector: 'fe-layout',
+  standalone: true,
+  imports: [ClarityModule, MainComponent, HeaderMobileComponent],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
 })

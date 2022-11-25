@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 @Pipe({
   name: 'thumbnailPhoto',
+  standalone: true,
 })
 export class ThumbnailPhotoPipe implements PipeTransform {
   constructor(protected sanitizer: DomSanitizer) {}

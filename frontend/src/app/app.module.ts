@@ -1,3 +1,4 @@
+/*
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -46,3 +47,4 @@ export function jwtTokenGetter(): string {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}
+*/

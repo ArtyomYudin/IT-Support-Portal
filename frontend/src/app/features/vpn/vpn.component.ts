@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { WebsocketService } from '@service/websocket.service';
 
+import { ActiveSessionComponent } from './active-session/active-session.component';
+import { UserActivityComponent } from './user-activity/user-activity.component';
+
 @Component({
   selector: 'fe-vpn',
+  standalone: true,
+  imports: [ActiveSessionComponent, UserActivityComponent],
   templateUrl: './vpn.component.html',
   styleUrls: ['./vpn.component.scss'],
 })
-export class VpnComponent implements OnInit {
+export default class VpnComponent implements OnInit {
   constructor(private wsService: WebsocketService) {}
 
   ngOnInit(): void {

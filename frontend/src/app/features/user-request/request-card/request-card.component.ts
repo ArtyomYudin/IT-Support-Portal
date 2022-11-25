@@ -2,7 +2,10 @@ import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } f
 import { Subject } from 'rxjs/internal/Subject';
 import { distinctUntilChanged, first, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ClarityModule } from '@clr/angular';
+import { AsyncPipe, DatePipe, NgIf, NgFor } from '@angular/common';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { Notify } from '@model/notify.model';
@@ -12,9 +15,12 @@ import { FilePreviewService } from '@service/file-preview/file.preview.service';
 import { SubscriptionLike } from 'rxjs/internal/types';
 import { saveAs } from 'file-saver';
 import { Buffer } from 'buffer';
+import { EmployeeNamePipe } from '@pipe/employeename.pipe';
 
 @Component({
   selector: 'fe-user-request-card',
+  standalone: true,
+  imports: [ClarityModule, NgFor, NgIf, DatePipe, AsyncPipe, MatAutocompleteModule, ReactiveFormsModule, EmployeeNamePipe],
   templateUrl: './request-card.component.html',
   styleUrls: ['./request-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

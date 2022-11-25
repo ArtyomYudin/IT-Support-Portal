@@ -5,6 +5,9 @@ import { SubscriptionLike } from 'rxjs/internal/types';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+
+import { ClarityModule } from '@clr/angular';
+
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 
@@ -12,6 +15,8 @@ Chart.register(...registerables);
 
 @Component({
   selector: 'fe-home-chart-provider',
+  standalone: true,
+  imports: [ClarityModule],
   templateUrl: './provider.component.html',
   styleUrls: ['../..//home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,7 +65,7 @@ export class ProviderChartComponent implements OnInit, OnDestroy {
       type: 'bar',
       data: {
         // values on X-Axis
-        labels: ['Orange', 'Телрос', 'Филанка'],
+        labels: ['Orange', 'Телрос', 'Филанко'],
         datasets: [
           {
             label: 'Входящий траффик',

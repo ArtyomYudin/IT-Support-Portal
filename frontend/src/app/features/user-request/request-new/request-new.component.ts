@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { Validators, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DatePipe, NgFor, AsyncPipe } from '@angular/common';
 import { Subject } from 'rxjs/internal/Subject';
 import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { SubscriptionLike } from 'rxjs/internal/types';
+import { ClarityModule } from '@clr/angular';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { Department } from '@model/department.model';
@@ -15,6 +17,8 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'fe-user-request-new',
+  standalone: true,
+  imports: [ClarityModule, NgFor, AsyncPipe, MatAutocompleteModule, ReactiveFormsModule],
   templateUrl: './request-new.component.html',
   styleUrls: ['./request-new.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,12 +75,7 @@ export class RequestNewComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private wsService: WebsocketService,
-    private datePipe: DatePipe,
-    private cdRef: ChangeDetectorRef,
-  ) {
+  constructor(private formBuilder: FormBuilder, private wsService: WebsocketService, private cdRef: ChangeDetectorRef) {
     this.serviceListArray$ = this.wsService
       .on<RequestService>(Event.EV_USER_REQUEST_SERVICE)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));

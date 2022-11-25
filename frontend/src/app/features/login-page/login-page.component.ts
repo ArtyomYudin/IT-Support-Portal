@@ -1,18 +1,24 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
+
+import { ClarityModule } from '@clr/angular';
+
+import { NgIf } from '@angular/common';
 
 import { AuthenticationService } from '@service/auth.service';
 
 @Component({
   selector: 'fe-login-page',
+  standalone: true,
+  imports: [ClarityModule, ReactiveFormsModule, NgIf],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginPageComponent implements OnInit, OnDestroy {
+export default class LoginPageComponent implements OnInit, OnDestroy {
   public submitted = false;
 
   public loading = false;

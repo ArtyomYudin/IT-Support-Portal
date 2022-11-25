@@ -7,10 +7,14 @@ import { Chart, registerables } from 'chart.js';
 // import { Event } from '@service/websocket.service.event';
 // import { SubscriptionLike } from 'rxjs/internal/types';
 
+import { ClarityModule } from '@clr/angular';
+
 Chart.register(...registerables);
 
 @Component({
   selector: 'fe-home-chart-avaya-e1-daily',
+  standalone: true,
+  imports: [ClarityModule],
   templateUrl: './avaya-e1-daily.component.html',
   styleUrls: ['../../home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

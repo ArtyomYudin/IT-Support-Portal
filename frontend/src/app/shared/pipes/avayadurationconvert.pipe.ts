@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'avayaDurationConvert',
+  standalone: true,
 })
 export class AvayaDurationConvertPipe implements PipeTransform {
   public transform(value: number): string {

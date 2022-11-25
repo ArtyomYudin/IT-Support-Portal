@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Subject } from 'rxjs/internal/Subject';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
@@ -7,15 +7,19 @@ import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { SubscriptionLike } from 'rxjs/internal/types';
 
+import { ClarityModule } from '@clr/angular';
+
 Chart.register(...registerables);
 
 @Component({
   selector: 'fe-home-chart-hardware',
+  standalone: true,
+  imports: [ClarityModule],
   templateUrl: './hardware.component.html',
   styleUrls: ['../../home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HardwareChartComponent implements OnInit {
+export class HardwareChartComponent implements OnInit, OnDestroy {
   @ViewChild('hwAlarmChart', { static: true }) public refHWAlarmChart: ElementRef;
 
   public hwGroupAlarmListArray$: Observable<any>;

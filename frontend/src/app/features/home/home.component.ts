@@ -2,10 +2,18 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { Observable } from 'rxjs/internal/Observable';
 import { Subject } from 'rxjs/internal/Subject';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { ClarityModule } from '@clr/angular';
 import { Chart, registerables } from 'chart.js';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { DynamicScriptLoaderService } from '@service/dynamic.script.loader.service';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
+
+import { ProviderChartComponent } from './chart/provider/provider.component';
+import { AvayaE1ChartComponent } from './chart/avaya-e1/avaya-e1.component';
+import { HardwareChartComponent } from './chart/hardware/hardware.component';
+import { AvayaE1DailyChartComponent } from './chart/avaya-e1-daily/avaya-e1-daily.component';
 
 declare let streamCam: any;
 declare let streamCamRoom1: any;
@@ -15,11 +23,22 @@ Chart.register(...registerables);
 
 @Component({
   selector: 'fe-home',
+  standalone: true,
+  imports: [
+    ClarityModule,
+    RouterModule,
+    NgFor,
+    AsyncPipe,
+    ProviderChartComponent,
+    AvayaE1ChartComponent,
+    HardwareChartComponent,
+    AvayaE1DailyChartComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export default class HomeComponent implements OnInit, OnDestroy {
   public vpnActiveSessionCountArray$: Observable<any>;
 
   private ngUnsubscribe$: Subject<any> = new Subject();

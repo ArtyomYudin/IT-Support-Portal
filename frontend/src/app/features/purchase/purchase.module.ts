@@ -1,3 +1,4 @@
+/*
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
@@ -19,3 +20,4 @@ const routes: Routes = [{ path: '', component: PurchaseComponent }];
   exports: [RouterModule],
 })
 export default class PurchaseModule {}
+*/

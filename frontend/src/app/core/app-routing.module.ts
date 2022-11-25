@@ -1,20 +1,20 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+// import { NgModule } from '@angular/core';
+import { Routes } from '@angular/router';
 
 import { AuthGuard } from '@service/auth.guard.service';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'home',
-    loadChildren: () => import('../features/home/home.module'),
+    loadComponent: () => import('../features/home/home.component'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_home' },
     // data: { reuseRoute: true },
   },
   {
     path: 'user-request',
-    loadChildren: () => import('../features/user-request/user-request.module'),
+    loadComponent: () => import('../features/user-request/user-request.component'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_user_request' },
     data: { reuseRoute: true },
@@ -28,28 +28,28 @@ const routes: Routes = [
   },
   {
     path: 'pacs',
-    loadChildren: () => import('../features/pacs/pacs.module'),
+    loadComponent: () => import('../features/pacs/pacs.component'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_pacs' },
     data: { reuseRoute: true },
   },
   {
     path: 'avaya',
-    loadChildren: () => import('../features/avaya/avaya.module'),
+    loadComponent: () => import('../features/avaya/avaya.component'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_avaya' },
     data: { reuseRoute: true },
   },
   {
     path: 'dhcp',
-    loadChildren: () => import('../features/dhcp/dhcp.module'),
+    loadComponent: () => import('../features/dhcp/dhcp.component'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_dhcp' },
     data: { reuseRoute: true },
   },
   {
     path: 'vpn',
-    loadChildren: () => import('../features/vpn/vpn.module'),
+    loadComponent: () => import('../features/vpn/vpn.component'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_vpn' },
     data: { reuseRoute: true },
@@ -63,17 +63,17 @@ const routes: Routes = [
   },
   {
     path: 'setting',
-    loadChildren: () => import('../features/setting/setting.module'),
+    // loadChildren: () => import('../features/setting/setting.module'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_setting' },
     data: { reuseRoute: true },
   },
-  { path: 'login', loadChildren: () => import('../features/login-page/login-page.module') },
+  { path: 'login', loadComponent: () => import('../features/login-page/login-page.component') },
   { path: '**', redirectTo: '' },
 ];
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}
+// @NgModule({
+//  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
+//  exports: [RouterModule],
+// })
+// export class AppRoutingModule {}
