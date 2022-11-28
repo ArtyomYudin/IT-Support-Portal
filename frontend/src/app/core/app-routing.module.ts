@@ -10,7 +10,7 @@ export const routes: Routes = [
     loadComponent: () => import('../features/home/home.component'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_home' },
-    // data: { reuseRoute: true },
+    data: { reuseRoute: false },
   },
   {
     path: 'user-request',
@@ -31,7 +31,7 @@ export const routes: Routes = [
     loadComponent: () => import('../features/pacs/pacs.component'),
     canActivate: [AuthGuard],
     // data: { key: 'cached_pacs' },
-    data: { reuseRoute: true },
+    data: { reuseRoute: false },
   },
   {
     path: 'avaya',

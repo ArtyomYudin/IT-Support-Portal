@@ -3,7 +3,11 @@ import { Server, WebSocket } from 'ws';
 import { TLSSocket } from 'tls';
 import { logger } from '../logger';
 import * as dbSelect from '../../shared/db/db_select';
+import * as dbInsert from '../../shared/db/db_insert';
 import * as pacsRequest from './pacs-create-json';
+
+const entranceAP = process.env.PACS_ENTRANCE_AP?.split(',').map(i => parseInt(i, 10));
+const exitAP = process.env.PACS_EXIT_AP?.split(',').map(i => parseInt(i, 10));
 
 // Посыл ответной комманды ping
 export function sendPing(pingId: any, socket: TLSSocket) {
@@ -18,14 +22,54 @@ export function sendPing(pingId: any, socket: TLSSocket) {
 // Разбор событий от Revers API
 export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
   const resive = JSON.parse(data.toString());
-  const apEntry = [1, 5, 16, 21, 27, 36, 39, 41, 43, 45, 47];
-  const apExit = [2, 6, 17, 20, 28, 37, 40, 42, 44, 46, 48];
+  // const apEntry = [1, 5, 16, 21, 27, 36, 39, 41, 43, 45, 47];
+  //  const apExit = [2, 6, 17, 20, 28, 37, 40, 42, 44, 46, 48];
   const employee = [3, 4, 189, 190, 191, 192, 193, 194, 195, 332];
   const apServerRoom = [29, 38];
   const guestCardId = [
     230, 231, 235, 236, 239, 240, 241, 242, 244, 246, 247, 248, 249, 250, 251, 252, 256, 257, 258, 261, 262, 263, 264, 265, 266, 267, 268,
     269, 270, 280, 287, 291, 293, 295, 296, 298, 301,
   ];
+
+  const pacsEvent = JSON.parse(data.toString());
+
+  pacsEvent.Data.forEach(async (item: any) => {
+    if (item.EvCode === 1) {
+      let conn;
+      try {
+        conn = await dbPool.getConnection();
+        await conn.query(
+          dbInsert.inserPacsEvent(item.EvTime.replace(/(\d+).(\d+).(\d+)/, '$3-$2-$1'), item.EvAddr, item.EvUser, item.EvCard, item.EvCode),
+        );
+
+        if (entranceAP?.indexOf(item.EvAddr) !== -1) {
+          try {
+            console.log('Entrance !!!');
+            // const allTenEntryRows = await dbSelect.dashboard.query(dbSelect.allTenEntry);
+            // wss.clients.forEach(client => {
+            //  client.send(
+            //    JSON.stringify({
+            //      event: 'event_entry',
+            //      data: allTenEntryRows,
+            //    }),
+            //  );
+            // });
+          } catch (error) {
+            logger.error(`parseEvent - ${error}`);
+          }
+        }
+
+        if (exitAP?.indexOf(item.EvAddr) !== -1) {
+          console.log('Exit  !!!');
+        }
+      } catch (error) {
+        logger.error(`not connected due to error: ${error}`);
+      } finally {
+        if (conn) conn.release();
+      }
+    }
+  });
+
   /*
   resive.Data.forEach(async item => {
     if (item.EvCode === 1) {
