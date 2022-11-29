@@ -19,11 +19,13 @@ export class AvayaCDRFilterComponent implements OnInit, OnDestroy {
     { name: '1 час', value: 1 },
     { name: '6 часов', value: 6 },
     { name: '1 день', value: 24 },
-    { name: '1 неделя', value: 168 },
-    { name: '2 недели', value: 336 },
-    { name: '30 дней', value: 720 },
-    { name: '90 дней', value: 2160 },
-    { name: '180 дней', value: 4320 },
+    // { name: '2 дня', value: 48 },
+    // { name: '3 дня', value: 72 },
+    // { name: '1 неделя', value: 168 },
+    // { name: '2 недели', value: 336 },
+    // { name: '30 дней', value: 720 },
+    // { name: '90 дней', value: 2160 },
+    // { name: '180 дней', value: 4320 },
   ];
 
   public avayaFilter: FormGroup;

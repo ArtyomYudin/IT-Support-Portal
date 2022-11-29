@@ -41,12 +41,12 @@ process.on('uncaughtException', err => {
   pacsSocket.on('data', data => {
     try {
       const resive = JSON.parse(data.slice(4).toString());
-      logger.info(resive);
-      console.log(resive);
+      // logger.info(resive);
+      // console.log(resive);
       if (resive.Command === 'ping') pacsAPI.sendPing(resive.Id, pacsSocket);
       if (resive.Command === 'events') pacsAPI.parseEvent(dbPool, wss, data.slice(4));
     } catch (e) {
-      logger.error({ 'Pacs error: ': e });
+      logger.error(`Pacs Socket error - ${e} `);
     }
   });
 
@@ -57,7 +57,7 @@ process.on('uncaughtException', err => {
 
   pacsSocket.on('error', err => {
     pacsSocket.destroy();
-    logger.error({ 'Pacs API connect error:': err });
+    logger.error(`Pacs API connect error - ${err}`);
     process.exit(1);
     // socket = initApiSocket();
   });

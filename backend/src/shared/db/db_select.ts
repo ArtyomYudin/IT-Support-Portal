@@ -342,7 +342,7 @@ export const vpnActiveSession = `
                      ) disconnect on(
                             disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
                             disconnect.sessionEnd >= connect.date)
-              WHERE LOCATE('%ASA-7-746012',connect.event) and disconnect.sessionEnd is Null
+              WHERE disconnect.sessionEnd is Null and LOCATE('%ASA-7-746012',connect.event)
               order by connect.date DESC`;
 
 export const vpnActiveSessionCount = `
@@ -359,5 +359,5 @@ export const vpnActiveSessionCount = `
               ) disconnect on(
                      disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
                      disconnect.sessionEnd >= connect.date)
-              WHERE LOCATE('%ASA-7-746012',connect.event) and disconnect.sessionEnd is Null
+              WHERE disconnect.sessionEnd is Null and LOCATE('%ASA-7-746012',connect.event)
               group by connect.host`;

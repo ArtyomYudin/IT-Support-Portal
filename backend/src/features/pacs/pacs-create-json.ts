@@ -78,6 +78,7 @@ export async function createRequestJSON(socket: any, reqBody: any, retry: any) {
   }
   */
 
+  /*
   logger.info({
     'Pacs Guest Event:': [
       reqBodyJSON.event,
@@ -92,6 +93,7 @@ export async function createRequestJSON(socket: any, reqBody: any, retry: any) {
     ],
   });
   logger.info({ 'Photo:': reqBodyJSON.photo });
+  */
   if (!retry) {
     // const cardType = (/pass_auto_cam/.test(reqBodyJSON.photo)) ? 'car' : 'person';
     const cardType = /автомобиль/.test(reqBodyJSON.pass_type) ? 'car' : 'person';

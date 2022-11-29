@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+// eslint-disable-next-line import/extensions
 import { FILE_PREVIEW_DATA } from '@service/file-preview/file.preview.token';
 
 @Component({
@@ -8,10 +8,9 @@ import { FILE_PREVIEW_DATA } from '@service/file-preview/file.preview.token';
   templateUrl: './file-preview.component.html',
   styleUrls: ['./file-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgOptimizedImage],
 })
-export class FilePreviewComponent implements OnInit {
+export class FilePreviewComponent {
   constructor(@Inject(FILE_PREVIEW_DATA) public data: any) {}
 
-  ngOnInit(): void {}
+  // ngOnInit(): void {}
 }
