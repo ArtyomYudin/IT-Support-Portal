@@ -1,7 +1,7 @@
 export class PacsEvent {
   public displayName: string;
 
-  public date: string;
+  public eventDate: string;
 
   public accessPoint: string;
 

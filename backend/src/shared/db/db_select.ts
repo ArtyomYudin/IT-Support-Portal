@@ -309,41 +309,41 @@ export const vpnCompletedSession = (period: number, employeeUpn: string | null) 
        order by connect.date DESC`;
 
 export const vpnActiveSession = `
-              SELECT DISTINCT
-                     connect.date AS sessionStart,
-                     connect.host AS vpnNode,
-                     SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2) AS user,
-                     employee.display_name AS displayName,
-                     SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) AS mappedIP,
-                     policy.policy as policyName,
-                     policy.ip as clientIP
-              FROM cisco_vpn_event connect
-                     LEFT OUTER JOIN employee on(
-                            employee.user_principal_name = (
-                                   case when SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2) not LIKE '%@%' 
-                                   then CONCAT(SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2),'@center-inform.ru')
-                                   else SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2)
-                                   end)
-                     )
-                     LEFT OUTER JOIN (
-                            SELECT
-                                   cisco_vpn_event.date as sessionStart,
-                                   SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', 4), ' ',-1) AS policy,
-                                   SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', 8), ' ',-1) AS ip
-                            FROM cisco_vpn_event
-                            WHERE LOCATE('%ASA-4-722051',cisco_vpn_event.event)
-                     ) policy on(policy.sessionStart = connect.date)
-                     LEFT OUTER JOIN (
-                            SELECT
-                                   cisco_vpn_event.date AS sessionEnd,
-                                   SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS ip
-                            FROM cisco_vpn_event
-                            WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event)
-                     ) disconnect on(
-                            disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
-                            disconnect.sessionEnd >= connect.date)
-              WHERE disconnect.sessionEnd is Null and LOCATE('%ASA-7-746012',connect.event)
-              order by connect.date DESC`;
+       SELECT DISTINCT
+              connect.date AS sessionStart,
+              connect.host AS vpnNode,
+              SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2) AS user,
+              employee.display_name AS displayName,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) AS mappedIP,
+              policy.policy as policyName,
+              policy.ip as clientIP
+       FROM cisco_vpn_event connect 
+       LEFT OUTER JOIN employee on(
+              employee.user_principal_name = (
+                     case when SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2) not LIKE '%@%' 
+                     then CONCAT(SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2),'@center-inform.ru')
+                     else SUBSTR(REGEXP_SUBSTR(connect.event,'(?<=LOCAL).*(?= S)'),2)
+                     end)
+       )
+       LEFT OUTER JOIN (
+              SELECT
+                     cisco_vpn_event.date as sessionStart,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', 4), ' ',-1) AS policy,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', 8), ' ',-1) AS ip
+              FROM cisco_vpn_event 
+              WHERE LOCATE('%ASA-4-722051',cisco_vpn_event.event) > 0
+       ) policy on(policy.sessionStart = connect.date)
+       LEFT OUTER JOIN (
+              SELECT
+                     cisco_vpn_event.date AS sessionEnd,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS ip
+              FROM cisco_vpn_event FORCE INDEX (EVENT_INDEX)
+              WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event) >0
+       ) disconnect on(
+              disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
+              disconnect.sessionEnd >= connect.date)
+       WHERE disconnect.sessionEnd is Null and LOCATE('%ASA-7-746012',connect.event) > 0
+       order by connect.date DESC`;
 
 export const vpnActiveSessionCount = `
               SELECT 
@@ -354,10 +354,33 @@ export const vpnActiveSessionCount = `
                      SELECT
                             cisco_vpn_event.date AS sessionEnd,
                             SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS ip
-                     FROM cisco_vpn_event
-                     WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event)
+                     FROM cisco_vpn_event FORCE INDEX (EVENT_INDEX)
+                     WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event) > 0
               ) disconnect on(
                      disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
                      disconnect.sessionEnd >= connect.date)
-              WHERE disconnect.sessionEnd is Null and LOCATE('%ASA-7-746012',connect.event)
+              WHERE disconnect.sessionEnd is Null and LOCATE('%ASA-7-746012',connect.event) > 0
               group by connect.host`;
+
+export const pacsEventCurrentDay = `
+              SELECT pacs_event.date AS eventDate,
+                            employee.displayName,
+                            employee.userPrincipalName,
+                            pacs_card_owner.display_name as pacsDisplayName,
+                            pacs_access_point.name as accessPointName
+              FROM pacs_event
+
+              LEFT JOIN (
+                     SELECT employee.user_principal_name as userPrincipalName,
+                     employee.display_name as displayName,
+                     pacs_card_owner.id as pacsCardOwnerId, 
+                     pacs_card_owner.display_name as pacsDisplayName
+              FROM employee
+                     LEFT JOIN pacs_card_owner on (pacs_card_owner.user_principal_name = employee.user_principal_name)
+              ) employee on( pacs_event.owner_id = employee.pacsCardOwnerId)
+
+              LEFT OUTER JOIN pacs_card_owner on (pacs_card_owner.id = pacs_event.owner_id)
+              LEFT JOIN pacs_access_point on(pacs_access_point.id = pacs_event.access_point)
+
+              WHERE pacs_event.date >= CURDATE()
+              ORDER by pacs_event.date DESC`;

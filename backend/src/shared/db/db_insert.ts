@@ -89,9 +89,9 @@ export const insertUserRequestLifeCycle = (
 export const inserPacsEvent = (
   date: string,
   accessPoint: number,
-  employeeId: number,
+  ownerId: number,
   card: number,
   code: number,
-) => `INSERT INTO pacs_event (date, access_point, employee_id, card, code)
+) => `INSERT INTO pacs_event (date, access_point, owner_id, card, code)
 VALUES (
-'${date}',${accessPoint},${employeeId},${card}, ${code})`;
+'${date}',${accessPoint},${ownerId},${card}, ${code})`;

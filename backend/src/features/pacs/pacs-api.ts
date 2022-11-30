@@ -34,6 +34,8 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
   */
   const pacsEvent = JSON.parse(data.toString());
 
+  const pacsEventCurrentDayArray: any[] = [];
+
   pacsEvent.Data.forEach(async (item: any) => {
     if (item.EvCode === 1) {
       let conn;
@@ -43,6 +45,23 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
           dbInsert.inserPacsEvent(item.EvTime.replace(/(\d+).(\d+).(\d+)/, '$3-$2-$1'), item.EvAddr, item.EvUser, item.EvCard, item.EvCode),
         );
 
+        const rows = await conn.query(dbSelect.pacsEventCurrentDay);
+        rows.forEach((row: any, i: number) => {
+          pacsEventCurrentDayArray[i] = {
+            displayName: row.displayName,
+            eventDate: row.eventDate,
+            accessPoint: row.accessPointName,
+          };
+        });
+        wss.clients.forEach(client => {
+          client.send(
+            JSON.stringify({
+              event: 'event_pacs_entry_exit',
+              data: { results: pacsEventCurrentDayArray, total: pacsEventCurrentDayArray.length },
+            }),
+          );
+        });
+        /*
         if (entranceAP?.indexOf(item.EvAddr) !== -1) {
           try {
             // console.log('Entrance !!!');
@@ -63,6 +82,7 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
         if (exitAP?.indexOf(item.EvAddr) !== -1) {
           // console.log('Exit  !!!');
         }
+        */
       } catch (error) {
         logger.error(`parseEvent - ${error}`);
       } finally {
