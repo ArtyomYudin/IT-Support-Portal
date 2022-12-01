@@ -7,11 +7,12 @@ import { IPacsEvent } from '@model/pacs-event.model';
 import { WebsocketService } from '@service/websocket.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { Event } from '@service/websocket.service.event';
+import { EmployeeNamePipe } from '@pipe/employeename.pipe';
 
 @Component({
   selector: 'fe-pacs-employee',
   standalone: true,
-  imports: [ClarityModule, NgIf, NgFor, AsyncPipe, DatePipe],
+  imports: [ClarityModule, NgIf, NgFor, AsyncPipe, DatePipe, EmployeeNamePipe],
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.scss'],
 })

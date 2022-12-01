@@ -84,7 +84,7 @@ export async function getVpnActiveSession(dbPool: Pool, ws: WebSocket) {
       activeSessionArray[i] = {
         sessionStart: row.sessionStart,
         node: row.vpnNode,
-        user: row.user,
+        user: row.vpnUser,
         displayName: row.displayName,
         clientIP: row.clientIP ? row.clientIP.slice(1, -1) : row.clientIP,
         mappedIP: row.mappedIP,

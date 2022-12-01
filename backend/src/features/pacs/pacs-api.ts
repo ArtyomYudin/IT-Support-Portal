@@ -51,6 +51,7 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
             displayName: row.displayName,
             eventDate: row.eventDate,
             accessPoint: row.accessPointName,
+            pacsDisplayName: row.pacsDisplayName,
           };
         });
         wss.clients.forEach(client => {

@@ -308,6 +308,7 @@ export const vpnCompletedSession = (period: number, employeeUpn: string | null) 
        ${employeeUpn ? ` AND employee.user_principal_name = '${employeeUpn}'` : ''}
        order by connect.date DESC`;
 
+/*
 export const vpnActiveSession = `
        SELECT DISTINCT
               connect.date AS sessionStart,
@@ -337,14 +338,65 @@ export const vpnActiveSession = `
               SELECT
                      cisco_vpn_event.date AS sessionEnd,
                      SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS ip
-              FROM cisco_vpn_event FORCE INDEX (EVENT_INDEX)
+              FROM cisco_vpn_event 
               WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event) >0
        ) disconnect on(
               disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
               disconnect.sessionEnd >= connect.date)
        WHERE disconnect.sessionEnd is Null and LOCATE('%ASA-7-746012',connect.event) > 0
        order by connect.date DESC`;
+*/
 
+export const vpnActiveSession = `
+       WITH cte_vpn_session_start AS (
+              SELECT DISTINCT
+                     cisco_vpn_event.date AS sessionStart,
+                     cisco_vpn_event.host AS vpnNode,
+                     case
+                            when SUBSTR(REGEXP_SUBSTR(cisco_vpn_event.event,'(?<=LOCAL).*(?= S)'),2) not LIKE '%@%' 
+                     then CONCAT(SUBSTR(REGEXP_SUBSTR(cisco_vpn_event.event,'(?<=LOCAL).*(?= S)'),2),'@center-inform.ru')
+              else SUBSTR(REGEXP_SUBSTR(cisco_vpn_event.event,'(?<=LOCAL).*(?= S)'),2)
+              end AS vpnUser,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -7), ' - ',1) AS mappedIP
+              FROM cisco_vpn_event
+              WHERE LOCATE('%ASA-7-746012',cisco_vpn_event.event) > 0
+       ),
+       cte_vpn_session_end AS (
+              SELECT DISTINCT
+                     cisco_vpn_event.date AS sessionEnd,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS mappedIP
+       FROM cisco_vpn_event
+       WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event) >0
+       ),
+       cte_vpn_session_policy AS (
+              SELECT DISTINCT
+              cisco_vpn_event.date as sessionStart,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', 4), ' ',-1) AS policyName,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', 8), ' ',-1) AS clientIP
+       FROM cisco_vpn_event 
+       WHERE LOCATE('%ASA-4-722051',cisco_vpn_event.event) > 0
+       )
+
+       SELECT
+              cte_vpn_session_start.sessionStart,
+              cte_vpn_session_start.vpnNode,
+              cte_vpn_session_start.vpnUser,
+              employee.display_name AS displayName,
+              cte_vpn_session_start.mappedIP,
+              cte_vpn_session_policy.policyName,
+              cte_vpn_session_policy.clientIP
+              
+       FROM cte_vpn_session_start 
+              LEFT JOIN employee on(employee.user_principal_name = cte_vpn_session_start.vpnUser)
+              LEFT JOIN cte_vpn_session_policy on(cte_vpn_session_policy.sessionStart = cte_vpn_session_start.sessionStart)
+              LEFT JOIN cte_vpn_session_end on(
+                     cte_vpn_session_end.mappedIP = cte_vpn_session_start.mappedIP and 
+       cte_vpn_session_end.sessionEnd >= cte_vpn_session_start.sessionStart
+              )
+       WHERE cte_vpn_session_end.sessionEnd is Null
+       ORDER BY cte_vpn_session_start.sessionStart DESC`;
+
+/*
 export const vpnActiveSessionCount = `
               SELECT 
                      connect.host AS vpnNode,
@@ -354,13 +406,40 @@ export const vpnActiveSessionCount = `
                      SELECT
                             cisco_vpn_event.date AS sessionEnd,
                             SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS ip
-                     FROM cisco_vpn_event FORCE INDEX (EVENT_INDEX)
+                     FROM cisco_vpn_event
                      WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event) > 0
               ) disconnect on(
                      disconnect.ip = SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,' ', -7), ' - ',1) and 
                      disconnect.sessionEnd >= connect.date)
               WHERE disconnect.sessionEnd is Null and LOCATE('%ASA-7-746012',connect.event) > 0
               group by connect.host`;
+*/
+export const vpnActiveSessionCount = `
+       WITH cte_vpn_session_start AS (
+              SELECT DISTINCT
+                     cisco_vpn_event.date AS sessionStart,
+                     cisco_vpn_event.host AS vpnNode,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -7), ' - ',1) AS mappedIP
+       FROM cisco_vpn_event
+       WHERE LOCATE('%ASA-7-746012',cisco_vpn_event.event) > 0
+       ),
+       cte_vpn_session_end AS (
+              SELECT DISTINCT
+                     cisco_vpn_event.date AS sessionEnd,
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(cisco_vpn_event.event,' ', -8), ' - ',1) AS mappedIP
+              FROM cisco_vpn_event
+              WHERE LOCATE('%ASA-7-746013',cisco_vpn_event.event) >0
+       )
+
+       SELECT
+              cte_vpn_session_start.vpnNode,
+       COUNT(*) as count
+       FROM cte_vpn_session_start
+              LEFT JOIN cte_vpn_session_end on(
+              cte_vpn_session_end.mappedIP = cte_vpn_session_start.mappedIP and 
+              cte_vpn_session_end.sessionEnd >= cte_vpn_session_start.sessionStart)
+       WHERE cte_vpn_session_end.sessionEnd is Null
+       group by cte_vpn_session_start.vpnNode`;
 
 export const pacsEventCurrentDay = `
               SELECT pacs_event.date AS eventDate,
