@@ -28,7 +28,7 @@ export async function getEmployee(dbPool: Pool, ws: WebSocket) {
   } catch (error) {
     logger.error(`getEmployee - ${error}`);
   } finally {
-    if (conn) conn.release();
+    if (conn) conn.end();
   }
 }
 
@@ -69,7 +69,7 @@ export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, value:
   } catch (error) {
     logger.error(`getVpnCompletedSession - ${error}`);
   } finally {
-    if (conn) conn.release();
+    if (conn) conn.end();
   }
 }
 
@@ -101,7 +101,7 @@ export async function getVpnActiveSession(dbPool: Pool, ws: WebSocket) {
   } catch (error) {
     logger.error(`getVpnActiveSession - ${error}`);
   } finally {
-    if (conn) conn.release();
+    if (conn) conn.end();
   }
 }
 
@@ -139,6 +139,6 @@ export async function getVpnActiveSessionCount(dbPool: Pool, wss: Server<WebSock
   } catch (error) {
     logger.error(`getVpnActiveSessionCount - ${error}`);
   } finally {
-    if (conn) conn.release();
+    if (conn) conn.end();
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'fe-dhcp',
@@ -7,8 +7,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   styleUrls: ['./dhcp.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class DhcpComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+export default class DhcpComponent {
+  // constructor() {}
+  // ngOnInit(): void {}
 }

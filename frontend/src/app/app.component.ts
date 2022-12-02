@@ -13,7 +13,7 @@ export class AppComponent {
 }
 */
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 // import { UiModule } from '@core/ui/ui.module';
 import { LayoutComponent } from '@core/ui/layout/layout.component';
 
@@ -23,9 +23,10 @@ import { LayoutComponent } from '@core/ui/layout/layout.component';
   imports: [LayoutComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  constructor() {}
+  // constructor() {}
 
   title = 'it-support-portal-frontend';
 }

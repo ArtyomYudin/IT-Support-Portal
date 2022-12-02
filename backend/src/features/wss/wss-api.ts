@@ -37,7 +37,7 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
             }),
           );
         });
-        conn.release(); // release to pool
+        conn.end(); // end to pool
       })
       .catch(err => {
         console.log(`not connected due to error: ${err}`);
@@ -61,7 +61,7 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
             }),
           );
         });
-        conn.release(); // release to pool
+        conn.end(); // end to pool
       })
       .catch(err => {
         console.log(`not connected due to error: ${err}`);
@@ -86,7 +86,7 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
           console.log(error);
         }
 
-        conn.release(); // release to pool
+        conn.end(); // end to pool
       })
       .catch(err => {
         console.log(`not connected due to error: ${err}`);

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { RequestListComponent } from './request-list/request-list.component';
+import { RequestListComponent } from '@feature/user-request/request-list/request-list.component';
 
 @Component({
   selector: 'fe-user-request',
@@ -8,9 +8,9 @@ import { RequestListComponent } from './request-list/request-list.component';
   imports: [RequestListComponent],
   templateUrl: './user-request.component.html',
   styleUrls: ['./user-request.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class UserRequestComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+export default class UserRequestComponent {
+  // constructor() {}
+  // ngOnInit(): void {}
 }

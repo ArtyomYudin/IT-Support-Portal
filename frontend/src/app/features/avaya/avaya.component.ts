@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { AvayaCDRComponent } from './avaya-cdr/avaya-cdr.component';
 
@@ -8,9 +8,9 @@ import { AvayaCDRComponent } from './avaya-cdr/avaya-cdr.component';
   imports: [AvayaCDRComponent],
   templateUrl: './avaya.component.html',
   styleUrls: ['./avaya.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class AvayaComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+export default class AvayaComponent {
+  // constructor() {}
+  // ngOnInit(): void {}
 }

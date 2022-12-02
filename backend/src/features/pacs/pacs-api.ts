@@ -35,18 +35,23 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
   const pacsEvent = JSON.parse(data.toString());
 
   const pacsEventCurrentDayArray: any[] = [];
+  const pacsLastEventArray: any[] = [];
 
   pacsEvent.Data.forEach(async (item: any) => {
     if (item.EvCode === 1) {
       let conn;
       try {
         conn = await dbPool.getConnection();
+        // console.log('Total connections: ', dbPool.totalConnections());
+        // console.log('Active connections: ', dbPool.activeConnections());
+        // console.log('Idle connections: ', dbPool.idleConnections());
         await conn.query(
           dbInsert.inserPacsEvent(item.EvTime.replace(/(\d+).(\d+).(\d+)/, '$3-$2-$1'), item.EvAddr, item.EvUser, item.EvCard, item.EvCode),
         );
 
-        const rows = await conn.query(dbSelect.pacsEventCurrentDay);
-        rows.forEach((row: any, i: number) => {
+        const eventCurrentDayRows = await conn.query(dbSelect.pacsEventCurrentDay);
+        const lastEventRows = await conn.query(dbSelect.pacsEventLast);
+        eventCurrentDayRows.forEach((row: any, i: number) => {
           pacsEventCurrentDayArray[i] = {
             displayName: row.displayName,
             eventDate: row.eventDate,
@@ -54,11 +59,26 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
             pacsDisplayName: row.pacsDisplayName,
           };
         });
+        lastEventRows.forEach((row: any, i: number) => {
+          pacsLastEventArray[i] = {
+            displayName: row.displayName,
+            eventDate: row.eventDate,
+            accessPoint: row.accessPointName,
+            pacsDisplayName: row.pacsDisplayName,
+            departmentId: row.departmentId,
+          };
+        });
         wss.clients.forEach(client => {
           client.send(
             JSON.stringify({
               event: 'event_pacs_entry_exit',
               data: { results: pacsEventCurrentDayArray, total: pacsEventCurrentDayArray.length },
+            }),
+          );
+          client.send(
+            JSON.stringify({
+              event: 'event_pacs_last_event',
+              data: { results: pacsLastEventArray, total: pacsLastEventArray.length },
             }),
           );
         });
@@ -87,7 +107,7 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
       } catch (error) {
         logger.error(`parseEvent - ${error}`);
       } finally {
-        if (conn) conn.release();
+        if (conn) conn.end();
       }
     }
   });

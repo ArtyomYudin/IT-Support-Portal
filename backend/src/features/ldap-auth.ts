@@ -39,7 +39,7 @@ export async function checkUserCredentials(reqBody: string, res: ServerResponse,
   } catch (error) {
     logger.error(`LDAP - ${error}`);
   } finally {
-    if (conn) conn.release();
+    if (conn) conn.end();
   }
 
   if (employeeIdByUPN) {
@@ -140,7 +140,7 @@ export async function checkUserCredentials(reqBody: string, res: ServerResponse,
                         [entry.object.userPrincipalName, entry.raw.thumbnailPhoto, entry.raw.thumbnailPhoto],
                       );
                     }
-                    conn.release(); // release to pool
+                    conn.end(); // end to pool
                   })
                   .catch(err => {
                     logger.error(`LDAP - ${err}`);

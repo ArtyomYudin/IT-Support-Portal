@@ -38,4 +38,5 @@ export enum Event {
   EV_HARDWARE_GROUP_ALARM = 'event_hardware_group_alarm',
 
   EV_PACS_ENTRY_EXIT = 'event_pacs_entry_exit',
+  EV_PACS_LAST_EVENT = 'event_pacs_last_event',
 }

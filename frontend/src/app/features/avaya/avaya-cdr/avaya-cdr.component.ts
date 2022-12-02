@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/internal/Subject';
 import { Observable } from 'rxjs/internal/Observable';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
 import { ClarityModule } from '@clr/angular';
-import { NgFor, DatePipe, AsyncPipe } from '@angular/common';
+import { DatePipe, AsyncPipe } from '@angular/common';
 import { WebsocketService } from '@service/websocket.service';
 import { AvayaCDRService } from '@service/avaya.cdr.service';
 import { IAvayaCDR } from '@model/avaya-cdr.model';

@@ -31,7 +31,7 @@ export function allPurchaseRequest(dbPool: Pool, ws: WebSocket): void {
           }),
         );
       });
-      conn.release(); // release to pool
+      conn.end(); // end to pool
     })
     .catch(err => {
       console.log(`not connected due to error: ${err}`);
@@ -54,7 +54,7 @@ export function getEmployeeByUPN(dbPool: Pool, ws: WebSocket, value: string): vo
           }),
         );
       });
-      conn.release(); // release to pool
+      conn.end(); // end to pool
     })
     .catch(err => {
       console.log(`not connected due to error: ${err}`);
@@ -78,7 +78,7 @@ export function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket, value
           }),
         );
       });
-      conn.release(); // release to pool
+      conn.end(); // end to pool
     })
     .catch(err => {
       console.log(`not connected due to error: ${err}`);
@@ -101,7 +101,7 @@ export function getPurchaseRequestInitInfo(dbPool: Pool, ws: WebSocket, value: s
           }),
         );
       });
-      conn.release(); // release to pool
+      conn.end(); // end to pool
     })
     .catch(err => {
       console.log(`not connected due to error: ${err}`);
@@ -124,7 +124,7 @@ export function getPurchaseRequestApproversByUPN(dbPool: Pool, ws: WebSocket, va
           }),
         );
       });
-      conn.release(); // release to pool
+      conn.end(); // end to pool
     })
     .catch(err => {
       console.log(`not connected due to error: ${err}`);
@@ -151,7 +151,7 @@ export function savePurcheseRequest(dbPool: Pool, ws: WebSocket, value: any): vo
         console.log(error);
       }
       console.log(value.purchaseTarget);
-      conn.release(); // release to pool
+      conn.end(); // end to pool
     })
     .catch(err => {
       console.log(`not connected due to error: ${err}`);

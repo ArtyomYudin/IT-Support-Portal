@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebsocketService } from '@service/websocket.service';
 import { Event } from '@service/websocket.service.event';
 import { IUserRequest } from '@model/user-request.model';
@@ -21,7 +21,7 @@ import { RequestCardComponent } from '@feature/user-request/request-card/request
   styleUrls: ['./request-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RequestListComponent implements OnInit, OnDestroy {
+export class RequestListComponent implements OnDestroy {
   public selected: any = [];
 
   public loading = true;
@@ -73,7 +73,7 @@ export class RequestListComponent implements OnInit, OnDestroy {
     });
   }
  */
-  ngOnInit(): void {}
+  // ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next(null);

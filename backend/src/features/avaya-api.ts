@@ -39,6 +39,6 @@ export async function getAvayaCDR(dbPool: Pool, ws: WebSocket, filter: number) {
   } catch (error) {
     logger.error(`getAvayaCDR - ${error}`);
   } finally {
-    if (conn) conn.release();
+    if (conn) conn.end();
   }
 }

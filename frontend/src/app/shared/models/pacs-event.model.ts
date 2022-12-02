@@ -5,6 +5,8 @@ export class PacsEvent {
 
   public accessPoint: string;
 
+  public departmentId?: string;
+
   public pacsDisplayName?: string;
 
   public thumbnailPhoto?: string;

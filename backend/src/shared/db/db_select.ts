@@ -463,3 +463,26 @@ export const pacsEventCurrentDay = `
 
               WHERE pacs_event.date >= CURDATE()
               ORDER by pacs_event.date DESC`;
+
+export const pacsEventLast = `
+              WITH cte_pacs_last_event AS (
+                     SELECT
+                            max(pacs_event.id) AS lastEventId,
+                     pacs_event.owner_id AS ownerID
+                     FROM pacs_event
+                                   WHERE pacs_event.date >= CURDATE()
+                     GROUP BY pacs_event.owner_id
+              )
+              SELECT
+                     pacs_event.date AS eventDate,
+                     pacs_card_owner.user_principal_name AS userPrincipalName, 
+              employee.display_name AS displayName,
+              employee.department_id AS departmentId,
+              pacs_card_owner.display_name AS pacsDisplayName,
+              pacs_access_point.name AS accessPointName
+              FROM cte_pacs_last_event
+                     INNER JOIN pacs_event ON (cte_pacs_last_event.lastEventID = pacs_event.id)
+                     INNER JOIN pacs_card_owner ON (pacs_event.owner_id = pacs_card_owner.id)
+                     INNER JOIN pacs_access_point ON (pacs_event.access_point = pacs_access_point.id)
+                     LEFT JOIN employee ON (employee.user_principal_name = pacs_card_owner.user_principal_name)
+              ORDER BY pacs_event.date DESC`;
