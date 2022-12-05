@@ -61,7 +61,7 @@ export class UserActivityComponent implements OnInit, OnDestroy {
 
   public tabName: string;
 
-  private reloadVpnSession: NodeJS.Timer;
+  private reloadVpnSession: number;
 
   constructor(private wsService: WebsocketService, private commonStrings: ClrCommonStringsService, private formBuilder: FormBuilder) {
     commonStrings.localize(russionLocale);
@@ -93,11 +93,11 @@ export class UserActivityComponent implements OnInit, OnDestroy {
     // this.wsService.send('getEmployee', null);
     // this.wsService.send('getVpnCompletedSession', 720);
     /*
-    this.reloadVpnSession = setInterval(() => {
+    this.reloadVpnSession = window.setInterval(() => {
       this.loadingSession = true;
       this.wsService.send('getVpnCompletedSession', 720);
     }, 120000);
-    */
+*/
     this.vpnFilter = this.formBuilder.group({
       vpnViewPeriod: [{ name: '6 часов', value: 6 }],
     });

@@ -137,6 +137,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
     case 'getDepartment':
       userRequestAPI.getDepartment(dbPool, ws, parseMsg.data);
       break;
+    case 'getDepartmentStructureByUPN':
+      userRequestAPI.getDepartmentStructureByUPN(dbPool, ws, parseMsg.data);
+      break;
     case 'getEmployeeByParentDepartment':
       userRequestAPI.getEmployeeByParentDepartment(dbPool, ws, parseMsg.data);
       break;

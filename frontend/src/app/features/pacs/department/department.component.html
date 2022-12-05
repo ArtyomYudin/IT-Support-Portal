@@ -1,12 +1,12 @@
-<div class="limit-height">
+<div class="limit-height pacs-department">
     <clr-datagrid class="datagrid-compact pacs-department-event-datagrid" [clrDgLoading]="loading">
-        <clr-dg-column>Сотрудники Управления</clr-dg-column>
+        <clr-dg-column>Время</clr-dg-column>
         <clr-dg-column></clr-dg-column>
         <clr-dg-column></clr-dg-column>
 
         <clr-dg-placeholder>Нет событий!</clr-dg-placeholder>
 
-        <clr-dg-row *clrDgItems="let pacsLastEvent of (pacsLastEventArray$ | async)?.results" [clrDgItem]="pacsLastEvent">
+        <clr-dg-row *clrDgItems="let pacsLastEvent of pacsLastEventArray$ | async" [clrDgItem]="pacsLastEvent">
             <clr-dg-cell class="date-column">{{ pacsLastEvent.eventDate | date : 'HH:mm:ss' }}</clr-dg-cell>
             <clr-dg-cell>{{
                 pacsLastEvent.displayName ? (pacsLastEvent.displayName | employeeName) : pacsLastEvent.pacsDisplayName
@@ -14,6 +14,6 @@
             <clr-dg-cell>{{ pacsLastEvent.accessPoint }}</clr-dg-cell>
         </clr-dg-row>
 
-        <clr-dg-footer> {{ (this.pacsLastEventArray$ | async)?.total }} событий </clr-dg-footer>
+        <!-- <clr-dg-footer> {{ (this.pacsLastEventArray$ | async)?.total }} событий </clr-dg-footer>-->
     </clr-datagrid>
 </div>

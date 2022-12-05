@@ -23,7 +23,7 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
-  private reloadVpnActiveSession: NodeJS.Timer;
+  private reloadVpnActiveSession: number;
 
   constructor(private wsService: WebsocketService) {
     this.eventVpnActiveSessionArray$ = this.wsService.on<IVpnActiveSession>(Event.EV_VPN_ACTIVE_SESSION).pipe(
@@ -36,7 +36,7 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.reloadVpnActiveSession = setInterval(() => {
+    this.reloadVpnActiveSession = window.setInterval(() => {
       this.loading = true;
       this.wsService.send('getVpnActiveSession', null);
     }, 60000);

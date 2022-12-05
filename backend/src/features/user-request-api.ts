@@ -301,6 +301,31 @@ export async function getDepartment(dbPool: Pool, ws: WebSocket, value?: number)
   }
 }
 
+export async function getDepartmentStructureByUPN(dbPool: Pool, ws: WebSocket, value: string) {
+  const departmentStructureByUPN: any = [];
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const rows = await conn.query(dbSelect.getDepartmentStructureByUPN(value));
+    rows.forEach((row: any, i: number) => {
+      if (i === 0) {
+        departmentStructureByUPN.push(row.parentId);
+      }
+      departmentStructureByUPN.push(row.id);
+    });
+    ws.send(
+      JSON.stringify({
+        event: 'event_department_structure_by_upn',
+        data: departmentStructureByUPN,
+      }),
+    );
+  } catch (error) {
+    logger.error(`getDepartmentЫекгсегкуByUPN - ${error}`);
+  } finally {
+    if (conn) conn.end();
+  }
+}
+
 export async function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, value: any): Promise<void> {
   const userRequestAttachmentArray: any[] = [];
   if (!Object.prototype.hasOwnProperty.call(value, 'fileName')) {

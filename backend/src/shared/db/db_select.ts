@@ -130,6 +130,19 @@ export const getDepartment = (departmentId?: any) => `
                             ${!departmentId.isNaN ? ` WHERE department.id  =${departmentId}` : ''}
                             order by department.name`;
 
+export const getDepartmentStructureByUPN = (userPrincipalName: string) => `
+       WITH cte_user_parent_department AS (
+              SELECT department.parent_id as parentId
+              FROM department 
+              LEFT JOIN employee ON (department.id = employee.department_id)
+              WHERE employee.user_principal_name = '${userPrincipalName}'
+              LIMIT 1
+       )
+       SELECT department.parent_id AS parentId,
+                     department.id AS id
+       FROM department
+       INNER JOIN cte_user_parent_department ON (department.parent_id = cte_user_parent_department.parentId)`;
+
 export const getUserRequestNewNumber = `SELECT user_request_new_number() AS newNumber`;
 
 export const getEmployee = `
@@ -291,7 +304,7 @@ export const vpnCompletedSession = (period: number, employeeUpn: string | null) 
               SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 2), ' ',-1) AS user,
               SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 3), ' ',-1) AS ip,
               SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 4), ' ',-1) AS type,
-              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 5), ' ',-1) AS duration,
+              SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 5), 'Duration: ',-1) AS duration,
               SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 6), ' ',-1) AS byteXmt,
               SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 7), ' ',-1) AS byteRcv,
               SUBSTRING_INDEX(SUBSTRING_INDEX(connect.event,',', 8), ' ',-1) AS reason,

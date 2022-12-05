@@ -1,16 +1,20 @@
 .limit-height clr-datagrid {
-  //height: calc(100vh - 144px);
-  height: calc(100vh - 5.9rem);
-  //height: 100% !important;
+  height: calc(100vh - 6.9rem);
 }
 
-/*
-  .datagrid-compact .datagrid-expandable-caret .datagrid-expandable-caret-icon cds-icon[direction='down'] {
-    background-color: #0072a3;
-    border-radius: 0.15rem;
-  }
-  */
+.datagrid-action-bar {
+  margin-top: 0rem;
+}
+
+clr-icon {
+  margin-right: 0.1rem;
+}
+
+::ng-deep .pacs-employee .datagrid {
+  margin-top: 0.45rem;
+}
 
 .date-column {
-  max-width: 156px;
+  max-width: 80px;
+  min-width: 80px;
 }

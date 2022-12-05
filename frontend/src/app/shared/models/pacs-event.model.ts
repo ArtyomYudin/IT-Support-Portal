@@ -5,7 +5,7 @@ export class PacsEvent {
 
   public accessPoint: string;
 
-  public departmentId?: string;
+  public departmentId?: number;
 
   public pacsDisplayName?: string;
 
