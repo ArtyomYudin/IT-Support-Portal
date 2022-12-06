@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { takeUntil, share, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
+import { NgIf } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
 import { WebsocketService } from '@service/websocket.service';
 import { AuthenticationService } from '@service/auth.service';
@@ -12,11 +13,11 @@ import { HeaderMobileComponent } from '@core/ui/layout/header/header-mobile/head
 @Component({
   selector: 'fe-layout',
   standalone: true,
-  imports: [ClarityModule, MainComponent, HeaderMobileComponent],
+  imports: [ClarityModule, NgIf, MainComponent, HeaderMobileComponent],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
 })
-export class LayoutComponent implements OnInit, OnDestroy {
+export class LayoutComponent implements OnDestroy {
   public isConnected: boolean;
 
   public currentUser: AuthUser;
@@ -32,7 +33,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {}
+  // ngOnInit(): void {}
 
   public ngOnDestroy() {
     this.ngUnsubscribe$.next(null);

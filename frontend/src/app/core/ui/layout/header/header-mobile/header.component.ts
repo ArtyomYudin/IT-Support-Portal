@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 // import { map, takeUntil } from 'rxjs/operators';
 // import { Subject } from 'rxjs';
@@ -17,7 +17,7 @@ import { ThumbnailPhotoPipe } from '@pipe/thumbnailphoto.pipe';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderMobileComponent implements OnInit, OnDestroy {
+export class HeaderMobileComponent {
   @Input() currentUser: AuthUser;
   // public currentUser: AuthUser;
 
@@ -38,12 +38,12 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
     //       });}
   }
 
-  ngOnInit(): void {}
+  // ngOnInit(): void {}
 
-  public ngOnDestroy(): void {
-    // this.ngUnsubscribe$.next(null);
-    // this.ngUnsubscribe$.complete();
-  }
+  // public ngOnDestroy(): void {
+  // this.ngUnsubscribe$.next(null);
+  // this.ngUnsubscribe$.complete();
+  // }
 
   public onLogout(): void {
     this.authenticationService.logout();

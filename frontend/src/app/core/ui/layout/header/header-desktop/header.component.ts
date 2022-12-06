@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, takeUntil } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 // import { Subject } from 'rxjs';
 
 import { ClarityModule } from '@clr/angular';
@@ -18,7 +18,7 @@ import { ThumbnailPhotoPipe } from '@pipe/thumbnailphoto.pipe';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderDesktopComponent implements OnInit, OnDestroy {
+export class HeaderDesktopComponent {
   @Input() currentUser: AuthUser;
   // public currentUser: AuthUser;
 
@@ -39,12 +39,12 @@ export class HeaderDesktopComponent implements OnInit, OnDestroy {
     //       });}
   }
 
-  ngOnInit(): void {}
+  // ngOnInit(): void {}
 
-  public ngOnDestroy(): void {
-    // this.ngUnsubscribe$.next(null);
-    // this.ngUnsubscribe$.complete();
-  }
+  // public ngOnDestroy(): void {
+  // this.ngUnsubscribe$.next(null);
+  // this.ngUnsubscribe$.complete();
+  // }
 
   public onLogout(): void {
     this.authenticationService.logout();

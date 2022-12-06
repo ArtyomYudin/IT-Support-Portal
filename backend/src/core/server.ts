@@ -16,10 +16,10 @@ process.on('uncaughtException', err => {
 });
 
 (async () => {
-  const httpServer = await initHTTPSServer(dbPool);
+  const pacsSocket = await initPacsSocket();
+  const httpServer = await initHTTPSServer(dbPool, pacsSocket);
   const wss = await websocketServer(httpServer);
   initZabbixAPI(dbPool, wss);
-  const pacsSocket = await initPacsSocket();
 
   const clients: any[] = [];
 

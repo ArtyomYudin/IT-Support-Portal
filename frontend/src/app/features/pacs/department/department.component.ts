@@ -38,7 +38,7 @@ export class DepartmentComponent {
       tap(() => {
         this.loading = false;
       }),
-      map(items => items.results.filter((item: any) => item.departmentId === 49 || item.departmentId === 50)),
+      map(items => items.results.filter((item: any) => this.departmentStructure.includes(item.departmentId))),
     );
   }
 

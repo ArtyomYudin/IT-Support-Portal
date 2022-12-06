@@ -3,10 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import { logger } from '../logger';
 
-tls.DEFAULT_MIN_VERSION = 'TLSv1';
+// tls.DEFAULT_MIN_VERSION = 'TLSv1';
 
 const options = {
-  requestCert: true,
+  // requestCert: false,
+  secureProtocol: 'TLSv1_method',
   rejectUnauthorized: false,
   key: fs.readFileSync(path.resolve(__dirname, '../../cert/ssl.key')),
   cert: fs.readFileSync(path.resolve(__dirname, '../../cert/cert.pem')),
@@ -30,7 +31,7 @@ function createBuffer(postJSONData: any) {
 // Соединение с сервером Revers 8000 API
 export function initPacsSocket() {
   const socket = tls.connect(parseInt(process.env.PACS_PORT as string, 10), process.env.PACS_HOST as string, options, () => {
-    logger.info(`Revers API client connected${socket.authorized ? ' authorized' : ' unauthorized'}`);
+    logger.info(`Pacs API client connected${socket.authorized ? ' authorized' : ' unauthorized'}`);
     socket.write(createBuffer(filterEventsCommand));
     process.stdin.pipe(socket);
     process.stdin.resume();

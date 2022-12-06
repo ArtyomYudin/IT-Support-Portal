@@ -4,6 +4,8 @@
 
 // const photoDownloader = require('./photo_downloader');
 
+import { Pool } from 'mariadb';
+import { TLSSocket } from 'tls';
 import { logger } from '../logger';
 import * as dbSelect from '../../shared/db/db_select';
 import * as dbInsert from '../../shared/db/db_insert';
@@ -21,7 +23,7 @@ export function createBuffer(postJSONData: any) {
 }
 
 // Функция формирования запроса на Revers 8000 на основании данных полученных со стороннего СКУДа
-export async function createRequestJSON(socket: any, reqBody: any, retry: any) {
+export async function createRequestJSON(socket: TLSSocket, dbPool: Pool, reqBody: any, retry: any) {
   let postAccessJSON: any = [];
   let postDataJSON: any = [];
   let postEditCardJSON: any = [];
@@ -106,10 +108,23 @@ export async function createRequestJSON(socket: any, reqBody: any, retry: any) {
       null,
       reqBodyJSON.photo,
     ];
+    let conn;
     try {
-      // await dashboard.query(inserGuestCardEvent, insertEventValue);
+      conn = await dbPool.getConnection();
+      await conn.query(
+        dbInsert.inserPacsGuestEvent(
+          getRequestTstamp.format('Y-m-d H:M:S'),
+          reqBodyJSON.event,
+          cardType,
+          reqBodyJSON.card_no,
+          cardNumber,
+          reqBodyJSON.photo,
+        ),
+      );
     } catch (error) {
       logger.error(error);
+    } finally {
+      if (conn) conn.end();
     }
   }
   switch (reqBodyJSON.event) {

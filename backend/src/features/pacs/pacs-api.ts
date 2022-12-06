@@ -5,6 +5,7 @@ import { logger } from '../logger';
 import * as dbSelect from '../../shared/db/db_select';
 import * as dbInsert from '../../shared/db/db_insert';
 import * as pacsRequest from './pacs-create-json';
+import { createRequestJSON } from './pacs-create-json';
 
 const entranceAP = process.env.PACS_ENTRANCE_AP?.split(',').map(i => parseInt(i, 10));
 const exitAP = process.env.PACS_EXIT_AP?.split(',').map(i => parseInt(i, 10));
@@ -239,4 +240,48 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
     }
   });
   */
+}
+
+// Передача запроса на выдачу или изьятие гостевой карты
+export function sendExtJSON(reqBody: string, pacsSocket: TLSSocket, dbPool: Pool) {
+  if (JSON.parse(reqBody).secret === 'Z3SN1AR6') {
+    // const socketReq = initApiSocket();
+    createRequestJSON(pacsSocket, dbPool, reqBody, false);
+    // if (JSON.parse(reqBody).event === 'issue') guestPerDay();
+    // if (/автомобиль/.test(JSON.parse(reqBody).pass_type)) {
+    //  realCarOnTerritory();
+    //  carTotalPerDay();
+    // }
+    pacsSocket.on('data', data => {
+      try {
+        const resive = JSON.parse(data.slice(4).toString());
+        logger.info(resive);
+        switch (resive.Command) {
+          case 'addcard':
+            if (resive.ErrCode === 9) {
+              createRequestJSON(pacsSocket, dbPool, reqBody, true);
+            } else pacsSocket.emit('end');
+            break;
+          case 'editcard':
+            if (resive.ErrCode === 0 || resive.ErrCode === 10) pacsSocket.emit('end');
+            break;
+          case 'delcard':
+            if (resive.ErrCode === 6) {
+              createRequestJSON(pacsSocket, dbPool, reqBody, true);
+            } else pacsSocket.emit('end');
+            break;
+          default:
+            break;
+        }
+      } catch (e) {
+        logger.error({ 'RESIVE ERROR: ': e });
+      }
+    });
+    // pacsSocket.on('end', () => {
+    //  pacsSocket.destroy();
+    //  logger.info('Revers API web client disconnected from server');
+    // });
+  } else {
+    logger.error('Not valid secret phrase');
+  }
 }

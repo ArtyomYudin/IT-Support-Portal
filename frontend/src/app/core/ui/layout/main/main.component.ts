@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AuthenticationService } from '@service/auth.service';
 import { AuthUser } from '@model/auth-user.model';
-import { takeUntil } from 'rxjs/operators';
+// import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 import { RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
@@ -17,7 +17,7 @@ import { HeaderDesktopComponent } from '@core/ui/layout/header/header-desktop/he
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainComponent implements OnInit {
+export class MainComponent {
   @Input() currentUser: AuthUser;
 
   private ngUnsubscribe$: Subject<any> = new Subject();
@@ -28,5 +28,5 @@ export class MainComponent implements OnInit {
     // });
   }
 
-  ngOnInit() {}
+  // ngOnInit() {}
 }

@@ -95,3 +95,14 @@ export const inserPacsEvent = (
 ) => `INSERT INTO pacs_event (date, access_point, owner_id, card, code)
 VALUES (
 '${date}',${accessPoint},${ownerId},${card}, ${code})`;
+
+export const inserPacsGuestEvent = (
+  date: string,
+  event: string,
+  type: string,
+  dotNumber: string,
+  sysNumber: number,
+  photoLink: string,
+) => `INSERT INTO pacs_guest_event (date, event, type, dot_number, sys_number, photo_link)
+VALUES (
+'${date}','${event}','${type}','${dotNumber}', ${sysNumber},'${photoLink}' )`;
