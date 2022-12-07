@@ -5,7 +5,7 @@
 // const photoDownloader = require('./photo_downloader');
 
 import { Pool } from 'mariadb';
-import { TLSSocket } from 'tls';
+import { TLSSocket } from 'node:tls';
 import { logger } from '../logger';
 import * as dbSelect from '../../shared/db/db_select';
 import * as dbInsert from '../../shared/db/db_insert';

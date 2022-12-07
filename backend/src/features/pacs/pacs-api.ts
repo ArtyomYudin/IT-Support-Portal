@@ -1,6 +1,6 @@
 import { Pool } from 'mariadb';
 import { Server, WebSocket } from 'ws';
-import { TLSSocket } from 'tls';
+import { TLSSocket } from 'node:tls';
 import { logger } from '../logger';
 import * as dbSelect from '../../shared/db/db_select';
 import * as dbInsert from '../../shared/db/db_insert';

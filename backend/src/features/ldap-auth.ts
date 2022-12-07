@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import * as ldap from 'ldapjs';
-import { ServerResponse } from 'http';
+import { ServerResponse } from 'node:http';
 import { Pool } from 'mariadb';
 
 import { Blob } from 'node:buffer';

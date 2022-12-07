@@ -15,10 +15,10 @@ process.on('uncaughtException', err => {
   process.exit(1);
 });
 
-(async () => {
-  const pacsSocket = await initPacsSocket();
-  const httpServer = await initHTTPSServer(dbPool, pacsSocket);
-  const wss = await websocketServer(httpServer);
+(() => {
+  const pacsSocket = initPacsSocket();
+  const httpServer = initHTTPSServer(dbPool, pacsSocket);
+  const wss = websocketServer(httpServer);
   initZabbixAPI(dbPool, wss);
 
   const clients: any[] = [];
@@ -51,7 +51,7 @@ process.on('uncaughtException', err => {
   });
 
   pacsSocket.on('end', () => {
-    pacsSocket.destroy();
+    // pacsSocket.destroy();
     logger.info('Pacs API client disconnected from server');
   });
 

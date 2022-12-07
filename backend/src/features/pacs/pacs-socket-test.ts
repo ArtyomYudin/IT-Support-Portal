@@ -1,13 +1,13 @@
 import tls from 'node:tls';
 import fs from 'node:fs';
 import path from 'node:path';
-import { logger } from '../logger';
 
 tls.DEFAULT_MIN_VERSION = 'TLSv1';
 
 const options = {
   // requestCert: false,
   // secureProtocol: 'TLSv1_method',
+  // minVersion: 'TLSv1',
   rejectUnauthorized: false,
   key: fs.readFileSync(path.resolve(__dirname, '../../cert/key.pem')),
   cert: fs.readFileSync(path.resolve(__dirname, '../../cert/cert.pem')),
@@ -33,16 +33,18 @@ function createBuffer(postJSONData: any) {
   return bufferWithByte;
 }
 
-// Соединение с сервером Revers 8000 API
-export function initPacsSocket() {
-  const socket = tls.connect(parseInt(process.env.PACS_PORT as string, 10), process.env.PACS_HOST as string, options, () => {
-    logger.info(`Pacs API client connected${socket.authorized ? ' authorized' : ' unauthorized'}`);
-    socket.write(createBuffer(filterEventsCommand));
-    process.stdin.pipe(socket);
-    process.stdin.resume();
-  });
-  // socket.enableTrace();
-  socket.setEncoding('utf8');
-  socket.setKeepAlive(true);
-  return socket;
-}
+const socket = tls.connect(24532, '172.21.110.139', options, () => {
+  console.log('client connected', socket.authorized ? 'authorized' : 'unauthorized');
+  process.stdin.pipe(socket);
+  process.stdin.resume();
+});
+
+socket.setEncoding('utf8');
+socket.write(createBuffer(filterEventsCommand));
+socket.on('data', data => {
+  console.log(data);
+});
+
+socket.on('end', () => {
+  console.log('server ends connection');
+});

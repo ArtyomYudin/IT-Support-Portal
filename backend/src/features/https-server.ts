@@ -1,9 +1,9 @@
-import https from 'https';
-import fs from 'fs';
-import path from 'path';
-import { constants } from 'crypto';
+import https from 'node:https';
+import fs from 'node:fs';
+import path from 'node:path';
+import { constants } from 'node:crypto';
 import { Pool } from 'mariadb';
-import { TLSSocket } from 'tls';
+import { TLSSocket } from 'node:tls';
 import { logger } from './logger';
 import { checkUserCredentials } from './ldap-auth';
 import * as pacsAPI from './pacs/pacs-api';
