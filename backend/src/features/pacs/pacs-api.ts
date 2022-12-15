@@ -46,10 +46,17 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
         // console.log('Total connections: ', dbPool.totalConnections());
         // console.log('Active connections: ', dbPool.activeConnections());
         // console.log('Idle connections: ', dbPool.idleConnections());
-        await conn.query(
-          dbInsert.inserPacsEvent(item.EvTime.replace(/(\d+).(\d+).(\d+)/, '$3-$2-$1'), item.EvAddr, item.EvUser, item.EvCard, item.EvCode),
-        );
-
+        if (process.env.NODE_ENV === 'production') {
+          await conn.query(
+            dbInsert.inserPacsEvent(
+              item.EvTime.replace(/(\d+).(\d+).(\d+)/, '$3-$2-$1'),
+              item.EvAddr,
+              item.EvUser,
+              item.EvCard,
+              item.EvCode,
+            ),
+          );
+        }
         const eventCurrentDayRows = await conn.query(dbSelect.pacsEventCurrentDay);
         const lastEventRows = await conn.query(dbSelect.pacsEventLast);
         eventCurrentDayRows.forEach((row: any, i: number) => {

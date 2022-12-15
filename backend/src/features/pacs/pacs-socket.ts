@@ -6,9 +6,9 @@ import { logger } from '../logger';
 tls.DEFAULT_MIN_VERSION = 'TLSv1';
 
 const options = {
-  // requestCert: false,
+  requestCert: true,
   // secureProtocol: 'TLSv1_method',
-  rejectUnauthorized: false,
+  // rejectUnauthorized: false,
   key: fs.readFileSync(path.resolve(__dirname, '../../cert/key.pem')),
   cert: fs.readFileSync(path.resolve(__dirname, '../../cert/cert.pem')),
   ca: [fs.readFileSync(path.resolve(__dirname, '../../cert/cert.pem'))],
@@ -37,6 +37,8 @@ function createBuffer(postJSONData: any) {
 export function initPacsSocket() {
   const socket = tls.connect(parseInt(process.env.PACS_PORT as string, 10), process.env.PACS_HOST as string, options, () => {
     logger.info(`Pacs API client connected${socket.authorized ? ' authorized' : ' unauthorized'}`);
+    logger.info(`Pacs API Cipher: ${JSON.stringify(socket.getCipher())}`);
+    logger.info(`Pacs API Protocol: ${JSON.stringify(socket.getProtocol())}`);
     socket.write(createBuffer(filterEventsCommand));
     process.stdin.pipe(socket);
     process.stdin.resume();

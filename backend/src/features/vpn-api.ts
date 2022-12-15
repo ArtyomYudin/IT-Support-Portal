@@ -40,13 +40,16 @@ export async function getVpnCompletedSession(dbPool: Pool, ws: WebSocket, value:
     conn = await dbPool.getConnection();
     const rows = await conn.query(dbSelect.vpnCompletedSession(value.period, value.employeeUpn));
     rows.forEach((row: any, i: number) => {
-      const durationArray = row.duration.split(':');
+      const durationArray = row.duration.replace(/\s/g, ':').split(':');
+      const durrationArraylength = durationArray.length;
+      const dayToMs = durrationArraylength === 4 ? Number(durationArray[0].replace(/d/, '')) * 24 * 60 * 60 * 1000 : 0;
       completedSessionArray[i] = {
         sessionStart: new Date(
           row.sessionEnd.getTime() -
-            (Number(durationArray[0].replace(/h/, '')) * 60 * 60 * 1000 +
-              Number(durationArray[1].replace(/m/, '')) * 60 * 1000 +
-              Number(durationArray[2].replace(/s/, '')) * 1000),
+            (dayToMs +
+              Number(durationArray[durrationArraylength - 3].replace(/h/, '')) * 60 * 60 * 1000 +
+              Number(durationArray[durrationArraylength - 2].replace(/m/, '')) * 60 * 1000 +
+              Number(durationArray[durrationArraylength - 1].replace(/s/, '')) * 1000),
         ).toLocaleString(),
         node: row.vpnNode,
         user: row.user,

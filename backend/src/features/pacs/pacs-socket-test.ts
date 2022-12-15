@@ -7,11 +7,10 @@ tls.DEFAULT_MIN_VERSION = 'TLSv1';
 const options = {
   // requestCert: false,
   // secureProtocol: 'TLSv1_method',
-  // minVersion: 'TLSv1',
   rejectUnauthorized: false,
-  key: fs.readFileSync(path.resolve(__dirname, '../../cert/key.pem')),
-  cert: fs.readFileSync(path.resolve(__dirname, '../../cert/cert.pem')),
-  ca: [fs.readFileSync(path.resolve(__dirname, '../../cert/cert.pem'))],
+  key: fs.readFileSync(path.resolve(__dirname, '../../cert/reverse-api-server.rsa.key.pem')),
+  cert: fs.readFileSync(path.resolve(__dirname, '../../cert/reverse-api-client.cert.pem')),
+  ca: [fs.readFileSync(path.resolve(__dirname, '../../cert/ca.cert.pem'))],
   // ciphers: 'TLS_RSA_WITH_AES_256_CBC_SHA',
   checkServerIdentity: () => {
     return undefined;
@@ -33,8 +32,10 @@ function createBuffer(postJSONData: any) {
   return bufferWithByte;
 }
 
-const socket = tls.connect(24532, '172.21.110.139', options, () => {
+const socket = tls.connect(24532, '172.20.4.196', options, () => {
   console.log('client connected', socket.authorized ? 'authorized' : 'unauthorized');
+  console.log(`Cipher: ${JSON.stringify(socket.getCipher())}`);
+  console.log(`Protocol: ${JSON.stringify(socket.getProtocol())}`);
   process.stdin.pipe(socket);
   process.stdin.resume();
 });
