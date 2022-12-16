@@ -26,7 +26,7 @@ async function getUserRequestNewNumber(): Promise<string> {
   } catch (error) {
     logger.error(`not connected due to error: ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
   return newNumber.toString().padStart(6, 0);
 }
@@ -41,7 +41,7 @@ async function getEmployeeByMail(value: any): Promise<any> {
   } catch (error) {
     logger.error(`not connected due to error: ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
   return employeeByUPN[0];
 }

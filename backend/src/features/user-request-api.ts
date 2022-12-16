@@ -60,7 +60,7 @@ export async function getFilteredEmployee(dbPool: Pool, ws: WebSocket, value: st
   } catch (error) {
     logger.error(`getFilteredEmployee - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -82,7 +82,7 @@ export async function getEmployeeByUPN(dbPool: Pool, ws: WebSocket, value: strin
   } catch (error) {
     logger.error(`getEmployeeByUPN - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -104,7 +104,7 @@ export async function getEmployeeByParentDepartment(dbPool: Pool, ws: WebSocket,
   } catch (error) {
     logger.error(`getEmployeeByParentDepartment - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -151,7 +151,7 @@ export async function allUserRequest(dbPool: Pool, ws: WebSocket | null, wss?: S
   } catch (error) {
     logger.error(`allUserRequest - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -187,7 +187,7 @@ export async function getUserRequestByNumber(dbPool: Pool, ws: WebSocket, value:
   } catch (error) {
     logger.error(`getUserRequestByNumber - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -207,7 +207,7 @@ export async function getUserRequestNewNumber(dbPool: Pool, ws: WebSocket): Prom
   } catch (error) {
     logger.error(`getUserRequestNewNumber - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -229,7 +229,7 @@ export async function getUserRequestService(dbPool: Pool, ws: WebSocket, value?:
   } catch (error) {
     logger.error(`getUserRequestService - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -251,7 +251,7 @@ export async function getUserRequestStatus(dbPool: Pool, ws: WebSocket, value?: 
   } catch (error) {
     logger.error(`getUserRequestStatus - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -274,7 +274,7 @@ export async function getUserRequestPriority(dbPool: Pool, ws: WebSocket, value?
   } catch (error) {
     logger.error(`getUserRequestPriority - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -297,7 +297,7 @@ export async function getDepartment(dbPool: Pool, ws: WebSocket, value?: number)
   } catch (error) {
     logger.error(`not connected due to error: ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -322,7 +322,7 @@ export async function getDepartmentStructureByUPN(dbPool: Pool, ws: WebSocket, v
   } catch (error) {
     logger.error(`getDepartmentЫекгсегкуByUPN - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -345,7 +345,7 @@ export async function getUserRequestAttachment(dbPool: Pool, ws: WebSocket, valu
     } catch (error) {
       logger.error(`getUserRequestAttachment - ${error}`);
     } finally {
-      if (conn) conn.end();
+      if (conn) conn.release();
     }
   } else if (existsSync(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/user_request/${value.requestNumber}`)) {
     fs.readFile(`${process.env.USER_REQUEST_ATTACHMENTS_PATH}/${value.filePath}/${value.fileName}`, (error, data) => {
@@ -468,7 +468,7 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
   } catch (error) {
     logger.error(`saveNewUserRequest - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
   return response;
 }
@@ -505,7 +505,7 @@ export async function getUserRequestLifeCycle(dbPool: Pool, ws: WebSocket, value
   } catch (error) {
     logger.error(`getUserRequestLifeCycle - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
 }
 
@@ -577,7 +577,7 @@ export async function updateUserRequest(dbPool: Pool, value: any, ws: WebSocket,
     );
     logger.error(`updateUserRequestStatus - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
   return response;
 }
@@ -596,7 +596,7 @@ export async function deleteUserRequest(dbPool: Pool, value: any, wss: Server<We
   } catch (error) {
     logger.error(`deleteUserRequest - ${error}`);
   } finally {
-    if (conn) conn.end();
+    if (conn) conn.release();
   }
   allUserRequest(dbPool, null, wss);
 }

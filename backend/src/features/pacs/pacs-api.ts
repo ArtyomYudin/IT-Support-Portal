@@ -1,4 +1,4 @@
-import { Pool } from 'mariadb';
+import { Pool, PoolConnection } from 'mariadb';
 import { Server, WebSocket } from 'ws';
 import { TLSSocket } from 'node:tls';
 import { logger } from '../logger';
@@ -20,6 +20,43 @@ export function sendPing(pingId: any, socket: TLSSocket) {
   socket.write(pacsRequest.createBuffer(pingJSONData));
 }
 
+async function getEventCurrentDay(conn: PoolConnection) {
+  const pacsEventCurrentDayArray: any[] = [];
+  try {
+    const eventCurrentDayRows = await conn.query(dbSelect.pacsEventCurrentDay);
+    eventCurrentDayRows.forEach((row: any, i: number) => {
+      pacsEventCurrentDayArray[i] = {
+        displayName: row.displayName,
+        eventDate: row.eventDate,
+        accessPoint: row.accessPointName,
+        pacsDisplayName: row.pacsDisplayName,
+      };
+    });
+  } catch (error) {
+    logger.error(`getEventCurrentDay - ${error}`);
+  }
+  return pacsEventCurrentDayArray;
+}
+
+async function getLastEvent(conn: PoolConnection) {
+  const pacsLastEventArray: any[] = [];
+  try {
+    const lastEventRows = await conn.query(dbSelect.pacsEventLast);
+    lastEventRows.forEach((row: any, i: number) => {
+      pacsLastEventArray[i] = {
+        displayName: row.displayName,
+        eventDate: row.eventDate,
+        accessPoint: row.accessPointName,
+        pacsDisplayName: row.pacsDisplayName,
+        departmentId: row.departmentId,
+      };
+    });
+  } catch (error) {
+    logger.error(`getLastEvent - ${error}`);
+  }
+  return pacsLastEventArray;
+}
+
 // Разбор событий от Revers API
 export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
   /*
@@ -35,8 +72,8 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
   */
   const pacsEvent = JSON.parse(data.toString());
 
-  const pacsEventCurrentDayArray: any[] = [];
-  const pacsLastEventArray: any[] = [];
+  // const pacsEventCurrentDayArray: any[] = [];
+  // const pacsLastEventArray: any[] = [];
 
   pacsEvent.Data.forEach(async (item: any) => {
     if (item.EvCode === 1) {
@@ -57,39 +94,48 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
             ),
           );
         }
-        const eventCurrentDayRows = await conn.query(dbSelect.pacsEventCurrentDay);
-        const lastEventRows = await conn.query(dbSelect.pacsEventLast);
-        eventCurrentDayRows.forEach((row: any, i: number) => {
-          pacsEventCurrentDayArray[i] = {
-            displayName: row.displayName,
-            eventDate: row.eventDate,
-            accessPoint: row.accessPointName,
-            pacsDisplayName: row.pacsDisplayName,
-          };
+        // const eventCurrentDayRows = await conn.query(dbSelect.pacsEventCurrentDay);
+        // const lastEventRows = await conn.query(dbSelect.pacsEventLast);
+        // eventCurrentDayRows.forEach((row: any, i: number) => {
+        //  pacsEventCurrentDayArray[i] = {
+        //    displayName: row.displayName,
+        //    eventDate: row.eventDate,
+        //    accessPoint: row.accessPointName,
+        //    pacsDisplayName: row.pacsDisplayName,
+        //  };
+        // });
+        // lastEventRows.forEach((row: any, i: number) => {
+        //  pacsLastEventArray[i] = {
+        //    displayName: row.displayName,
+        //    eventDate: row.eventDate,
+        //    accessPoint: row.accessPointName,
+        //    pacsDisplayName: row.pacsDisplayName,
+        //    departmentId: row.departmentId,
+        // };
+        // });
+
+        const eventCurrentDay = await getEventCurrentDay(conn);
+        const lastEvent = await getLastEvent(conn);
+
+        wss.clients.forEach(async client => {
+          if (eventCurrentDay.length > 0) {
+            client.send(
+              JSON.stringify({
+                event: 'event_pacs_entry_exit',
+                data: { results: eventCurrentDay, total: eventCurrentDay.length },
+              }),
+            );
+          }
+          if (lastEvent.length > 0) {
+            client.send(
+              JSON.stringify({
+                event: 'event_pacs_last_event',
+                data: { results: lastEvent, total: lastEvent.length },
+              }),
+            );
+          }
         });
-        lastEventRows.forEach((row: any, i: number) => {
-          pacsLastEventArray[i] = {
-            displayName: row.displayName,
-            eventDate: row.eventDate,
-            accessPoint: row.accessPointName,
-            pacsDisplayName: row.pacsDisplayName,
-            departmentId: row.departmentId,
-          };
-        });
-        wss.clients.forEach(client => {
-          client.send(
-            JSON.stringify({
-              event: 'event_pacs_entry_exit',
-              data: { results: pacsEventCurrentDayArray, total: pacsEventCurrentDayArray.length },
-            }),
-          );
-          client.send(
-            JSON.stringify({
-              event: 'event_pacs_last_event',
-              data: { results: pacsLastEventArray, total: pacsLastEventArray.length },
-            }),
-          );
-        });
+
         /*
         if (entranceAP?.indexOf(item.EvAddr) !== -1) {
           try {
@@ -115,7 +161,7 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
       } catch (error) {
         logger.error(`parseEvent - ${error}`);
       } finally {
-        if (conn) conn.end();
+        if (conn) conn.release();
       }
     }
   });

@@ -124,7 +124,7 @@ export async function createRequestJSON(socket: TLSSocket, dbPool: Pool, reqBody
     } catch (error) {
       logger.error(error);
     } finally {
-      if (conn) conn.end();
+      if (conn) conn.release();
     }
   }
   switch (reqBodyJSON.event) {
