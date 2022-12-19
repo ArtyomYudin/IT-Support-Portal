@@ -57,7 +57,7 @@ async function getHWGroup(token: string | undefined) {
   }
 }
 
-async function getProviderInfo(token: string | undefined) {
+async function getProviderInfo(token: string | undefined, retryCount = 0): Promise<any> {
   const postData = {
     jsonrpc: '2.0',
     method: 'item.get',
@@ -80,6 +80,9 @@ async function getProviderInfo(token: string | undefined) {
       },
     },
   };
+  if (retryCount > 0) {
+    logger.info('Retry fetch!');
+  }
   try {
     const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
       method: 'post',
@@ -90,14 +93,15 @@ async function getProviderInfo(token: string | undefined) {
     return dataJSON.result;
   } catch (error) {
     logger.error(`getProviderInfo - ${error}`);
+    return retryCount < 3 ? getProviderInfo(token, retryCount + 1) : false;
     return false;
   }
 }
 
 async function sendProviderInfo(wss: Server<WebSocket>, ws?: WebSocket) {
   // logger.info(data);
-  const providerInfo = await getProviderInfo(process.env.ZABBIX_TOKEN);
   try {
+    const providerInfo = await getProviderInfo(process.env.ZABBIX_TOKEN);
     const providerSpeed = {
       inSpeedOrange: (providerInfo[8].lastvalue / 1000 / 1000).toFixed(2),
       outSpeedOrange: (providerInfo[11].lastvalue / 1000 / 1000).toFixed(2),
@@ -177,20 +181,23 @@ async function getAvayaE1ChannelInfo(wss: Server<WebSocket>, ws?: WebSocket) {
   }
 }
 
-async function getHardwareGroupEvent(token: string | undefined, hwGroup: any) {
+async function getHardwareGroupEvent(token: string | undefined, hwGroup: any, retryCount = 0): Promise<any> {
+  const postData = {
+    jsonrpc: '2.0',
+    method: 'problem.get',
+    id: 1,
+    auth: token,
+    params: {
+      groupids: hwGroup.id,
+      severities: [2, 3, 4, 5],
+      sortfield: ['eventid'],
+      sortorder: 'DESC',
+    },
+  };
+  if (retryCount > 0) {
+    logger.info('Retry fetch!');
+  }
   try {
-    const postData = {
-      jsonrpc: '2.0',
-      method: 'problem.get',
-      id: 1,
-      auth: token,
-      params: {
-        groupids: hwGroup.id,
-        severities: [2, 3, 4, 5],
-        sortfield: ['eventid'],
-        sortorder: 'DESC',
-      },
-    };
     const dataResponse = await fetch(process.env.ZABBIX_HOST as string, {
       method: 'post',
       body: JSON.stringify(postData),
@@ -199,8 +206,8 @@ async function getHardwareGroupEvent(token: string | undefined, hwGroup: any) {
     const dataJSON = await dataResponse.json();
     return { group: hwGroup.name, event: dataJSON.result, count: dataJSON.result.length };
   } catch (error) {
-    logger.error(`getHardwareEvent - ${error}`);
-    return false;
+    logger.error(`getHardwareGroupEvent - ${error}`);
+    return retryCount < 3 ? getHardwareGroupEvent(token, hwGroup, retryCount + 1) : false;
   }
 }
 

@@ -5,12 +5,13 @@ export const dbPool = mariadb.createPool({
   database: process.env.DB_BASE,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  connectionLimit: 50,
+  connectionLimit: 5,
   trace: process.env.NODE_ENV === 'development',
   // acquireTimeout: 10000,
   // connectTimeout: 10000,
 });
 
+/*
 if (process.env.NODE_ENV === 'development') {
   dbPool.on('acquire', connection => {
     console.log('Connection %d acquired', connection.threadId);
@@ -25,3 +26,4 @@ if (process.env.NODE_ENV === 'development') {
     console.log('Connection %d released', connection.threadId);
   });
 }
+*/
