@@ -1,6 +1,6 @@
 .limit-height clr-datagrid {
   //height: calc(100vh - 144px);
-  height: calc(100vh - 7.15rem);
+  height: calc(100vh - 7.75rem);
   //height: 100% !important;
 }
 
@@ -8,10 +8,12 @@
   //height: calc(100vh - 144px);
   height: 66vh;
   //height: 100% !important;
+  margin-top: 0.3rem !important;
 }
-//::ng-deep .datagrid {
-//  margin-top: 0.3rem;
-//}
+
+::ng-deep .vpn-user-activity-datagrid .datagrid {
+  margin-top: 0.3rem;
+}
 
 ::ng-deep .datagrid-detail-open > .datagrid-outer-wrapper > .datagrid-inner-wrapper div.datagrid-table-wrapper {
   overflow: visible;
@@ -42,6 +44,7 @@
   .nav {
     box-shadow: none !important;
     margin-top: -0.55rem;
+    height: unset;
     /*
     .nav-link {
       line-height: 1.15rem;
@@ -55,6 +58,21 @@
       color: #0072a3;
     }
     */
+  }
+  &-button {
+    text-transform: uppercase !important;
+    color: #0072a3 !important;
+    line-height: 1.15rem !important;
+    letter-spacing: 0.073em !important;
+    font-size: 0.55rem !important;
+    font-weight: 500 !important;
+    height: 1.2rem !important;
+    padding: 0 0.6rem !important;
+    box-shadow: none !important;
+  }
+  &-button.active,
+  &-button:hover {
+    color: hsl(198deg, 100%, 24%) !important;
   }
 }
 
@@ -100,6 +118,7 @@
   //  max-width: fit-content !important;
   //}
   text-align: end;
+  padding: 0rem;
 }
 
 .view-period {
@@ -119,7 +138,7 @@
 
     &.clr-form-control {
       //align-items: unset;
-      margin-top: 0.1rem;
+      margin-top: -0.4rem;
       flex-direction: row;
     }
 

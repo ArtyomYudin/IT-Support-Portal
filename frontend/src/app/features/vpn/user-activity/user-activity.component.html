@@ -23,7 +23,7 @@
 
 <clr-tabs class="vpn-history-switch">
     <clr-tab>
-        <button clrTabLink (click)="onTabChange('employeeTab')">История по пользователям</button>
+        <button class="btn-sm vpn-history-switch-button" clrTabLink (click)="onTabChange('employeeTab')">История по пользователям</button>
         <clr-tab-content>
             <div class="limit-height">
                 <clr-datagrid class="datagrid-compact vpn-user-activity-datagrid" [clrDgLoading]="loadingEmployee">
@@ -98,7 +98,7 @@
         </clr-tab-content>
     </clr-tab>
     <clr-tab>
-        <button clrTabLink (click)="onTabChange('sessionTab')">История по сеансам</button>
+        <button class="btn-sm vpn-history-switch-button" clrTabLink (click)="onTabChange('sessionTab')">История по сеансам</button>
         <clr-tab-content>
             <div class="limit-height">
                 <clr-datagrid class="datagrid-compact vpn-user-activity-datagrid" [clrDgLoading]="loadingSession">
