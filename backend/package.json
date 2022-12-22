@@ -30,7 +30,7 @@
     "dotenv": "^16.0.3",
     "html-to-text": "^9.0.2",
     "imap": "^0.8.19",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "ldapjs": "^2.3.3",
     "mailparser": "^3.6.0",
     "mariadb": "^3.0.2",
