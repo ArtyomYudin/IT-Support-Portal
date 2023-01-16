@@ -320,7 +320,7 @@ export async function getDepartmentStructureByUPN(dbPool: Pool, ws: WebSocket, v
       }),
     );
   } catch (error) {
-    logger.error(`getDepartmentЫекгсегкуByUPN - ${error}`);
+    logger.error(`getDepartmentStructureByUPN - ${error}`);
   } finally {
     if (conn) conn.release();
   }
@@ -455,8 +455,14 @@ export async function saveNewUserRequest(dbPool: Pool, value: any, wss: Server<W
                                         padding: 4px 4px 4px 4px;
                                     "
                                 >
-                                    <div style="margin: 0px; font-stretch: normal; font-size: 12px; line-height: normal; min-height: 14px"><br />
-                                    ${value.topic}
+                                    <div style="
+                                        margin: 0px;
+                                        font-stretch: normal;
+                                        font-size: 12px;
+                                        line-height: normal;
+                                        min-height: 14px"
+                                    ><br />
+                                      ${value.topic}
                                     </div>
                                 </td>
                             </tr>
