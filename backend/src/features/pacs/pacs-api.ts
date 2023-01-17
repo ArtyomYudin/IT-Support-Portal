@@ -57,6 +57,49 @@ async function getLastEvent(conn: PoolConnection) {
   return pacsLastEventArray;
 }
 
+export async function getPacsEvent(dbPool: Pool, wss: Server<WebSocket>, ws?: WebSocket) {
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const eventCurrentDay = await getEventCurrentDay(conn);
+    const lastEvent = await getLastEvent(conn);
+
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          event: 'event_pacs_entry_exit',
+          data: { results: eventCurrentDay, total: eventCurrentDay.length },
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          event: 'event_pacs_last_event',
+          data: { results: lastEvent, total: lastEvent.length },
+        }),
+      );
+    } else {
+      wss.clients.forEach((client: any) => {
+        client.send(
+          JSON.stringify({
+            event: 'event_pacs_entry_exit',
+            data: { results: eventCurrentDay, total: eventCurrentDay.length },
+          }),
+        );
+        client.send(
+          JSON.stringify({
+            event: 'event_pacs_last_event',
+            data: { results: lastEvent, total: lastEvent.length },
+          }),
+        );
+      });
+    }
+  } catch (error) {
+    logger.error(`getPacsEvent - ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
 // Разбор событий от Revers API
 export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
   /*
@@ -114,27 +157,7 @@ export function parseEvent(dbPool: Pool, wss: Server<WebSocket>, data: any) {
         // };
         // });
 
-        const eventCurrentDay = await getEventCurrentDay(conn);
-        const lastEvent = await getLastEvent(conn);
-
-        wss.clients.forEach(async client => {
-          if (eventCurrentDay.length > 0) {
-            client.send(
-              JSON.stringify({
-                event: 'event_pacs_entry_exit',
-                data: { results: eventCurrentDay, total: eventCurrentDay.length },
-              }),
-            );
-          }
-          if (lastEvent.length > 0) {
-            client.send(
-              JSON.stringify({
-                event: 'event_pacs_last_event',
-                data: { results: lastEvent, total: lastEvent.length },
-              }),
-            );
-          }
-        });
+        await getPacsEvent(dbPool, wss);
 
         /*
         if (entranceAP?.indexOf(item.EvAddr) !== -1) {

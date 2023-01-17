@@ -33,6 +33,7 @@ export default class PacsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.wsService.send('getPacsInitValue');
     this.wsService.send(
       'getDepartmentStructureByUPN',
       localStorage.getItem('IT-Support-Portal') ? JSON.parse(localStorage.getItem('IT-Support-Portal')).id : null,
