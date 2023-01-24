@@ -7,6 +7,7 @@ import * as avayaAPI from '../avaya-api';
 import * as vpnAPI from '../vpn-api';
 import * as pacsAPI from '../pacs/pacs-api';
 import * as zabbixAPI from '../zabbix-api';
+import * as dhcpAPI from '../dhcp-client';
 
 export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocket>, msg: any): void {
   /*
@@ -173,6 +174,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
       break;
     case 'getPacsInitValue':
       pacsAPI.getPacsEvent(dbPool, wss, ws);
+      break;
+    case 'getDHCPLease':
+      dhcpAPI.getDHCPLease(ws);
       break;
     default:
       break;
