@@ -18,7 +18,7 @@ import { Event } from '@service/websocket.service.event';
   imports: [ClarityModule, AsyncPipe],
 })
 export default class DhcpComponent implements OnInit, OnDestroy {
-  public loading: boolean;
+  public loading = true;
 
   public dhcpLeaseArray$: Observable<IDHCPLease>;
 

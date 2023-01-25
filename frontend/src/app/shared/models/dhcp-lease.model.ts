@@ -1,7 +1,7 @@
 export class DHCPLease {
   public ipAddress: string;
 
-  public MacAddress: number;
+  public macAddress: number;
 
   public hostName: string;
 
