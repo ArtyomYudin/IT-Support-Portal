@@ -10,7 +10,8 @@
   &-icon {
     border-radius: 3px;
     background-color: #999;
-    color: white;
+    //color: white;
+    color: #565656;
     padding: 10px;
     margin-top: -24px;
     margin-right: 15px;
@@ -18,24 +19,29 @@
 
     // Icon Blue
     &__blue {
-      background: linear-gradient(60deg, #03a9f4, #027bb1) !important;
-      box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #027bb1;
+      //background: linear-gradient(60deg, #03a9f4, #027bb1) !important;
+      //box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #027bb1;
+      background: linear-gradient(60deg, #fafafa, #fafafa) !important;
+      box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #dedede;
     }
 
     //Icon Red
     &__red {
+      color: white;
       background: linear-gradient(60deg, #ef5350, #ea2027);
       box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #ea2027;
     }
 
     //Icon Yellow
     &__yellow {
+      color: white;
       background: linear-gradient(60deg, #ffc312, #fb8c00);
       box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #fb8c00;
     }
 
     //Icon Green
     &__green {
+      color: white;
       background: linear-gradient(60deg, #66bb6a, #43a047);
       box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px #43a047;
     }
@@ -76,6 +82,32 @@
       text-align: right;
       margin: 0;
       font-weight: 500;
+    }
+
+    &__request {
+      width: 100%;
+      &__data {
+        display: flex;
+        flex-flow: column;
+        font-size: 0.631rem;
+        flex: 1;
+        text-align: center;
+        margin: 0;
+        font-weight: 500;
+      }
+    }
+
+    &__dhcp {
+      width: 100%;
+      &__data {
+        display: flex;
+        flex-flow: column;
+        font-size: 0.631rem;
+        flex: 1;
+        text-align: center;
+        margin: 0;
+        font-weight: 500;
+      }
     }
   }
   // Block

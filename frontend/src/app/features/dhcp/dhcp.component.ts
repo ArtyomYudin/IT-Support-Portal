@@ -43,4 +43,9 @@ export default class DhcpComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe$.next(null);
     this.ngUnsubscribe$.complete();
   }
+
+  public dhcpLeaseRefresh() {
+    this.loading = true;
+    this.wsService.send('getDHCPLease');
+  }
 }

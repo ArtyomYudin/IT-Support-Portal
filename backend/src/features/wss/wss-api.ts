@@ -7,7 +7,7 @@ import * as avayaAPI from '../avaya-api';
 import * as vpnAPI from '../vpn-api';
 import * as pacsAPI from '../pacs/pacs-api';
 import * as zabbixAPI from '../zabbix-api';
-import * as dhcpAPI from '../dhcp-client';
+import * as dhcpAPI from '../dhcp-api';
 
 export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocket>, msg: any): void {
   /*

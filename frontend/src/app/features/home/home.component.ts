@@ -41,6 +41,8 @@ Chart.register(...registerables);
 export default class HomeComponent implements OnInit, OnDestroy {
   public vpnActiveSessionCountArray$: Observable<any>;
 
+  public dhcpInfoArray$: Observable<any>;
+
   private ngUnsubscribe$: Subject<any> = new Subject();
 
   private mainCamPlayer: any;
@@ -53,6 +55,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
     this.vpnActiveSessionCountArray$ = this.wsService
       .on<any>(Event.EV_VPN_ACTIVE_SESSION_COUNT)
       .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
+    this.dhcpInfoArray$ = this.wsService.on<any>(Event.EV_DHCP_INFO).pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$));
   }
 
   public ngOnInit(): void {

@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { Pool } from 'mariadb';
 import { logger } from './logger';
 import { getVpnActiveSessionCount } from './vpn-api';
+import { getDHCPInfo } from './dhcp-api';
 
 const hardwareGroup: any[] = [];
 
@@ -249,6 +250,7 @@ export function getDashboardEvent(dbPool: Pool, wss: Server<WebSocket>, ws: WebS
   sendHardwareGroupEvent(wss, ws);
   getAvayaE1ChannelInfo(wss, ws);
   getVpnActiveSessionCount(dbPool, wss, ws);
+  getDHCPInfo(wss, ws);
 }
 
 export async function initZabbixAPI(dbPool: Pool, wss: Server<WebSocket>): Promise<void> {
