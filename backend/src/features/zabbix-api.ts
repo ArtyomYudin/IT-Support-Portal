@@ -264,4 +264,8 @@ export async function initZabbixAPI(dbPool: Pool, wss: Server<WebSocket>): Promi
     sendHardwareGroupEvent(wss);
     getVpnActiveSessionCount(dbPool, wss);
   }, 60000);
+
+  setInterval(() => {
+    sendProviderInfo(wss);
+  }, 1800000);
 }

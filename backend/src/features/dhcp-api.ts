@@ -59,7 +59,7 @@ export async function getDHCPInfo(wss: Server<WebSocket>, ws?: WebSocket) {
       });
     }
 
-    console.log(dhcpInfoArray);
+    // console.log(dhcpInfoArray);
   } catch (error) {
     logger.error(`getDHCPLease - ${error}`);
   } finally {

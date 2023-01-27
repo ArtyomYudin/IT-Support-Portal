@@ -57,12 +57,26 @@
                         <div class="card-icon card-icon__green">
                             <clr-icon shape="shield" style="width: 24px; height: 24px"></clr-icon>
                         </div>
-                        <h5 class="card-header__head">VPN</h5>
+                        <h5 class="card-header__head">Подключения VPN</h5>
                     </div>
                     <div class="card-block">
+                        <!--
                         <div class="card-info" *ngFor="let session of vpnActiveSessionCountArray$ | async">
                             <p class="card-info__head">{{ session.node.charAt(0).toUpperCase() + session.node.slice(1) }}</p>
                             <p class="card-info__data">{{ session.count }}</p>
+                        </div>
+                    -->
+                        <div class="card-info">
+                            <table class="card-info__dhcp">
+                                <tr>
+                                    <td *ngFor="let session of vpnActiveSessionCountArray$ | async">
+                                        <div class="card-info__dhcp__data">
+                                            <span>{{ session.count }}</span>
+                                            <span>{{ session.node.charAt(0).toUpperCase() + session.node.slice(1) }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>

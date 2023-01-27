@@ -62,7 +62,9 @@ process.on('uncaughtException', err => {
     // socket = initApiSocket();
   });
 
-  setInterval(() => {
-    getEmails(wss);
-  }, 30000);
+  if (process.env.NODE_ENV === 'production') {
+    setInterval(() => {
+      getEmails(wss);
+    }, 30000);
+  }
 })();
