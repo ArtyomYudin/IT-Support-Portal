@@ -1,6 +1,7 @@
 .limit-height clr-datagrid {
   //height: calc(100vh - 144px);
-  height: calc(100vh - 7.75rem);
+  // height: calc(100vh - 7.75rem);
+  height: calc(100vh - 7.15rem);
   //height: 100% !important;
 }
 
@@ -43,7 +44,7 @@
 ::ng-deep .vpn-history-switch {
   .nav {
     box-shadow: none !important;
-    margin-top: -0.55rem;
+    //margin-top: -0.55rem;
     height: unset;
     /*
     .nav-link {

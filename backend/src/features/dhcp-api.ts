@@ -13,10 +13,11 @@ export async function getDHCPInfo(wss: Server<WebSocket>, ws?: WebSocket) {
 
   try {
     const getInfoCommand = PowerShell.command`
+    $so = New-PSSessionOption -SkipCACheck -SkipCNCheck;
     $username = ${process.env.ARNOLD_USER as string};
     $password = ConvertTo-SecureString ${process.env.ARNOLD_USER_PASSWORD as string} -AsPlainText -Force;
     $psCred = New-Object System.Management.Automation.PSCredential -ArgumentList ($username, $password);
-    $dhcp = New-PSSession -ComputerName arnold.c-inform.spbatlas -Credential $psCred -Authentication Negotiate;
+    $dhcp = New-PSSession -ComputerName arnold.c-inform.spbatlas -SessionOption $so -Credential $psCred -Authentication Negotiate;
     Invoke-Command -Session $dhcp -ScriptBlock {
       Get-DhcpServerv4Scope -ComputerName "arnold.c-inform.spbatlas" |
       Get-DhcpServerv4ScopeStatistics -ComputerName "arnold.c-inform.spbatlas"
@@ -77,10 +78,11 @@ export async function getDHCPLease(ws: WebSocket) {
   });
   try {
     const getLeaseCommand = PowerShell.command`
+      $so = New-PSSessionOption -SkipCACheck -SkipCNCheck;
       $username = ${process.env.ARNOLD_USER as string};
       $password = ConvertTo-SecureString ${process.env.ARNOLD_USER_PASSWORD as string} -AsPlainText -Force;
       $psCred = New-Object System.Management.Automation.PSCredential -ArgumentList ($username, $password);
-      $dhcp = New-PSSession -ComputerName arnold.c-inform.spbatlas -Credential $psCred -Authentication Negotiate;
+      $dhcp = New-PSSession -ComputerName arnold.c-inform.spbatlas -SessionOption $so -Credential $psCred -Authentication Negotiate;
       Invoke-Command -Session $dhcp -ScriptBlock {
           Get-DhcpServerv4Scope -ComputerName "arnold.c-inform.spbatlas" |
           Get-DhcpServerv4Lease -ComputerName "arnold.c-inform.spbatlas"

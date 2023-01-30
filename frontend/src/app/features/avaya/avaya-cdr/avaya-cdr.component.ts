@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { Subject } from 'rxjs/internal/Subject';
 import { Observable } from 'rxjs/internal/Observable';
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
-import { ClarityModule } from '@clr/angular';
+import { ClarityModule, ClrCommonStringsService } from '@clr/angular';
 import { DatePipe, AsyncPipe } from '@angular/common';
 import { WebsocketService } from '@service/websocket.service';
 import { AvayaCDRService } from '@service/avaya.cdr.service';
@@ -11,6 +11,7 @@ import { Event } from '@service/websocket.service.event';
 import { EmployeeNamePipe } from '@pipe/employeename.pipe';
 import { AvayaDurationConvertPipe } from '@pipe/avayadurationconvert.pipe';
 import { AvayaCallCodeConvertPipe } from '@pipe/avayacallcodeconvert.pipe';
+import { russionLocale } from '@translation/russion';
 import { AvayaCDRFilterComponent } from '../avaya-cdr-filter/avaya-cdr-filter.component';
 
 @Component({
@@ -37,7 +38,12 @@ export class AvayaCDRComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe$: Subject<any> = new Subject();
 
-  constructor(private wsService: WebsocketService, private avayaCDRService: AvayaCDRService) {
+  constructor(
+    private wsService: WebsocketService,
+    private avayaCDRService: AvayaCDRService,
+    private commonStrings: ClrCommonStringsService,
+  ) {
+    commonStrings.localize(russionLocale);
     this.eventAvayaCDRArray$ = this.wsService.on<IAvayaCDR>(Event.EV_AVAYA_CDR).pipe(
       distinctUntilChanged(),
       takeUntil(this.ngUnsubscribe$),
@@ -48,7 +54,9 @@ export class AvayaCDRComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.avayaCDRService.currentCDRLoadStatus.subscribe(loadStatus => (this.loading = loadStatus));
+    this.avayaCDRService.currentCDRLoadStatus.subscribe(loadStatus => {
+      this.loading = loadStatus;
+    });
   }
 
   ngOnDestroy(): void {
