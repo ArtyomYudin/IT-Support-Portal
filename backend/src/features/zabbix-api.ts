@@ -266,6 +266,6 @@ export async function initZabbixAPI(dbPool: Pool, wss: Server<WebSocket>): Promi
   }, 60000);
 
   setInterval(() => {
-    sendProviderInfo(wss);
+    getDHCPInfo(wss);
   }, 1800000);
 }

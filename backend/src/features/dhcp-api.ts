@@ -53,7 +53,7 @@ export async function getDHCPInfo(wss: Server<WebSocket>, ws?: WebSocket) {
       wss.clients.forEach((client: any) => {
         client.send(
           JSON.stringify({
-            event: 'event_vpn_active_session_count',
+            event: 'event_dhcp_info',
             data: dhcpInfoArray,
           }),
         );
