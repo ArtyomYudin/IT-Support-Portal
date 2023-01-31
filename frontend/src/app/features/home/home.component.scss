@@ -92,7 +92,9 @@
 
     &__request {
       width: 100%;
+      table-layout: fixed;
       &__data {
+        width: 100%;
         display: flex;
         flex-flow: column;
         font-size: 0.631rem;
@@ -105,50 +107,29 @@
 
     &__dhcp {
       width: 100%;
+      table-layout: fixed;
       &__data {
+        width: 100%;
         display: flex;
-        flex-flow: column;
+        flex-direction: column;
         font-size: 0.631rem;
-        flex: 1;
         text-align: center;
         margin: 0;
         font-weight: 500;
+        &_value {
+          flex: 1;
+        }
+        &_title {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
     }
   }
   // Block
   &-block {
     padding: 0.4rem 0.7rem;
-  }
-  // Footer
-  &-footer {
-    padding: 0.4rem 0.7rem;
-    display: flex;
-
-    // Footer Head
-    &__head {
-      margin: 0;
-      font-weight: 700;
-    }
-
-    // Footer Data
-    &__data {
-      font-size: 0.631rem;
-      flex: 1;
-      text-align: right;
-      margin: 0;
-      font-weight: 500;
-    }
-
-    // Footer Icon
-    &__icon {
-      -webkit-transform: rotate(180deg);
-      -moz-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-      -o-transform: rotate(180deg);
-      transform: rotate(180deg);
-      display: inline-block;
-    }
   }
 }
 // Table

@@ -2,8 +2,8 @@
     <span>Главная</span>
 </div>
 <div class="clr-row main-section">
+    <!-- Cекция заявок -->
     <div class="clr-col-lg-4 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
-        <!-- Cекция заявок -->
         <div class="clr-row request-section">
             <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
                 <div class="card clickable" routerLink="/user-request">
@@ -45,11 +45,11 @@
                 </div>
             </div>
         </div>
-        <!-- Секция заявок Конец -->
     </div>
+    <!-- Секция заявок Конец -->
 
+    <!-- Cекция статистики -->
     <div class="clr-col-lg-3 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
-        <!-- Cекция статистики -->
         <div class="clr-row statistic-section">
             <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
                 <div class="card clickable" routerLink="/vpn">
@@ -60,19 +60,15 @@
                         <h5 class="card-header__head">Подключения VPN</h5>
                     </div>
                     <div class="card-block">
-                        <!--
-                        <div class="card-info" *ngFor="let session of vpnActiveSessionCountArray$ | async">
-                            <p class="card-info__head">{{ session.node.charAt(0).toUpperCase() + session.node.slice(1) }}</p>
-                            <p class="card-info__data">{{ session.count }}</p>
-                        </div>
-                    -->
                         <div class="card-info">
                             <table class="card-info__dhcp">
                                 <tr>
                                     <td *ngFor="let session of vpnActiveSessionCountArray$ | async">
                                         <div class="card-info__dhcp__data">
-                                            <span>{{ session.count }}</span>
-                                            <span>{{ session.node.charAt(0).toUpperCase() + session.node.slice(1) }}</span>
+                                            <span class="card-info__dhcp__data_value">{{ session.count }}</span>
+                                            <span class="card-info__dhcp__data_title">{{
+                                                session.node.charAt(0).toUpperCase() + session.node.slice(1)
+                                            }}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -97,17 +93,20 @@
                                 <tr>
                                     <td>
                                         <div class="card-info__dhcp__data">
-                                            <span>{{ dhcp.addressesFree }}</span> <span>Свободно</span>
+                                            <span class="card-info__dhcp__data_value">{{ dhcp.addressesFree }}</span>
+                                            <span class="card-info__dhcp__data_title">Свободно</span>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="card-info__dhcp__data">
-                                            <span>{{ dhcp.addressesInUse }}</span> <span>Используется</span>
+                                            <span class="card-info__dhcp__data_value">{{ dhcp.addressesInUse }}</span>
+                                            <span class="card-info__dhcp__data_title">Используется</span>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="card-info__dhcp__data">
-                                            <span>{{ dhcp.reservedAddress }}</span> <span>Зарезервировано</span>
+                                            <span class="card-info__dhcp__data_value">{{ dhcp.reservedAddress }}</span>
+                                            <span class="card-info__dhcp__data_title">Зарезервировано</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -117,11 +116,11 @@
                 </div>
             </div>
         </div>
-        <!-- Секция статистики Конец -->
     </div>
+    <!-- Секция статистики Конец -->
 
+    <!-- Сукция с камерами -->
     <div class="clr-col-lg-2 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
-        <!-- Сукция с камерами -->
         <div class="clr-row camera-section">
             <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
                 <div class="card">
@@ -169,9 +168,10 @@
                 </div>
             </div>
         </div>
-        <!-- Секция с камерами Конец -->
     </div>
+    <!-- Секция с камерами Конец -->
 
+    <!-- Cекция миниторинга и статистики -->
     <div class="clr-col-lg-3 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
         <div class="clr-row charts-section">
             <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
@@ -185,155 +185,7 @@
             <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
                 <fe-home-chart-hardware></fe-home-chart-hardware>
             </div>
-
-            <!--
-            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-                <div class="card clickable" routerLink="/vpn">
-                    <div class="card-header">
-                        <div class="card-icon card-icon__green">
-                            <clr-icon shape="shield" style="width: 24px; height: 24px"></clr-icon>
-                        </div>
-                        <h5 class="card-header__head">VPN</h5>
-                    </div>
-                    <div class="card-block">
-                        <div class="card-info" *ngFor="let session of vpnActiveSessionCountArray$ | async">
-                            <p class="card-info__head">{{ session.node.charAt(0).toUpperCase() + session.node.slice(1) }}</p>
-                            <p class="card-info__data">{{ session.count }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        -->
-
-            <!--
-            <div class="clr-col-lg-12 clr-col-md-12 clr-col-sm-12 clr-col-xs-12">
-                <fe-home-chart-avaya-e1-daily></fe-home-chart-avaya-e1-daily>
-            </div>
-        -->
-
-            <!--
-            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-                <div class="card clickable" routerLink="">
-                    <div class="card-header">
-                        <div class="card-icon card-icon__red">
-                            <clr-icon shape="switch" style="width: 24px; height: 24px"></clr-icon>
-                        </div>
-                        <h5 class="card-header__head">DHCP</h5>
-                    </div>
-                    <div class="card-footer">
-                        <p class="card-footer__head">
-                            <clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result
-                        </p>
-                        <h3 class="card-footer__data">1280</h3>
-                    </div>
-                </div>
-            </div>
-            -->
-            <!--
-            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-                <div class="card clickable" routerLink="/setting">
-                    <div class="card-header">
-                        <div class="card-icon card-icon__green">
-                            <clr-icon shape="battery" style="width: 24px; height: 24px"></clr-icon>
-                        </div>
-                        <h5 class="card-header__head">ИБП</h5>
-                    </div>
-                    <div class="card-footer">
-                        <p class="card-footer__head">
-                            <clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result
-                        </p>
-                        <h3 class="card-footer__data">1280</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="clr-col-lg-12 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-                <div class="card clickable" routerLink="/setting">
-                    <div class="card-header">
-                        <div class="card-icon card-icon__green">
-                            <clr-icon shape="host" style="width: 24px; height: 24px"></clr-icon>
-                        </div>
-                        <h5 class="card-header__head">Сервера</h5>
-                    </div>
-                    <div class="card-footer">
-                        <p class="card-footer__head">
-                            <clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result
-                        </p>
-                        <h3 class="card-footer__data">1280</h3>
-                    </div>
-                </div>
-            </div>-->
         </div>
     </div>
+    <!-- Секция миниторинга и статистики Конец -->
 </div>
-
-<!-- Cекция миниторинга и статистики -->
-<!--
-<div class="clr-row monitoring-section">
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-        <div class="card clickable" routerLink="">
-            <div class="card-header">
-                <div class="card-icon card-icon__green">
-                    <clr-icon shape="router" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h5 class="card-header__head">Маршрутизаторы</h5>
-            </div>
-            <div class="card-block">
-                <div class="card-info">
-                    <p class="card-info__head">Новые заявки</p>
-                    <p class="card-info__data">24</p>
-                </div>
-                <div class="card-info">
-                    <p class="card-info__head">Заявки в работе</p>
-                    <p class="card-info__data">24</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-        <div class="card clickable" routerLink="">
-            <div class="card-header">
-                <div class="card-icon card-icon__red">
-                    <clr-icon shape="switch" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h5 class="card-header__head">Коммутаторы</h5>
-                <h3 class="card-header__data">2012469756</h3>
-            </div>
-            <div class="card-footer">
-                <p class="card-footer__head"><clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result</p>
-                <h3 class="card-footer__data">1280</h3>
-            </div>
-        </div>
-    </div>
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12 clr-col-xs-12">
-        <div class="card clickable" routerLink="/setting">
-            <div class="card-header">
-                <div class="card-icon card-icon__green">
-                    <clr-icon shape="battery" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h5 class="card-header__head">ИБП</h5>
-                <h3 class="card-header__data">2012469756</h3>
-            </div>
-            <div class="card-footer">
-                <p class="card-footer__head"><clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result</p>
-                <h3 class="card-footer__data">1280</h3>
-            </div>
-        </div>
-    </div>
-    <div class="clr-col-lg-3 clr-col-md-6 clr-col-sm-12clr-col-xs-12">
-        <div class="card clickable" routerLink="/setting">
-            <div class="card-header">
-                <div class="card-icon card-icon__green">
-                    <clr-icon shape="host" style="width: 24px; height: 24px"></clr-icon>
-                </div>
-                <h5 class="card-header__head">Сервера</h5>
-                <h3 class="card-header__data">2012469756</h3>
-            </div>
-            <div class="card-footer">
-                <p class="card-footer__head"><clr-icon class="card-footer__icon" shape="angle" size="22"></clr-icon>Today's Result</p>
-                <h3 class="card-footer__data">1280</h3>
-            </div>
-        </div>
-    </div>
-</div>
--->
-<!-- Секция миниторинга и статистики Конец -->
