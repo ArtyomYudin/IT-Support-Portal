@@ -1,8 +1,0 @@
-DROP TABLE IF EXISTS department;
-CREATE TABLE IF NOT EXISTS department (
-  id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
-  parent_id INT,
-  manager_id INT,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
