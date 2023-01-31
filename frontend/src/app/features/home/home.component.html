@@ -60,6 +60,7 @@
                         <h5 class="card-header__head">Подключения VPN</h5>
                     </div>
                     <div class="card-block">
+                        <div class="spinner-centered"><clr-spinner clrSmall *ngIf="vpnLoading">Loading data</clr-spinner></div>
                         <div class="card-info">
                             <table class="card-info__dhcp">
                                 <tr>
@@ -87,6 +88,8 @@
                         <h5 class="card-header__head">Статистика DHCP</h5>
                     </div>
                     <div class="card-block">
+                        <div class="spinner-centered"><clr-spinner clrSmall *ngIf="dhcpLoading">Loading data</clr-spinner></div>
+
                         <div class="card-info" *ngFor="let dhcp of dhcpInfoArray$ | async">
                             <table class="card-info__dhcp">
                                 <th colspan="3">{{ dhcp.scopeId }}/24</th>
