@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DynamicScriptLoaderService } from '@service/dynamic.script.loader.service';
 
 declare let streamCam: any;
+declare let streamCamBack: any;
 
 @Component({
   selector: 'fe-pacs-guest',
@@ -14,6 +15,8 @@ declare let streamCam: any;
 export class GuestComponent implements OnInit, OnDestroy {
   private mainCamPlayer: any;
 
+  private backCamPlayer: any;
+
   constructor(private dynamicScriptLoader: DynamicScriptLoaderService) {}
 
   public ngOnInit(): void {
@@ -22,6 +25,7 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.mainCamPlayer.destroy();
+    this.backCamPlayer.destroy();
   }
 
   private loadScripts() {
@@ -30,6 +34,7 @@ export class GuestComponent implements OnInit, OnDestroy {
       .then(() => {
         // Script Loaded Successfully
         this.mainCamPlayer = streamCam();
+        this.backCamPlayer = streamCamBack();
       })
       .catch(error => console.log(error));
   }

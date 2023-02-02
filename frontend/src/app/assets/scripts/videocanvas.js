@@ -10,6 +10,15 @@ function streamCam() {
   });
   return player;
 }
+function streamCamBack() {
+  const client = 'wss://it.center-inform.ru:9996';
+  const canvas = document.getElementById('back-camera');
+  const player = new JSMpeg.Player(client, {
+    canvas,
+    audio: false,
+  });
+  return player;
+}
 function streamCamRoom1() {
   const client = 'wss://it.center-inform.ru:9997';
   const canvas = document.getElementById('server-room-1');
