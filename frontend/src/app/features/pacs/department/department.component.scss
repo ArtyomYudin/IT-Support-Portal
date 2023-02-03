@@ -1,5 +1,5 @@
 .limit-height clr-datagrid {
-  height: calc(100vh - 5.9rem);
+  height: calc(100vh - 6.9rem);
 }
 
 .datagrid-action-bar {
@@ -11,7 +11,8 @@ clr-icon {
 }
 
 ::ng-deep .pacs-department .datagrid {
-  margin-top: 0.45rem;
+  //margin-top: 0.45rem;
+  margin-top: 0.53rem;
 }
 
 .date-column {
