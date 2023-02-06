@@ -38,10 +38,10 @@ async function getEventCurrentDay(conn: PoolConnection) {
   return pacsEventCurrentDayArray;
 }
 
-async function getLastEvent(conn: PoolConnection) {
+async function getLastEvent(conn: PoolConnection, ownerId?: number | undefined) {
   const pacsLastEventArray: any[] = [];
   try {
-    const lastEventRows = await conn.query(dbSelect.pacsEventLast);
+    const lastEventRows = await conn.query(dbSelect.pacsEventLast(ownerId));
     lastEventRows.forEach((row: any, i: number) => {
       pacsLastEventArray[i] = {
         displayName: row.displayName,
@@ -95,6 +95,25 @@ export async function getPacsEvent(dbPool: Pool, wss: Server<WebSocket>, ws?: We
     }
   } catch (error) {
     logger.error(`getPacsEvent - ${error}`);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
+export async function getPacsEmployeeLastEvent(dbPool: Pool, ws: WebSocket, userPrincipalName: string) {
+  let conn;
+  try {
+    conn = await dbPool.getConnection();
+    const owner = await conn.query(dbSelect.getPacsOwnerId(userPrincipalName));
+    const lastEvent = await getLastEvent(conn, owner[0].ownerId);
+    ws.send(
+      JSON.stringify({
+        event: 'event_pacs_employee_last_event',
+        data: lastEvent,
+      }),
+    );
+  } catch (error) {
+    logger.error(`getPacsEmployeeLastEvent - ${error}`);
   } finally {
     if (conn) conn.release();
   }

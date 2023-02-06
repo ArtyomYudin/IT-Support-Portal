@@ -477,13 +477,13 @@ export const pacsEventCurrentDay = `
               WHERE pacs_event.date >= CURDATE()
               ORDER by pacs_event.date DESC`;
 
-export const pacsEventLast = `
+export const pacsEventLast = (owenrId: number | undefined) => `
               WITH cte_pacs_last_event AS (
                      SELECT
                             max(pacs_event.id) AS lastEventId,
                      pacs_event.owner_id AS ownerID
                      FROM pacs_event
-                                   WHERE pacs_event.date >= CURDATE()
+                                   WHERE ${owenrId ? `pacs_event.owner_id = '${owenrId}'` : 'pacs_event.date >= CURDATE()'}
                      GROUP BY pacs_event.owner_id
               )
               SELECT
@@ -499,3 +499,9 @@ export const pacsEventLast = `
                      INNER JOIN pacs_access_point ON (pacs_event.access_point = pacs_access_point.id)
                      LEFT JOIN employee ON (employee.user_principal_name = pacs_card_owner.user_principal_name)
               ORDER BY pacs_event.date DESC`;
+
+export const getPacsOwnerId = (userPrincipalName: string) => `
+              SELECT pacs_card_owner.id AS ownerId
+              FROM pacs_card_owner
+              WHERE pacs_card_owner.user_principal_name = '${userPrincipalName}'
+              LIMIT 1`;

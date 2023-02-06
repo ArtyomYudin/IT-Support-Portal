@@ -23,8 +23,12 @@
                             />
                             <mat-autocomplete #employeeSearchResult="matAutocomplete">
                                 <ng-container>
-                                    <mat-option *ngFor="let period of this.periods" [value]="period" (onSelectionChange)="(null)">
-                                        {{ period.name }}
+                                    <mat-option
+                                        (onSelectionChange)="onEmployeeSelected(employee)"
+                                        *ngFor="let employee of filteredEmployee"
+                                        [value]="employee.displayName"
+                                    >
+                                        {{ employee.displayName }}
                                     </mat-option>
                                 </ng-container>
                             </mat-autocomplete>

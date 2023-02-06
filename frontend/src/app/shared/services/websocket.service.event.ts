@@ -41,6 +41,7 @@ export enum Event {
 
   EV_PACS_ENTRY_EXIT = 'event_pacs_entry_exit',
   EV_PACS_LAST_EVENT = 'event_pacs_last_event',
+  EV_PACS_EMPLOYEE_LAST_EVENT = 'event_pacs_employee_last_event',
 
   EV_DHCP_LEASE = 'event_dhcp_lease',
   EV_DHCP_INFO = 'event_dhcp_info',

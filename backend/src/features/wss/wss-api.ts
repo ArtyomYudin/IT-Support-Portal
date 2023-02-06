@@ -175,6 +175,9 @@ export function wsParseMessage(dbPool: Pool, ws: WebSocket, wss: Server<WebSocke
     case 'getPacsInitValue':
       pacsAPI.getPacsEvent(dbPool, wss, ws);
       break;
+    case 'getPacsEmployeeLastEvent':
+      pacsAPI.getPacsEmployeeLastEvent(dbPool, ws, parseMsg.data);
+      break;
     case 'getDHCPLease':
       dhcpAPI.getDHCPLease(ws);
       break;

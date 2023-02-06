@@ -38,3 +38,28 @@
     }
   }
 }
+
+::ng-deep .mat-mdc-snack-bar-container {
+  --mat-mdc-snack-bar-button-color: #0072a3;
+  --mdc-snackbar-container-color: #fafafa;
+  --mdc-snackbar-supporting-text-color: #666666;
+
+  & .mdc-snackbar__label {
+    font-size: 0.631rem !important;
+    white-space: pre-line !important;
+  }
+  & .mdc-snackbar__surface {
+    box-shadow: 0 0.05rem 0.15rem #8c8c8c40 !important;
+    border: 0.05rem solid !important;
+    border-color: #ccc !important;
+  }
+  & .mat-mdc-button {
+    outline: none;
+    & .mat-mdc-button-persistent-ripple::before {
+      background-color: unset !important;
+    }
+    & .mat-mdc-button-ripple {
+      position: unset;
+    }
+  }
+}
