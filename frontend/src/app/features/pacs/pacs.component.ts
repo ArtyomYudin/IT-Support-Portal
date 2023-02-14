@@ -123,9 +123,9 @@ export default class PacsComponent implements OnInit, OnDestroy {
     this.wsService.send('getPacsEmployeeLastEvent', employee.userPrincipalName);
     this.employeeLastEventArray$.subscribe(event => {
       this.openNotifyBar(
-        `СКУД\n${this.datePipe.transform(event[0].eventDate)}  ${this.employeeNamePipe.transform(event[0].displayName)}  ${
-          event[0].accessPoint
-        }`,
+        `СКУД\n${this.datePipe.transform(event[0].eventDate, 'dd MMMM HH:mm:ss')}  ${this.employeeNamePipe.transform(
+          event[0].displayName,
+        )}  ${event[0].accessPoint}`,
       );
       this.employeeSearch.controls.employeeName.setValue('');
     });
