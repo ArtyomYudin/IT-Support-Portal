@@ -13,9 +13,9 @@ export class VpnSession {
 
   public clientIP: string;
 
-  public byteXmt: string;
+  public byteXmt: number;
 
-  public byteRcv: string;
+  public byteRcv: number;
 
   public disconnectReason: string;
 }

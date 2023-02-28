@@ -47,7 +47,6 @@
         <clr-dg-row
             *clrDgItems="let userRequest of (this.userRequestArray$ | async)?.results"
             [clrDgItem]="userRequest"
-            [(clrDgSelected)]="userRequest.selected"
             (dblclick)="modalCard.openRequestCard(userRequest.requestNumber)"
         >
             <!--[ngStyle]="{
@@ -80,12 +79,12 @@
             <clr-dg-cell>{{ userRequest.executor.name | employeeName }}</clr-dg-cell>
             <clr-dg-cell>{{ userRequest.deadline | date : 'dd.MM.YYYY' }}</clr-dg-cell>
         </clr-dg-row>
-
+        <!--
         <clr-dg-column-toggle>
             <clr-dg-column-toggle-title>Column Toggle Title</clr-dg-column-toggle-title>
             <clr-dg-column-toggle-button>Select All Button</clr-dg-column-toggle-button>
         </clr-dg-column-toggle>
-
+    -->
         <clr-dg-footer> {{ (this.userRequestArray$ | async)?.total }} заявок </clr-dg-footer>
         <!--
         <clr-dg-footer>

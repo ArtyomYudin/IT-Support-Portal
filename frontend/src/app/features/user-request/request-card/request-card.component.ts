@@ -107,7 +107,9 @@ export class RequestCardComponent implements OnInit, OnDestroy {
       comment: [''],
       delegate: [''],
     });
-    this.previewDialog.overlayStatus.subscribe(status => (this.previewDialogStatus = status));
+    this.previewDialog.overlayStatus.subscribe(status => {
+      this.previewDialogStatus = status;
+    });
   }
 
   ngOnDestroy(): void {
